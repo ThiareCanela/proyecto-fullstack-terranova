@@ -1,0 +1,18 @@
+# Node.js & React
+node_modules/
+dist/
+.vite/
+.env
+
+# Java & Spring Boot
+target/
+*.class
+*.jar
+*.war
+!src/main/resources/
+
+# Configuración del sistema
+.DS_Store
+.idea/
+.vscode/
+*.log
