@@ -67,7 +67,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<Usuario> listarUsuarios() {
-        List<Usuario> usuarios = new ArrayList<>();
+        List<Usuario> usuarios = new ArrayList();
         usuarios = usuarioRepository.findAll();
         return usuarios;
     }

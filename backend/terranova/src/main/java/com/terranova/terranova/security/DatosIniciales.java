@@ -23,14 +23,13 @@ public class DatosIniciales implements ApplicationRunner {
         String passSinCifrar= "admin";
         String passCifrado= bCryptPasswordEncoder.encode(passSinCifrar);
         System.out.println("pass cifrado: "+passCifrado);
-        Usuario usuario= new Usuario("admin","admin","admin@digitalhouse.com",passCifrado, UsuarioRole.ROLE_ADMIN);
+        Usuario usuario= new Usuario("admin","admin","admin@dh.com",passCifrado, UsuarioRole.ROLE_ADMIN);
         usuarioRepository.save(usuario);
 
         String passSinCifrar1= "user";
         String passCifrado1= bCryptPasswordEncoder.encode(passSinCifrar1);
         System.out.println("pass cifrado: "+passCifrado1);
-        Usuario usuario1= new Usuario("Pedro","Lopez","Pedro@digitalhouse.com",passCifrado1, UsuarioRole.ROLE_USER);
+        Usuario usuario1= new Usuario("Pedro","Lopez","pedro@dh.com",passCifrado1, UsuarioRole.ROLE_USER);
         usuarioRepository.save(usuario1);
-
     }
 }
