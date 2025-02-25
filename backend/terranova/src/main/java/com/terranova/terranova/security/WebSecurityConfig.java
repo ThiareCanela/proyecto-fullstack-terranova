@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout").permitAll()
-                        .requestMatchers("/usuarios/listar").hasRole("ADMIN")// ✅ Permitir sin autenticación
+                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*","/usuarios/*" ).hasRole("ADMIN")// ✅ Permitir sin autenticación
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
