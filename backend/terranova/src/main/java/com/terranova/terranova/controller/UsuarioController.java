@@ -1,22 +1,29 @@
 package com.terranova.terranova.controller;
 
 import com.terranova.terranova.entity.Usuario;
+import com.terranova.terranova.repository.UsuarioRepository;
 import com.terranova.terranova.exception.ResourceNotFoundException;
 import com.terranova.terranova.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     // Endpoint para registrar un nuevo usuario
     @PostMapping("/registrar")
@@ -34,6 +41,32 @@ public class UsuarioController {
         }
     }
 
+    // Endpoint para obtener datos del usuario autenticado
+    @GetMapping("/perfil")
+    public ResponseEntity<Usuario> obtenerPerfil() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            Usuario usuario = usuarioRepository.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+            return ResponseEntity.ok(usuario);
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @PutMapping("/cambiarRol/{id}")
+    public ResponseEntity<String> cambiarRol(@PathVariable Long id) {
+        usuarioService.cambiarRol(id);
+        return ResponseEntity.ok("Rol cambiado con éxito");
+    }
     // Endpoint para actualizar datos de un usuario
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<String> actualizarUsuario(
@@ -69,21 +102,6 @@ public class UsuarioController {
     }
 
     // Endpoint para cambiar el rol de un usuario
-    @PutMapping("/cambiarRol/{id}")
-    public ResponseEntity<String> cambiarRol(@PathVariable Long id) {
-        usuarioService.cambiarRol(id);
-        return ResponseEntity.ok("Rol cambiado con éxito");
-    }
 
-    // Endpoint para obtener datos del usuario autenticado
-    @GetMapping("/perfil")
-    public ResponseEntity<Usuario> obtenerPerfil(@AuthenticationPrincipal UserDetails userDetails) throws ResourceNotFoundException {
-        if (userDetails != null) {
-            String email = userDetails.getUsername();
-            Usuario usuario = usuarioService.buscarPorEmail(email)
-                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-            return ResponseEntity.ok(usuario);
-        }
-        return ResponseEntity.status(401).build();
-    }
+
 }

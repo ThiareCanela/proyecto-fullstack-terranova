@@ -26,7 +26,7 @@ public class Usuario implements UserDetails {
     private String nombre;
     @Column
     private String apellido;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
     private String password;
