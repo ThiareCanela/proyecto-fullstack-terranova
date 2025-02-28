@@ -4,8 +4,12 @@ FROM eclipse-temurin:17-jdk
 # Definir el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar archivos de Maven Wrapper y pom.xml
+# Copiar archivos del Wrapper de Maven
+COPY .mvn .mvn
 COPY mvnw mvnw.cmd pom.xml ./
+
+# Dar permisos de ejecución a mvnw
+RUN chmod +x mvnw
 
 # Descargar dependencias
 RUN ./mvnw dependency:go-offline
@@ -21,3 +25,4 @@ EXPOSE 8080
 
 # Ejecutar la aplicación
 CMD ["java", "-jar", "target/terranova-0.0.1-SNAPSHOT.jar"]
+
