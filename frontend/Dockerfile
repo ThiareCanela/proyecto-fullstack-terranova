@@ -4,7 +4,7 @@ FROM node:18-alpine
 # Definir directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar package.json y package-lock.json
+# Copiar archivos de configuración
 COPY package.json package-lock.json ./
 
 # Instalar dependencias
