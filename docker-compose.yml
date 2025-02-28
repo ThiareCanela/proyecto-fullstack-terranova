@@ -19,7 +19,8 @@ services:
     restart: always
     depends_on:
       - db
-    environment: SPRING_PROFILES_ACTIVE=docker # Activa MySQL cuando se ejecuta en Docker
+    environment:
+      SPRING_PROFILES_ACTIVE: docker # Activa MySQL cuando se ejecuta en Docker
     ports:
       - "8080:8080"
 
