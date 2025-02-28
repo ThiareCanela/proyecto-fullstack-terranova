@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Servir la aplicación con Vite
-CMD ["npm", "run", "preview", "--", "--port", "3000"]
+CMD ["npm", "run", "preview", "--", "--port", "3000", "--host"]
