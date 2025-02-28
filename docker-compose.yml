@@ -14,7 +14,7 @@ services:
       - db_data:/var/lib/mysql
 
   backend:
-    build: ./terranova-backend/backend/terranova
+    build: ./backend/terranova
     container_name: backend_tours
     restart: always
     depends_on:
