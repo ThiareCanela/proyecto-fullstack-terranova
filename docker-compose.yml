@@ -27,7 +27,7 @@ services:
       - "8080:8080"
 
   frontend:
-    build: ./terranova-frontend/frontend
+    build: ./frontend
     container_name: frontend_tours
     restart: always
     depends_on:
