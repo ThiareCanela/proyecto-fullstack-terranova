@@ -19,10 +19,7 @@ services:
     restart: always
     depends_on:
       - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+    environment: SPRING_PROFILES_ACTIVE=docker # Activa MySQL cuando se ejecuta en Docker
     ports:
       - "8080:8080"
 
