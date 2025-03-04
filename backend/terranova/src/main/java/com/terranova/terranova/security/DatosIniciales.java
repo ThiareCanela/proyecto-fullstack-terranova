@@ -1,5 +1,6 @@
 package com.terranova.terranova.security;
 
+import com.terranova.terranova.entity.CategoriaTours;
 import com.terranova.terranova.entity.Usuario;
 import com.terranova.terranova.entity.UsuarioRole;
 import com.terranova.terranova.repository.UsuarioRepository;
@@ -31,5 +32,7 @@ public class DatosIniciales implements ApplicationRunner {
         System.out.println("pass cifrado: "+passCifrado1);
         Usuario usuario1= new Usuario("Pedro","Lopez","pedro@dh.com",passCifrado1, UsuarioRole.ROLE_USER);
         usuarioRepository.save(usuario1);
+
+        CategoriaTours categoriaTours= new CategoriaTours( "Tours de aventura","http://example.com/icono_actualizado.png" );
     }
 }
