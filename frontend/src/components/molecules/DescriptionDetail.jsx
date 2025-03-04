@@ -6,13 +6,13 @@ export const DescriptionDetail = ({ description, subtitle }) => {
         Descripción
       </h3>
       <h4 className="text-gray-400 text-sm w-full text-justify">{subtitle}</h4>
-      {description.map((des, index) => (
-        <>
+      <>
+        {description.map((des, index) => (
           <p key={index} className="text-default text-sm w-full text-justify">
             {des}
           </p>
-        </>
-      ))}
+        ))}
+      </>
     </div>
   );
 };

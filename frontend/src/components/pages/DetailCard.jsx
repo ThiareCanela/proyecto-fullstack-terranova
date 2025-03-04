@@ -1,8 +1,9 @@
 import { ArrowLeft } from "lucide-react";
 import { ScoreCalification } from "../molecules/ScoreCalification";
 import { DescriptionDetail } from "../molecules/DescriptionDetail";
-import { DESCRIPTIONS } from "../../constants";
+import { CARACTERISTICAS, DESCRIPTIONS } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
 
 export default function DetailCard() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function DetailCard() {
             subtitle={"Una isla que te transportara"}
           />
         </div>
+        <CharacteristicsSection characteristics={CARACTERISTICAS} />
       </main>
     </div>
   );

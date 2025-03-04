@@ -1,22 +1,9 @@
-// import { Routes, Route } from 'react-router';
-// import Home from './Home';
-// import About from './About';
-
-// function App() {
-//   return (
-//     <Routes>
-//       <Route path="/" element={<Home />} />
-//       <Route path="/about" element={<About />} />
-//     </Routes>
-//   );
-// }
-
-// export default App;
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/organisms/NavBar";
 import Footer from "./components/organisms/Footer";
 import Home from "./components/pages/Home";
 import DetailCard from "./components/pages/DetailCard";
+import Profile from "./components/pages/Profile";
 
 const App = () => {
   return (
@@ -25,6 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detalle" element={<DetailCard />} />
+        <Route path="/perfil" element={<Profile />} />
       </Routes>
       <Footer />
     </div>
