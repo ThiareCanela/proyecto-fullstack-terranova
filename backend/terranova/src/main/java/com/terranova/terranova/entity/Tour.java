@@ -22,7 +22,7 @@ public class Tour {
     @Column(name = "duracion")
     private int duracion;
     @Column(name = "descripcion")
-    private Object descripcion;
+    private String descripcion;
     @Column(name = "precio")
     private double precio;
 

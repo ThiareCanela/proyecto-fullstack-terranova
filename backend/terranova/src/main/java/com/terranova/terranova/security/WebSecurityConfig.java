@@ -51,7 +51,7 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout").permitAll()
+                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours").permitAll()
                         .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*" ).hasRole("ADMIN")// ✅ Permitir sin autenticación
                         .anyRequest().authenticated()
                 )
@@ -61,6 +61,8 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
+
 
 }
 

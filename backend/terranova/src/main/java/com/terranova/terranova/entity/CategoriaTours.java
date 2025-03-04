@@ -21,4 +21,9 @@ public class CategoriaTours {
     @Column (name = "url_icono", nullable = false)
     private String urlIcono;
 
+    public CategoriaTours(String nombre, String urlIcono) {
+        this.nombre = nombre;
+        this.urlIcono = urlIcono;
+    }
+
 }
