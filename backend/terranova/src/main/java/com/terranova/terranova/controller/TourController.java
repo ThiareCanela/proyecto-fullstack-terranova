@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,7 +18,14 @@ import java.util.Optional;
 public class TourController {
 @Autowired
 private TourService tourService;
+@Autowired
 private CategoriaToursService categoriaToursService;
+
+@GetMapping
+    public ResponseEntity<List<Tour>> listarTodosLosTours() {
+        List<Tour> tours = tourService.listarTodosLosTour();
+        return ResponseEntity.ok(tours);
+    }
 
 @PostMapping
     public ResponseEntity<Tour> guardarTour(@RequestBody Tour tour) throws BadRequestException {

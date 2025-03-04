@@ -51,8 +51,8 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours").permitAll()
-                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*" ).hasRole("ADMIN")// ✅ Permitir sin autenticación
+                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours/*","/tour/*").permitAll() //✅ Permitir sin autenticación
+                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*" ).hasRole("ADMIN")//
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -61,8 +61,5 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-
-
 }
 
