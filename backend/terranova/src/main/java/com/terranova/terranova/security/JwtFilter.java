@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtFilter  extends OncePerRequestFilter {
@@ -23,15 +24,21 @@ public class JwtFilter  extends OncePerRequestFilter {
     @Autowired
     private UsuarioService usuarioService;
 
+    private static final List<String> PUBLIC_URLS = List.of(
+            "/auth/login",
+            "/usuarios/registrar",
+            "/auth/logout",
+            "/categoriaTours/*",
+            "/tour/*"
+    );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
 
         // Si la ruta es de registro o login, no se valida el JWT
-        if (requestURI.startsWith("/usuarios/registrar") || requestURI.startsWith("/auth/login")) {
+        if (isPublicUrl(requestURI)) {
             chain.doFilter(request, response);
-            System.out.println("Login permitido");
             return;
         }
 
@@ -59,5 +66,9 @@ public class JwtFilter  extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    private boolean isPublicUrl(String requestURI) {
+        return PUBLIC_URLS.stream().anyMatch(requestURI::startsWith);
     }
 }

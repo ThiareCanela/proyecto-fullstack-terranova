@@ -26,7 +26,7 @@ public class Tour {
     @Column(name = "precio")
     private double precio;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "categoria_id", referencedColumnName = "id" )
     private CategoriaTours categoriaTours;
 
