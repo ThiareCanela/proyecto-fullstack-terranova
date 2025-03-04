@@ -4,6 +4,7 @@ import Footer from "./components/organisms/Footer";
 import Home from "./components/pages/Home";
 import DetailCard from "./components/pages/DetailCard";
 import Profile from "./components/pages/Profile";
+import AdminPanel from "./components/pages/AdminPanel";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/detalle" element={<DetailCard />} />
         <Route path="/perfil" element={<Profile />} />
+        <Route path="/panel-administrador" element={<AdminPanel />} />
       </Routes>
       <Footer />
     </div>
