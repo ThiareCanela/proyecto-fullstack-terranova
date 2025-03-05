@@ -15,9 +15,12 @@ const Login = ({ isOpen, onClose }) => {
     const success = login(email, password);
     if (success) {
       onClose();
+      setEmail("");
+      setPassword("");
     } else {
       setMessageError("Los datos ingresados no son correctos.");
     }
+    setMessageError("");
   };
 
   return (
