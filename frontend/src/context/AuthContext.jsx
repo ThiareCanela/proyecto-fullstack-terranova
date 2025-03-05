@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
-
+/* eslint-disable react/prop-types */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [messageError, setMessageError] = useState("");
@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
 
-    // Asegurar que los datos completos se guardan en `setUser`
     setUser({
       name: foundUser.name,
       lastName: foundUser.lastName,
