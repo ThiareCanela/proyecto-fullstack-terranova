@@ -4,7 +4,7 @@ export const ProfileContainer = ({ user }) => {
     <div className="bg-white shadow-md rounded-lg p-6 w-full flex flex-col items-start  md:max-w-[500px]">
       <div className="flex items-center gap-4">
         <img
-          src={user.avatar}
+          src={user.avatar ? user.avatar : "src/assets/profile.webp"}
           alt="User Avatar"
           className="w-16 h-16 rounded-full"
         />

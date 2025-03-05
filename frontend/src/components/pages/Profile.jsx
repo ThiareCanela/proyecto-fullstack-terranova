@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import useProfile from "../../hooks/useProfile";
 import { ProfileContainer } from "../organisms/ProfileContainer";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Profile() {
-  const { user } = useProfile();
+  const { user } = useAuth();
   const navigate = useNavigate();
   return (
     <div className="w-full py-10">
