@@ -32,9 +32,9 @@ export const CATEGORIES = [
 ];
 
 export const DESCRIPTIONS = [
-  "Body text for your whole article or post. We’ll put in some lorem ipsum to show how a filled-out page might look:",
-  "Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui  international first-class nulla ut. Punctual adipisicing, essential lovely queen tempor eiusmod irure. Exclusive izakaya charming Scandinavian impeccable aute quality of life soft power pariatur Melbourne occaecat discerning. Qui wardrobe aliquip, et Porter destination Toto remarkable officia Helsinki excepteur Basset hound. Zürich sleepy perfect consectetur.",
-  "Excepteur efficient emerging, minim veniam anim aute carefully curated Ginza conversation exquisite perfect nostrud nisi intricate Content. Qui  international first-class nulla ut. Punctual adipisicing, essential lovely queen tempor eiusmod irure. Exclusive izakaya charming Scandinavian impeccable aute quality of life soft power pariatur Melbourne occaecat discerning. Qui wardrobe aliquip, et Porter destination Toto remarkable officia Helsinki excepteur Basset hound. Zürich sleepy perfect consectetur.",
+  "Explora Oahu en un tour guiado adaptado a tus intereses. Descubre el impresionante litoral de la isla, adéntrate en la historia y la cultura hawaianas, y visita lugares de visita obligada.",
+  "Tanto si eres un aficionado a la historia como un amante de la naturaleza o de la gastronomía, esta excursión ofrece algo para todos. Deja que tu guía te muestre lo mejor de Oahu de una forma que sea exclusivamente tuya.",
+  "Entre los lugares más destacados se encuentran lugares emblemáticos como Diamond Head, el Mirador de Pali, la isla de Mokoli'i y Laie Point. Sé testigo de la belleza de Banzai Pipeline, Sunset Beach y Waimea Bay. Saborea gambas frescas hawaianas en un camión de comida local (almuerzo por tu cuenta). Descubre lugares secretos para ver tortugas marinas y focas monje (si el tiempo lo permite).",
 ];
 
 export const CARACTERISTICAS = [

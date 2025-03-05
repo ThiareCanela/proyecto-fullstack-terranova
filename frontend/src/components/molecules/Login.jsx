@@ -8,13 +8,15 @@ import logo from "../../assets/logo.png";
 const Login = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const { login, messageError, setMessageError } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = login(email, password);
     if (success) {
       onClose();
+    } else {
+      setMessageError("Los datos ingresados no son correctos.");
     }
   };
 
@@ -41,6 +43,11 @@ const Login = ({ isOpen, onClose }) => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        {messageError && (
+          <p className="text-red-600 text-sm text-center w-full my-5">
+            {messageError}
+          </p>
+        )}
         <a href="#" className="text-[var(--color-emphasis)] text-right">
           ¿Olvidaste tu contraseña?
         </a>

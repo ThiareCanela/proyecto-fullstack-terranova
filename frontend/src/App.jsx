@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/organisms/NavBar";
 import Footer from "./components/organisms/Footer";
@@ -7,13 +7,13 @@ import DetailCard from "./components/pages/DetailCard";
 import Profile from "./components/pages/Profile";
 import AdminPanel from "./components/pages/AdminPanel";
 import { useAuth } from "./context/AuthContext";
-
+// eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
   console.log("AdminRoute - Usuario:", user);
   return user?.role === "admin" ? children : <Navigate to="/" replace />;
 };
-
+// eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
   console.log("PrivateRoute - Usuario:", user);
@@ -42,14 +42,7 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/detalle"
-          element={
-            <PrivateRoute user={user}>
-              <DetailCard />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/detalle" element={<DetailCard />} />
         <Route
           path="/perfil"
           element={
