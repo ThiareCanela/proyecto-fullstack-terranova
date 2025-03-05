@@ -40,6 +40,7 @@ const Register = ({ isOpen, onClose }) => {
       setLastName("");
       setEmail("");
       setPassword("");
+      setMessageError("");
     }
   };
 

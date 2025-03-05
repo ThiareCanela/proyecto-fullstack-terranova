@@ -12,7 +12,7 @@ const Navbar = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const [activeModal, setActiveModal] = useState(null);
-  console.log("Usuario en Navbar:", user);
+
   const openLogin = () => setActiveModal("login");
   const openRegister = () => setActiveModal("register");
   const closeModal = () => setActiveModal(null);
@@ -109,11 +109,9 @@ const Navbar = () => {
           {user ? (
             <>
               <div className="flex items-center space-x-3 border-b pb-2">
-                <img
-                  src={user.profilePicture}
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full"
-                />
+                <div className="h-12 w-12 rounded-full flex items-center text-2xl font-bold justify-center bg-gray-200">
+                  {getInitials(user.name, user.lastName)}
+                </div>
                 <span className="text-[var(--color-default)] font-medium">
                   {user.name}
                 </span>
@@ -127,7 +125,7 @@ const Navbar = () => {
               </Link>
               {isAdmin && (
                 <Link
-                  to="/admin"
+                  to="/panel-administrador"
                   className="flex items-center space-x-2 text-[var(--color-default)] py-2"
                 >
                   <Settings size={20} />

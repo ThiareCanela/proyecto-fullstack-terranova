@@ -26,7 +26,6 @@ export default function AdminPanel() {
     setSelectedUser(user);
     setShowModal(true);
   };
-
   const confirmRoleChange = (newRole) => {
     setUsers((prevUsers) =>
       prevUsers.map((u) =>
@@ -113,13 +112,13 @@ export default function AdminPanel() {
                       <td className="py-2">
                         <select
                           className="border rounded-lg p-1"
-                          value={user.role}
+                          defaultValue={user.role.toLowerCase()}
                           onChange={(e) =>
                             handleRoleChange({ ...user, role: e.target.value })
                           }
                         >
-                          <option value="User">User</option>
-                          <option value="Admin">Admin</option>
+                          <option value="user">User</option>
+                          <option value="admin">Admin</option>
                         </select>
                       </td>
                     </tr>
