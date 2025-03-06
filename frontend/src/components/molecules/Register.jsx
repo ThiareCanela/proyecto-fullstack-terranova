@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "../atoms/Modal";
 import { InputField } from "../atoms/InputField";
@@ -33,16 +33,28 @@ const Register = ({ isOpen, onClose }) => {
       return;
     }
 
+    setMessageError("");
+
     const success = register(newUser);
     if (success) {
       onClose();
-      setName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setMessageError("");
+      resetForm();
     }
   };
+
+  const resetForm = () => {
+    setName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setMessageError("");
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -57,15 +69,22 @@ const Register = ({ isOpen, onClose }) => {
           placeholder="Tu nombre"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
+            setName(onlyLetters);
+          }}
         />
         <InputField
           label="Apellidos"
           name="lastName"
           placeholder="Tus apellidos"
           type="text"
+          pattern="^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$"
           value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          onChange={(e) => {
+            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
+            setLastName(onlyLetters);
+          }}
         />
         <InputField
           label="Correo Electrónico"
@@ -74,6 +93,7 @@ const Register = ({ isOpen, onClose }) => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="off"
         />
         <InputField
           label="Contraseña"
@@ -82,6 +102,7 @@ const Register = ({ isOpen, onClose }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
         />
 
         {messageError && (

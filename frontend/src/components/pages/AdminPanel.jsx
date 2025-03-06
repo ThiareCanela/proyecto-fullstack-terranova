@@ -67,6 +67,9 @@ export default function AdminPanel() {
             <li className="cursor-pointer text-gray-700 hover:text-black">
               Categorías
             </li>
+            <li className="cursor-pointer text-gray-700 hover:text-black">
+              Características de producto
+            </li>
           </ul>
         </div>
 
