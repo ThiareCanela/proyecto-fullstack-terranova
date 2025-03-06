@@ -57,15 +57,22 @@ const Register = ({ isOpen, onClose }) => {
           placeholder="Tu nombre"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
+            setName(onlyLetters);
+          }}
         />
         <InputField
           label="Apellidos"
           name="lastName"
           placeholder="Tus apellidos"
           type="text"
+          pattern="^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$"
           value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          onChange={(e) => {
+            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
+            setLastName(onlyLetters);
+          }}
         />
         <InputField
           label="Correo Electrónico"
