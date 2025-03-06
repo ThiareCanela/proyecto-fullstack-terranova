@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "../atoms/Modal";
 import { InputField } from "../atoms/InputField";
@@ -33,16 +33,28 @@ const Register = ({ isOpen, onClose }) => {
       return;
     }
 
+    setMessageError("");
+
     const success = register(newUser);
     if (success) {
       onClose();
-      setName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setMessageError("");
+      resetForm();
     }
   };
+
+  const resetForm = () => {
+    setName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setMessageError("");
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -81,6 +93,7 @@ const Register = ({ isOpen, onClose }) => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="off"
         />
         <InputField
           label="Contraseña"
@@ -89,6 +102,7 @@ const Register = ({ isOpen, onClose }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
         />
 
         {messageError && (
