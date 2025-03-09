@@ -30,6 +30,7 @@ public class DatosIniciales implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        /*
         String passSinCifrar= "admin";
         String passCifrado= bCryptPasswordEncoder.encode(passSinCifrar);
         System.out.println("pass cifrado: "+passCifrado);
@@ -61,5 +62,6 @@ public class DatosIniciales implements ApplicationRunner {
         } else {
             System.out.println("❌ Error: La categoría no se guardó correctamente, los tours no se insertarán.");
         }
+        */
     }
 }
