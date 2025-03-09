@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql_tours
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root #password usuario root
+      MYSQL_DATABASE: terranova_db
+      MYSQL_USER: terranova
+      MYSQL_PASSWORD: terranova
+    ports:
+      - "3307:3306" # Puerto externo 3307 para evitar conflictos en local
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # Ejecutar script SQL al iniciar
+
+volumes:
+  db_data:
