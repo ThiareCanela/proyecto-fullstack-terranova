@@ -4,14 +4,14 @@ FROM eclipse-temurin:17-jdk
 # Definir el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar archivos del Wrapper de Maven
+# Copiar archivos del Wrapper de Maven necesarios para compilar
 COPY .mvn .mvn
 COPY mvnw mvnw.cmd pom.xml ./
 
 # Dar permisos de ejecución a mvnw
 RUN chmod +x mvnw
 
-# Descargar dependencias
+# Descargar dependencias antes de copiar el codigo fuente
 RUN ./mvnw dependency:go-offline
 
 # Copiar todo el código fuente

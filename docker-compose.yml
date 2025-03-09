@@ -6,10 +6,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: terranova_db
+      MYSQL_USER: terranova
+      MYSQL_PASSWORD: terranova
     ports:
-      - "3307:3306" # Cambia el puerto externo a 3307 ya que en mi local se encuentra ocupado
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend:
     build: ./backend/terranova
@@ -18,7 +21,9 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_PROFILES_ACTIVE: docker # Activa MySQL cuando se ejecuta en Docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: terranova
+      SPRING_DATASOURCE_PASSWORD: terranova
     ports:
       - "8080:8080"
 

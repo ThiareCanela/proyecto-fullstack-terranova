@@ -1,34 +1,15 @@
 spring:
   application:
     name: terranova
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
 
-# PERFIL LOCAL (H2 EN MEMORIA)
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:terranova
-    username: sa
-    password: sa
-  h2:
-    console:
-      enabled: true # Habilita H2 en http://localhost:8080/h2-console
-
-# PERFIL DOCKER (MySQL)
----
-spring:
-  config:
-    activate:
-      on-profile: docker
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db:3306/terranova_db
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:3307/terranova_db?serverTimezone=UTC
+    username: terranova
+    password: terranova
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
