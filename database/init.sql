@@ -4,78 +4,78 @@ USE terranova_db;
 
 -- Crear la tabla de categorías
 CREATE TABLE IF NOT EXISTS categoria_tours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
     nombre VARCHAR(100) NOT NULL UNIQUE,
     url_icon VARCHAR(255) NOT NULL
 );
 
 -- Crear la tabla de tours
 CREATE TABLE IF NOT EXISTS tours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
     titulo VARCHAR(255) NOT NULL,
     tipo_duracion ENUM('horas', 'dias') NOT NULL DEFAULT 'dias',
     duracion INT NOT NULL,
     descripcion JSON NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
-    categoria_id INT NOT NULL,
-    FOREIGN KEY (categoria_id) REFERENCES categoria_tours(id)
+    categoria_id BIGINT NOT NULL, -- Cambiado a BIGINT
+    FOREIGN KEY (categoria_id) REFERENCES categoria_tours(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla de imágenes de los tours
 CREATE TABLE IF NOT EXISTS imagenes_tours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    tour_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
+    tour_id BIGINT NOT NULL, -- Cambiado a BIGINT
     url_imagen VARCHAR(255) NOT NULL,
     descripcion VARCHAR(255),
-    FOREIGN KEY (tour_id) REFERENCES tours(id)
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla de características
 CREATE TABLE IF NOT EXISTS caracteristicas_tours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
     descripcion VARCHAR(255) NOT NULL,
     url_icon VARCHAR(255) NOT NULL
 );
 
--- Crear la tabla de usuarios
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    usuario_role ENUM('ROLE_USER', 'ROLE_ADMIN') DEFAULT 'ROLE_USER'
-);
-
--- Crear la tabla de reservas
-CREATE TABLE IF NOT EXISTS reservas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    tour_id INT NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE NOT NULL,
-    estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') DEFAULT 'PENDIENTE',
-    num_personas INT NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (tour_id) REFERENCES tours(id)
-);
-
+-- Crear la tabla de relación tours_x_caracteristicas
 CREATE TABLE IF NOT EXISTS tours_x_caracteristicas (
-    tour_id INT NOT NULL,
-    caracteristica_id INT NOT NULL,
+    tour_id BIGINT NOT NULL, -- Cambiado a BIGINT
+    caracteristica_id BIGINT NOT NULL, -- Cambiado a BIGINT
     PRIMARY KEY (tour_id, caracteristica_id),
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
     FOREIGN KEY (caracteristica_id) REFERENCES caracteristicas_tours(id) ON DELETE CASCADE
 );
 
--- Crear la tabla de disponibilidad
+-- Crear la tabla de usuarios
+CREATE TABLE IF NOT EXISTS usuarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    usuario_role ENUM('ROLE_USER', 'ROLE_ADMIN') DEFAULT 'ROLE_USER' -- Con 'ROLE_'
+);
+
+-- Crear la tabla de reservas
+CREATE TABLE IF NOT EXISTS reservas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
+    usuario_id BIGINT NOT NULL, -- Cambiado a BIGINT
+    tour_id BIGINT NOT NULL, -- Cambiado a BIGINT
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') DEFAULT 'PENDIENTE',
+    num_personas INT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
+);
+
+-- Crear la tabla de disponibilidades (sin columna redundante)
 CREATE TABLE IF NOT EXISTS disponibilidades_tours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    tour_id INT NOT NULL,
+    tour_id BIGINT NOT NULL, -- Cambiado a BIGINT
     fecha DATE NOT NULL,
     disponible BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (tour_id) REFERENCES tours(id),
-    UNIQUE (tour_id, fecha)
+    PRIMARY KEY (tour_id, fecha), -- Clave primaria compuesta
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
 );
 
 -- Insertar categorías
