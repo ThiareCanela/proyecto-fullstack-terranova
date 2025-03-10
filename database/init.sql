@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS tours (
     descripcion JSON NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     categoria_id INT NOT NULL,
-    FOREIGN KEY (categoria_id) REFERENCES categorias_tours(id)
+    FOREIGN KEY (categoria_id) REFERENCES categoria_tours(id)
 );
 
 -- Crear la tabla de imágenes de los tours
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    correo VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    rol ENUM('USER', 'ADMIN') DEFAULT 'USER'
+    usuario_role ENUM('ROLE_USER', 'ROLE_ADMIN') DEFAULT 'ROLE_USER'
 );
 
 -- Crear la tabla de reservas
@@ -60,8 +60,7 @@ CREATE TABLE IF NOT EXISTS reservas (
     FOREIGN KEY (tour_id) REFERENCES tours(id)
 );
 
---se crea la tabla de relacion entre tours y caracteristica
-CREATE TABLE tours_x_caracteristicas (
+CREATE TABLE IF NOT EXISTS tours_x_caracteristicas (
     tour_id INT NOT NULL,
     caracteristica_id INT NOT NULL,
     PRIMARY KEY (tour_id, caracteristica_id),
@@ -80,7 +79,7 @@ CREATE TABLE IF NOT EXISTS disponibilidades_tours (
 );
 
 -- Insertar categorías
-INSERT INTO categorias_tours (nombre, url_icon) VALUES
+INSERT INTO categoria_tours (nombre, url_icon) VALUES
 ('Aventura', 'https://terranova-tours-images.s3.amazonaws.com/icon-aventura.png'),
 ('Cultural', 'https://terranova-tours-images.s3.amazonaws.com/icon-cultural.png'),
 ('Playa', 'https://terranova-tours-images.s3.amazonaws.com/icon-playa.png'),
@@ -94,9 +93,9 @@ INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, categor
 ('Tour en la Montaña', 'dias', 4, '{"detalle": "Escalada y camping en montaña"}', 300.00, 4);
 
 -- Insertar usuarios
-INSERT INTO usuarios (nombre, apellido, correo, password, rol) VALUES
-('Admin', 'admin', 'admin@dh.com', 'admin123', 'ADMIN'),
-('Pedro', 'Lopez', 'pedro@dh.com', 'user123', 'USER');
+INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES
+('Admin', 'admin', 'admin@dh.com', 'admin', 'ROLE_ADMIN'),
+('Pedro', 'Lopez', 'pedro@dh.com', 'user', 'ROLE_USER');
 
 -- Insertar una reserva
 INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas, estado) VALUES
