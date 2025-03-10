@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS terranova_db;
 USE terranova_db;
 
 -- Crear la tabla de categorías
-CREATE TABLE IF NOT EXISTS categorias_tours (
+CREATE TABLE IF NOT EXISTS categoria_tours (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
     url_icon VARCHAR(255) NOT NULL
@@ -58,6 +58,15 @@ CREATE TABLE IF NOT EXISTS reservas (
     num_personas INT NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (tour_id) REFERENCES tours(id)
+);
+
+--se crea la tabla de relacion entre tours y caracteristica
+CREATE TABLE tours_x_caracteristicas (
+    tour_id INT NOT NULL,
+    caracteristica_id INT NOT NULL,
+    PRIMARY KEY (tour_id, caracteristica_id),
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
+    FOREIGN KEY (caracteristica_id) REFERENCES caracteristicas_tours(id) ON DELETE CASCADE
 );
 
 -- Crear la tabla de disponibilidad
