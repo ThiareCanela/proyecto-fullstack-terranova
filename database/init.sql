@@ -6,7 +6,7 @@ USE terranova_db;
 CREATE TABLE IF NOT EXISTS categoria_tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY, -- Cambiado a BIGINT
     nombre VARCHAR(100) NOT NULL UNIQUE,
-    url_icon VARCHAR(255) NOT NULL
+    url_icono VARCHAR(255) NOT NULL
 );
 
 -- Crear la tabla de tours
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS disponibilidades_tours (
 );
 
 -- Insertar categorías
-INSERT INTO categoria_tours (nombre, url_icon) VALUES
+INSERT INTO categoria_tours (nombre, url_icono) VALUES
 ('Aventura', 'https://terranova-tours-images.s3.amazonaws.com/icon-aventura.png'),
 ('Cultural', 'https://terranova-tours-images.s3.amazonaws.com/icon-cultural.png'),
 ('Playa', 'https://terranova-tours-images.s3.amazonaws.com/icon-playa.png'),
@@ -94,8 +94,8 @@ INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, categor
 
 -- Insertar usuarios
 INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES
-('Admin', 'admin', 'admin@dh.com', 'admin', 'ROLE_ADMIN'),
-('Pedro', 'Lopez', 'pedro@dh.com', 'user', 'ROLE_USER');
+('Admin', 'admin', 'admin@dh.com', '$2a$10$5pNnGarTmGjQfNe3FhGEK.bAZskRzn01FWctQcGFXj8SKVNFi28mK', 'ROLE_ADMIN'),
+('Pedro', 'Lopez', 'pedro@dh.com', '$2a$10$7fVH2J0U9z0kjOB5OrLySOVEo5xdaJObTT2phvZTxdHZraG5AMsqq', 'ROLE_USER');
 
 -- Insertar una reserva
 INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas, estado) VALUES
