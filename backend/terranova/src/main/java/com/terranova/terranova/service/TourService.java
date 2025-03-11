@@ -33,8 +33,4 @@ public class TourService {
         return tourRepository.findByCategoriaToursId(id);
     }
 
-
-
-
-
 }
