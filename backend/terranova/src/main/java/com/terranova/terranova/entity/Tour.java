@@ -17,17 +17,20 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "titulo")
+    @Column(unique = true, name = "titulo",  nullable = false)
     private String titulo;
+    @Enumerated(EnumType.STRING)
+    private TipoDuracion tipoDuracion;
     @Column(name = "duracion")
     private int duracion;
-    @Column(name = "descripcion")
+    @Column(name = "descripcion",columnDefinition = "JSON")
     private String descripcion;
-    @Column(name = "precio")
+    @Column(name = "precio",  nullable = false)
     private double precio;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id", referencedColumnName = "id" )
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false )
     private CategoriaTours categoriaTours;
-
+    @Column(name= "ubicacion")
+    private String ubicacion;
 }

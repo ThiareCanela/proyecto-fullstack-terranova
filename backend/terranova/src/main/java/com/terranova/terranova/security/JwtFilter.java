@@ -28,8 +28,10 @@ public class JwtFilter  extends OncePerRequestFilter {
             "/auth/login",
             "/usuarios/registrar",
             "/auth/logout",
+            "/categoriaTours",
             "/categoriaTours/*",
-            "/tour/*"
+            "/tour/*",
+            "/tour"
     );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {

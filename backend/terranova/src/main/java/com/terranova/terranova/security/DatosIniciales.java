@@ -1,12 +1,11 @@
 package com.terranova.terranova.security;
 
-import com.terranova.terranova.entity.CategoriaTours;
-import com.terranova.terranova.entity.Tour;
-import com.terranova.terranova.entity.Usuario;
-import com.terranova.terranova.entity.UsuarioRole;
+import com.terranova.terranova.entity.*;
 import com.terranova.terranova.repository.ICategoriaToursRepository;
 import com.terranova.terranova.repository.UsuarioRepository;
 import com.terranova.terranova.service.CategoriaToursService;
+import com.terranova.terranova.service.DisponibilidadTourService;
+import com.terranova.terranova.service.ReservaService;
 import com.terranova.terranova.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -27,11 +26,14 @@ public class DatosIniciales implements ApplicationRunner {
     private TourService tourService;
     @Autowired
     private CategoriaToursService categoriaToursService;
+    @Autowired
+    private ReservaService reservaService;
+    @Autowired
+    private DisponibilidadTourService disponibilidadTourService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
-        String passSinCifrar= "admin";
+        /*String passSinCifrar= "admin";
         String passCifrado= bCryptPasswordEncoder.encode(passSinCifrar);
         System.out.println("pass cifrado admin: "+passCifrado);
         //Usuario usuario= new Usuario("admin","admin","admin@dh.com",passCifrado, UsuarioRole.ROLE_ADMIN);
@@ -53,15 +55,31 @@ public class DatosIniciales implements ApplicationRunner {
         }
 
         // Tours
-        if (categoria != null) {
-            Tour tour1 = new Tour(null, "Excursión en la Montaña", 3, "Recorrido por montañas nevadas", 150.50, categoria);
-            Tour tour2 = new Tour(null, "Tour por la Selva", 2, "Exploración de fauna y flora tropical", 200.00, categoria);
+        Tour tour = new Tour();
+        tour.setTitulo("Aventura en la montaña");
+        tour.setTipoDuracion(TipoDuracion.DIAS);
+        tour.setDuracion(3);
+        tour.setDescripcion("Explora las montañas y disfruta de paisajes impresionantes.");
+        tour.setPrecio(299.99);
+        tour.setCategoriaTours(categoria);
+        tour = tourService.guardarTour(tour);
 
-            tourService.guardarTour(tour1);
-            tourService.guardarTour(tour2);
-        } else {
-            System.out.println("❌ Error: La categoría no se guardó correctamente, los tours no se insertarán.");
-        }
-        */
+
+        DisponibilidadTour disponibilidad = new DisponibilidadTour();
+        disponibilidad.setTour(tour);
+        disponibilidad.setFecha(LocalDate.now().plusDays(10));
+        disponibilidad.setDisponible(true);
+        disponibilidadTourService.save(disponibilidad);
+
+        Reserva reserva = new Reserva();
+        reserva.setUsuario(usuario1);
+        reserva.setTour(tour);
+        reserva.setFechaInicio(LocalDate.now().plusDays(10));
+        reserva.setFechaFin(LocalDate.now().plusDays(13));
+        reserva.setHoraInicio(null);
+        reserva.setHoraFin(null);
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
+        reserva.setNumPersonas(2);
+        reservaService.save(reserva);*/
     }
 }

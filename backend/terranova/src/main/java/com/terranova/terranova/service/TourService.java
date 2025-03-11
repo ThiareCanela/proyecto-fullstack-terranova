@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +29,26 @@ public class TourService {
     public void eliminarTour(Long id) {
         tourRepository.deleteById(id);
     }
-
     public List<Tour> buscarTourPorCategoria(Long id) {
         return tourRepository.findByCategoriaToursId(id);
     }
-
-
-
-
+    public List<Tour> buscarTours(String keyword, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (keyword != null && fechaInicio != null && fechaFin != null) {
+            return tourRepository.findByKeywordAndDisponibilidadEntreFechas(keyword, fechaInicio, fechaFin);
+        } else if (keyword != null) {
+            return tourRepository.findByTituloContainingOrDescripcionContaining(keyword, keyword);
+        } else if (fechaInicio != null && fechaFin != null) {
+            return tourRepository.findByDisponibilidadEntreFechas(fechaInicio, fechaFin);
+        } else {
+            return tourRepository.findAll();
+        }
+    }
+    public boolean actualizarTour(Tour tour) {
+        if (tourRepository.existsById(tour.getId())) {
+            tourRepository.save(tour);
+            return true;
+        }
+        return false;
+    }
 
 }

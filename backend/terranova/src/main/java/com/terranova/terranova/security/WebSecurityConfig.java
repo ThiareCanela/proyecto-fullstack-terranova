@@ -51,8 +51,8 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours/*","/tour/*").permitAll() //✅ Permitir sin autenticación
-                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*" ).hasRole("ADMIN")//
+                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours/*","/tour/*","/categoriaTours","/tour").permitAll() //✅ Permitir sin autenticación
+                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*","/categoriaTours/registrar/","/categoriaTours/actualizar/","/tour/registrar/","/tour/actualizar/" ).hasRole("ADMIN")//
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
