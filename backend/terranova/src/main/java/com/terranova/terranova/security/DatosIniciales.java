@@ -33,7 +33,7 @@ public class DatosIniciales implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String passSinCifrar= "admin";
+        /*String passSinCifrar= "admin";
         String passCifrado= bCryptPasswordEncoder.encode(passSinCifrar);
         System.out.println("pass cifrado: "+passCifrado);
         Usuario usuario= new Usuario("admin","admin","admin@dh.com",passCifrado, UsuarioRole.ROLE_ADMIN);
@@ -80,6 +80,6 @@ public class DatosIniciales implements ApplicationRunner {
         reserva.setHoraFin(null);
         reserva.setEstado(EstadoReserva.CONFIRMADA);
         reserva.setNumPersonas(2);
-        reservaService.save(reserva);
+        reservaService.save(reserva);*/
     }
 }

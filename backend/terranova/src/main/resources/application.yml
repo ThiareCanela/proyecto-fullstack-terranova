@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: terranova
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/terranova_db?serverTimezone=UTC
+    username: terranova
+    password: terranova
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update

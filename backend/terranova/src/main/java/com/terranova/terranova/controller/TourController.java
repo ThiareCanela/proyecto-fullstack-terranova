@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,15 @@ public class TourController {
         return ResponseEntity.ok(tours);
     }
 
+/*    @GetMapping("/buscar")
+    public ResponseEntity<List<Tour>> buscarTours(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin) {
+        List<Tour> resultados = tourService.buscarTours(keyword, fechaInicio, fechaFin);
+        return ResponseEntity.ok(resultados);
+    }
+*/
     @PostMapping
     public ResponseEntity<Tour> guardarTour(@RequestBody Tour tour) {
         if (tour.getCategoriaTours() == null || tour.getCategoriaTours().getId() == null) {

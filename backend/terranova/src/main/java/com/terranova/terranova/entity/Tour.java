@@ -31,5 +31,6 @@ public class Tour {
     @ManyToOne
     @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false )
     private CategoriaTours categoriaTours;
-
+    @Column(name= "ubicacion")
+    private String ubicacion;
 }

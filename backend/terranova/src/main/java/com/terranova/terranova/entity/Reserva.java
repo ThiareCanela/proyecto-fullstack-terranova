@@ -38,4 +38,5 @@ public class Reserva {
     private EstadoReserva estado;
 
     private Integer numPersonas;
+    private double total;
 }
