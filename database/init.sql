@@ -82,6 +82,11 @@ CREATE TABLE IF NOT EXISTS disponibilidades_tours (
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
 );
 
+-- Insertar usuarios
+INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES
+('Admin', 'admin', 'admin@dh.com', '$2a$10$5pNnGarTmGjQfNe3FhGEK.bAZskRzn01FWctQcGFXj8SKVNFi28mK', 'ROLE_ADMIN'),
+('Pedro', 'Lopez', 'pedro@dh.com', '$2a$10$7fVH2J0U9z0kjOB5OrLySOVEo5xdaJObTT2phvZTxdHZraG5AMsqq', 'ROLE_USER');
+
 -- Insertar categorías
 INSERT INTO categoria_tours (nombre, url_icono) VALUES
 ('Aventura', 'https://terranova-tours-images.s3.amazonaws.com/icon-aventura.png'),
@@ -139,18 +144,13 @@ INSERT INTO tours_x_caracteristicas (tour_id, caracteristica_id) VALUES
 (9, 2), (9, 4),
 (10, 1), (10, 4);
 
--- Insertar usuarios
-INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES
-('Admin', 'admin', 'admin@dh.com', '$2a$10$5pNnGarTmGjQfNe3FhGEK.bAZskRzn01FWctQcGFXj8SKVNFi28mK', 'ROLE_ADMIN'),
-('Pedro', 'Lopez', 'pedro@dh.com', '$2a$10$7fVH2J0U9z0kjOB5OrLySOVEo5xdaJObTT2phvZTxdHZraG5AMsqq', 'ROLE_USER');
-
 -- Insertar reservas
 INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas, total, estado) VALUES
 (2, 1, '2025-04-10', '2025-04-12', 3, 750.00, 'confirmada'),
-(3, 2, '2025-05-15', '2025-05-15', 2, 240.00, 'pendiente'),
-(4, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'confirmada'),
-(5, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'cancelada'),
-(6, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'confirmada'),
+(2, 2, '2025-05-15', '2025-05-15', 2, 240.00, 'pendiente'),
+(2, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'confirmada'),
+(2, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'cancelada'),
+(2, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'confirmada'),
 (2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'pendiente');
 
 -- Disponibilidad para el tour 1 (ocupado del 2025-04-10 al 2025-04-12)
