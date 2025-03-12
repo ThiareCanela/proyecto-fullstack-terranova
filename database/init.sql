@@ -118,18 +118,36 @@ INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, ubicaci
 
 -- Insertar imágenes de los tours
 INSERT INTO imagenes_tours (tour_id, url_imagen, descripcion) VALUES
-(1, 'https://terranova-tours-images.s3.amazonaws.com/tour-selva-1.jpg', 'Selva amazónica vista desde el río'),
-(1, 'https://terranova-tours-images.s3.amazonaws.com/tour-selva-2.jpg', 'Animales exóticos en su hábitat natural'),
-(1, 'https://terranova-tours-images.s3.amazonaws.com/tour-selva-3.jpg', 'Cabañas en medio de la selva'),
-(2, 'https://terranova-tours-images.s3.amazonaws.com/tour-piramides-1.jpg', 'Pirámides de Egipto al atardecer'),
-(2, 'https://terranova-tours-images.s3.amazonaws.com/tour-piramides-2.jpg', 'Interior de la Gran Pirámide'),
-(2, 'https://terranova-tours-images.s3.amazonaws.com/tour-piramides-3.jpg', 'Guía explicando la historia egipcia'),
-(3, 'https://terranova-tours-images.s3.amazonaws.com/tour-playa-1.jpg', 'Playa paradisíaca con aguas cristalinas'),
-(3, 'https://terranova-tours-images.s3.amazonaws.com/tour-playa-2.jpg', 'Deportes acuáticos en la playa'),
-(3, 'https://terranova-tours-images.s3.amazonaws.com/tour-playa-3.jpg', 'Atardecer en la playa'),
-(4, 'https://terranova-tours-images.s3.amazonaws.com/tour-montana-1.jpg', 'Montañas nevadas al amanecer'),
-(4, 'https://terranova-tours-images.s3.amazonaws.com/tour-montana-2.jpg', 'Camping en la montaña'),
-(4, 'https://terranova-tours-images.s3.amazonaws.com/tour-montana-3.jpg', 'Senderismo en la montaña');
+(1, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/1.jpeg', 'Selva amazónica vista desde el río'),
+(1, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/2.jpg', 'Animales exóticos en su hábitat natural'),
+(1, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/3.jpg', 'Cabañas en medio de la selva'),
+(2, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/4.jpg', 'Pirámides de Egipto al atardecer'),
+(2, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/5.jpg', 'Interior de la Gran Pirámide'),
+(2, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/6.jpeg', 'Guía explicando la historia egipcia'),
+(3, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/7.jpeg', 'Playa paradisíaca con aguas cristalinas'),
+(3, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/8.jpeg', 'Deportes acuáticos en la playa'),
+(3, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/9.jpg', 'Atardecer en la playa'),
+(4, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/10.jpg', 'Montañas nevadas al amanecer'),
+(4, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/11.jpg', 'Camping en la montaña'),
+(4, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/12.jpg', 'Senderismo en la montaña'),
+(5, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/13.jpg', 'Selva amazónica vista desde el río'),
+(5, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/14.jpg', 'Animales exóticos en su hábitat natural'),
+(5, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/15.jpg', 'Cabañas en medio de la selva'),
+(6, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/16.jpg', 'Pirámides de Egipto al atardecer'),
+(6, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/17.jpeg', 'Interior de la Gran Pirámide'),
+(6, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/18.jpg', 'Guía explicando la historia egipcia'),
+(7, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/19.jpg', 'Playa paradisíaca con aguas cristalinas'),
+(7, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/20.jpeg', 'Deportes acuáticos en la playa'),
+(7, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/21.jpg', 'Atardecer en la playa'),
+(8, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/22.jpeg', 'Montañas nevadas al amanecer'),
+(8, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/23.jpg', 'Camping en la montaña'),
+(8, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/24.jpg', 'Senderismo en la montaña'),
+(9, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/25.jpg', 'Playa paradisíaca con aguas cristalinas'),
+(9, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/26.jpg', 'Deportes acuáticos en la playa'),
+(9, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/27.jpg', 'Atardecer en la playa'),
+(10, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/28.jpg', 'Montañas nevadas al amanecer'),
+(10, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/29.jpg', 'Camping en la montaña'),
+(10, 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/prueba/30.jpg', 'Senderismo en la montaña');
 
 -- Insertar relación entre tours y características
 INSERT INTO tours_x_caracteristicas (tour_id, caracteristica_id) VALUES
