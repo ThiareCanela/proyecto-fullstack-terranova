@@ -89,19 +89,19 @@ INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES
 
 -- Insertar categorías
 INSERT INTO categoria_tours (nombre, url_icono) VALUES
-('Aventura', 'https://terranova-tours-images.s3.amazonaws.com/icon-aventura.png'),
-('Cultural', 'https://terranova-tours-images.s3.amazonaws.com/icon-cultural.png'),
-('Playa', 'https://terranova-tours-images.s3.amazonaws.com/icon-playa.png'),
-('Montaña', 'https://terranova-tours-images.s3.amazonaws.com/icon-montana.png'),
-('Gastronomía', 'https://terranova-tours-images.s3.amazonaws.com/icon-gastronomia.png'),
-('Relajación', 'https://terranova-tours-images.s3.amazonaws.com/icon-relajacion.png');
+('Aventura', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-aventura.png'),
+('Cultural', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-cultural.png'),
+('Playa', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-playa.png'),
+('Montaña', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-montana.png'),
+('Gastronomía', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-gastronomia.png'),
+('Relajación', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-relajacion.png');
 
 -- Insertar características
 INSERT INTO caracteristicas_tours (descripcion, url_icon) VALUES
-('Guía turístico profesional', 'https://terranova-tours-images.s3.amazonaws.com/icon-guia.png'),
-('Transporte incluido', 'https://terranova-tours-images.s3.amazonaws.com/icon-transporte.png'),
-('Comida incluida', 'https://terranova-tours-images.s3.amazonaws.com/icon-comida.png'),
-('Actividades al aire libre', 'https://terranova-tours-images.s3.amazonaws.com/icon-actividades.png');
+('Guía turístico profesional', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-guia.png'),
+('Transporte incluido', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-transporte.png'),
+('Comida incluida', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-comida.png'),
+('Actividades al aire libre', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-actividades.png');
 
 -- Insertar tours
 INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, ubicacion, categoria_id) VALUES
