@@ -99,6 +99,19 @@
 			<version>8.3.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.30.24</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.30.34</version>
+			<scope>compile</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
