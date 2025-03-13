@@ -45,55 +45,33 @@ public class TourController {
     }
 
     @PostMapping("/agregar")
-    public ResponseEntity<String> agregarTour(
-            @RequestParam String titulo,
-            @RequestParam String descripcion,
-            @RequestParam Long categoriaId,
-            @RequestParam List<Long> caracteristicasIds,
-            @RequestParam("imagenes") List<MultipartFile> imagenes) {
-
-        if (tourService.existePorTitulo(titulo)) {
+    public ResponseEntity<?> agregarTour(@RequestBody Tour tour, @RequestParam List<Long> caracteristicasIds) {
+        // Validar si el tour ya existe por título
+        if (tourService.existePorTitulo(tour.getTitulo())) {
             return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
         }
 
-        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(categoriaId);
+        // Validar si la categoría existe
+        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(tour.getCategoriaTours().getId());
         if (categoriaOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Error: Categoría no encontrada.");
         }
 
+        // Validar si las características existen
         List<CaracteristicaTour> caracteristicas = caracteristicaTourService.obtenerPorIds(caracteristicasIds);
         if (caracteristicas.isEmpty() || caracteristicas.size() != caracteristicasIds.size()) {
             return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
         }
 
-        Tour nuevoTour = new Tour();
-        nuevoTour.setTitulo(titulo);
-        nuevoTour.setDescripcion(descripcion);
-        nuevoTour.setCategoriaTours(categoriaOpt.get());
-        nuevoTour.setCaracteristicas(caracteristicas);
-        Tour tourGuardado = tourService.guardarTour(nuevoTour);
+        // Asignar categoría y características
+        tour.setCategoriaTours(categoriaOpt.get());
+        tour.setCaracteristicas(caracteristicas);
 
-        List<String> urlsImagenes = imagenTourService.subirImagenesAWS(imagenes);
-        imagenTourService.guardarImagenesTour(tourGuardado, urlsImagenes);
-
-        return ResponseEntity.ok("Tour agregado exitosamente.");
+        // Guardar el tour
+        Tour nuevoTour = tourService.guardarTour(tour);
+        return ResponseEntity.ok(nuevoTour);
     }
-    @PostMapping
-    public ResponseEntity<Tour> guardarTour(@RequestBody Tour tour) {
-        if (tour.getCategoriaTours() == null || tour.getCategoriaTours().getId() == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
 
-        Optional<CategoriaTours> categoriaToursBuscado = categoriaToursService.buscarCategoriaToursPorId(tour.getCategoriaTours().getId());
-
-        if (categoriaToursBuscado.isPresent()) {
-            tour.setCategoriaTours(categoriaToursBuscado.get());
-            Tour nuevoTour = tourService.guardarTour(tour);
-            return ResponseEntity.ok(nuevoTour);
-        }
-
-        return ResponseEntity.badRequest().body(null);
-    }
     @PutMapping("/{tourId}")
     public ResponseEntity<String> actualizarTour(@PathVariable Long tourId, @RequestBody Tour tour) {
         Optional<Tour> tourBuscado = tourService.consultarTour(tourId);

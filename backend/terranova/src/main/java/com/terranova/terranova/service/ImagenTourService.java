@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ImagenTourService {
-    private final ImagenTourRepository repository;
+    @Autowired
+    private ImagenTourRepository repository;
     public ImagenTourService(ImagenTourRepository repository) {
         this.repository = repository;
     }
