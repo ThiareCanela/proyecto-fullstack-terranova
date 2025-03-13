@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("categoriaTours")
+@RequestMapping("/categoriaTours")
 public class CategoriaToursController {
     @Autowired
     private CategoriaToursService categoriaToursService;
