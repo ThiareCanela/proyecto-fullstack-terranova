@@ -31,7 +31,17 @@ public class JwtFilter  extends OncePerRequestFilter {
             "/categoriaTours",
             "/categoriaTours/*",
             "/tour/*",
-            "/tour"
+            "/tour",
+            "/caracteristicas",
+            "/caracteristicas/*",
+            "/categoriaTours",
+            "/categoriaTours/*",
+            "/disponibilidades",
+            "/disponibilidades/*",
+            "/imagenes",
+            "/imagenes/*",
+            "/reservas",
+            "/reservas/*"
     );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {

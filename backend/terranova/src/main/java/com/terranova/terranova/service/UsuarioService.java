@@ -54,9 +54,16 @@ public class UsuarioService implements UserDetailsService {
             Usuario usuario = respuesta.get();
             usuario.setNombre(nombre);
             usuario.setEmail(email);
-            usuario.setPassword(new BCryptPasswordEncoder().encode(password));
-            usuario.setUsuarioRole(UsuarioRole.ROLE_USER);
+
+            // Solo actualizar la contraseña si ambas contraseñas son enviadas y coinciden
+            if (password != null && password2 != null && password.equals(password2)) {
+                usuario.setPassword(new BCryptPasswordEncoder().encode(password));
+            }
+
+            // Mantener el rol original del usuario, no sobrescribirlo con ROLE_USER
             usuarioRepository.save(usuario);
+        } else {
+            throw new ResourceNotFoundException("Usuario no encontrado con ID: " + idUsuario);
         }
     }
 
