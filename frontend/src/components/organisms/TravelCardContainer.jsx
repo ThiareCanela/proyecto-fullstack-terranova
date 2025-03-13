@@ -156,7 +156,7 @@ import { useNavigate } from "react-router-dom";
 //     return array.sort(() => Math.random() - 0.5);
 //   };
 
-//   const [places, setPlaces] = useState([]);
+//   const [places, setPlaces] = useState([]);  
 
 //   useEffect(() => {
 //     setPlaces(shuffleArray([...allPlaces]).slice(0, 9));
@@ -192,3 +192,4 @@ const TravelCardContainer = () => {
 };
 
 export default TravelCardContainer;
+

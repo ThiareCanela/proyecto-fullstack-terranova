@@ -8,20 +8,26 @@ export const BookingForm = () => {
   return (
     <div className="flex flex-col w-full p-6 gap-6 bg-white rounded-lg shadow-md">
       <h3 className="font-medium text-default text-3xl text-center w-full">
-        ¿Cuál es tu proxima aventura?
+        ¿Cuál es tu próxima aventura?
       </h3>
       <form className="w-full flex flex-col gap-6">
+        <InputField
+          label="Dónde"
+          type="text"
+          placeholder="Encuentra tu aventura"
+          className="w-full"
+        />
         <div className="flex w-full justify-between gap-6">
           <InputField
-            label="Donde"
-            type="text"
-            placeholder="Encuentra tu aventura"
+            label="Inicio"
+            type="date"
+            placeholder="dd/mm/yyyy"
             className="w-[50%]"
           />
           <InputField
-            label="Cuando"
+            label="Fin"
             type="date"
-            placeholder="dd/mm/yyy"
+            placeholder="dd/mm/yyyy"
             className="w-[50%]"
           />
         </div>
