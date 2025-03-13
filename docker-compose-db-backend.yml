@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql_tours
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: terranova_db
+      MYSQL_USER: terranova
+      MYSQL_PASSWORD: terranova
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend/terranova
+    container_name: backend_tours
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: terranova
+      SPRING_DATASOURCE_PASSWORD: terranova
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_data:
