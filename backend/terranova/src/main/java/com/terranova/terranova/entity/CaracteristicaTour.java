@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,6 +21,9 @@ public class CaracteristicaTour {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
+    @Column(name= "url_icono",nullable = false)
     private String urlIcono;
+
+    @ManyToMany(mappedBy = "caracteristicas")
+    private List<Tour> tours;
 }

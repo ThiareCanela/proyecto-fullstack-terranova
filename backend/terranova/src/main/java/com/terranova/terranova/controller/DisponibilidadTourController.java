@@ -3,6 +3,8 @@ package com.terranova.terranova.controller;
 import com.terranova.terranova.entity.DisponibilidadTour;
 import com.terranova.terranova.entity.DisponibilidadTourPK;
 import com.terranova.terranova.service.DisponibilidadTourService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -11,20 +13,34 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/disponibilidades")
 public class DisponibilidadTourController {
-    private final DisponibilidadTourService service;
+    @Autowired
+    private DisponibilidadTourService disponibilidadTourService;
     public DisponibilidadTourController(DisponibilidadTourService service) {
-        this.service = service;
+        this.disponibilidadTourService = service;
     }
     @GetMapping
-    public List<DisponibilidadTour> findAll() { return service.findAll(); }
+    public List<DisponibilidadTour> findAll() { return disponibilidadTourService.findAll(); }
+
+    @GetMapping("/{tourId}")
+    public ResponseEntity<List<DisponibilidadTour>> obtenerDisponibilidadPorTour(@PathVariable Long tourId) {
+        List<DisponibilidadTour> disponibilidad = disponibilidadTourService.obtenerDisponibilidadPorTour(tourId);
+        if (disponibilidad.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(disponibilidad);
+    }
+
     @GetMapping("/{tourId}/{fecha}")
-    public Optional<DisponibilidadTour> findById(@PathVariable Long tourId, @PathVariable String fecha) {
-        return service.findById(new DisponibilidadTourPK(tourId, LocalDate.parse(fecha)));
+    public ResponseEntity<DisponibilidadTour> findById(@PathVariable Long tourId, @PathVariable String fecha) {
+        Optional<DisponibilidadTour> disponibilidad = disponibilidadTourService.findById(new DisponibilidadTourPK(tourId, LocalDate.parse(fecha)));
+
+        return disponibilidad.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping
-    public DisponibilidadTour save(@RequestBody DisponibilidadTour disponibilidad) { return service.save(disponibilidad); }
+    public DisponibilidadTour save(@RequestBody DisponibilidadTour disponibilidad) { return disponibilidadTourService.save(disponibilidad); }
     @DeleteMapping("/{tourId}/{fecha}")
     public void deleteById(@PathVariable Long tourId, @PathVariable String fecha) {
-        service.deleteById(new DisponibilidadTourPK(tourId, LocalDate.parse(fecha)));
+        disponibilidadTourService.deleteById(new DisponibilidadTourPK(tourId, LocalDate.parse(fecha)));
     }
 }

@@ -17,7 +17,7 @@ public class TourService {
     private ITourRepository tourRepository;
 
     public Tour guardarTour(Tour tour) {
-        return (Tour) tourRepository.save(tour);
+        return tourRepository.save(tour);
     }
 
     public List<Tour> listarTodosLosTour() {
@@ -26,8 +26,12 @@ public class TourService {
     public Optional<Tour> consultarTour(Long id) {
         return tourRepository.findById(id);
     }
-    public void eliminarTour(Long id) {
-        tourRepository.deleteById(id);
+    public boolean eliminarTour(Long id) {
+        if (tourRepository.existsById(id)) {
+            tourRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
     public List<Tour> buscarTourPorCategoria(Long id) {
         return tourRepository.findByCategoriaToursId(id);
@@ -45,10 +49,24 @@ public class TourService {
     }
     public boolean actualizarTour(Tour tour) {
         if (tourRepository.existsById(tour.getId())) {
+            tour.setId(tour.getId());
             tourRepository.save(tour);
             return true;
         }
         return false;
     }
+    public boolean existePorTitulo(String titulo) {
+        return tourRepository.existsByTitulo(titulo);
+    }
 
+
+    // Buscar tours por ubicación
+    public List<Tour> buscarToursPorUbicacion(String ubicacion) {
+        return tourRepository.findByUbicacionContainingIgnoreCase(ubicacion);
+    }
+
+    // Buscar tours por ubicación y fechas de disponibilidad
+    public List<Tour> buscarToursPorUbicacionYFechas(String ubicacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        return tourRepository.findByUbicacionAndDisponibilidad(ubicacion, fechaInicio, fechaFin);
+    }
 }

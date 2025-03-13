@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ITourRepository extends JpaRepository <Tour, Long> {
@@ -22,4 +23,22 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     // Buscar por palabra clave y rango de fechas
     @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE (t.titulo LIKE %:keyword% OR t.descripcion LIKE %:keyword%) AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
     List<Tour> findByKeywordAndDisponibilidadEntreFechas(@Param("keyword") String keyword, @Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
+
+    Optional<Tour> findByTitulo(String titulo);
+    boolean existsByTitulo(String titulo);
+
+    // Buscar por caracteristicas
+    @Query("SELECT t FROM Tour t JOIN t.caracteristicas c WHERE c.id IN :caracteristicaIds GROUP BY t HAVING COUNT(DISTINCT c.id) = :cantidad")
+    List<Tour> findByCaracteristicas(@Param("caracteristicaIds") List<Long> caracteristicaIds, @Param("cantidad") Long cantidad);
+
+    // Búsqueda de tours por ubicación
+    List<Tour> findByUbicacionContainingIgnoreCase(String ubicacion);
+
+    // Búsqueda de tours por ubicación y disponibilidad en un rango de fechas
+    @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id " +
+            "WHERE LOWER(t.ubicacion) LIKE LOWER(CONCAT('%', :ubicacion, '%')) " +
+            "AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
+    List<Tour> findByUbicacionAndDisponibilidad(@Param("ubicacion") String ubicacion,
+                                                @Param("fechaInicio") LocalDate fechaInicio,
+                                                @Param("fechaFin") LocalDate fechaFin);
 }

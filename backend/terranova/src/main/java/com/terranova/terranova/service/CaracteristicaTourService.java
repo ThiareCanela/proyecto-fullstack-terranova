@@ -15,4 +15,8 @@ public class CaracteristicaTourService {
     public Optional<CaracteristicaTour> findById(Long id) { return repository.findById(id); }
     public CaracteristicaTour save(CaracteristicaTour caracteristica) { return repository.save(caracteristica); }
     public void deleteById(Long id) { repository.deleteById(id); }
+
+    public List<CaracteristicaTour> obtenerPorIds(List<Long> ids) {
+        return repository.findAllById(ids);
+    }
 }

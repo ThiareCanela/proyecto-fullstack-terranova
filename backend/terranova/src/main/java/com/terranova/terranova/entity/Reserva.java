@@ -29,14 +29,20 @@ public class Reserva {
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
+    @Column(name= "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
+    @Column(name= "fecha_fin", nullable = false)
     private LocalDate fechaFin;
+    @Column(name= "hora_inicio")
     private LocalTime horaInicio;
+    @Column(name= "hora_fin")
     private LocalTime horaFin;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EstadoReserva estado;
-
+    @Column(name= "num_personas", nullable = false)
     private Integer numPersonas;
+    @Column(name= "total")
     private double total;
 }

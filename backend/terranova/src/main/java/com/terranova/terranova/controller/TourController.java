@@ -1,14 +1,16 @@
 package com.terranova.terranova.controller;
 
+import com.terranova.terranova.entity.CaracteristicaTour;
 import com.terranova.terranova.entity.CategoriaTours;
 import com.terranova.terranova.entity.Tour;
+import com.terranova.terranova.service.CaracteristicaTourService;
 import com.terranova.terranova.service.CategoriaToursService;
+import com.terranova.terranova.service.ImagenTourService;
 import com.terranova.terranova.service.TourService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,13 +24,18 @@ public class TourController {
     @Autowired
     private CategoriaToursService categoriaToursService;
 
+    @Autowired
+    private CaracteristicaTourService caracteristicaTourService;
+    @Autowired
+    private ImagenTourService imagenTourService;
+
     @GetMapping
     public ResponseEntity<List<Tour>> listarTodosLosTours() {
         List<Tour> tours = tourService.listarTodosLosTour();
         return ResponseEntity.ok(tours);
     }
 
-/*    @GetMapping("/buscar")
+    @GetMapping("/buscar")
     public ResponseEntity<List<Tour>> buscarTours(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) LocalDate fechaInicio,
@@ -36,43 +43,84 @@ public class TourController {
         List<Tour> resultados = tourService.buscarTours(keyword, fechaInicio, fechaFin);
         return ResponseEntity.ok(resultados);
     }
-*/
-    @PostMapping
-    public ResponseEntity<Tour> guardarTour(@RequestBody Tour tour) {
-        if (tour.getCategoriaTours() == null || tour.getCategoriaTours().getId() == null) {
-            return ResponseEntity.badRequest().body(null);
+
+    @PostMapping("/agregar")
+    public ResponseEntity<?> agregarTour(@RequestBody Tour tour, @RequestParam List<Long> caracteristicasIds) {
+        // Validar si el tour ya existe por título
+        if (tourService.existePorTitulo(tour.getTitulo())) {
+            return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
         }
 
-        Optional<CategoriaTours> categoriaToursBuscado = categoriaToursService.buscarCategoriaToursPorId(tour.getCategoriaTours().getId());
-
-        if (categoriaToursBuscado.isPresent()) {
-            tour.setCategoriaTours(categoriaToursBuscado.get());
-            Tour nuevoTour = tourService.guardarTour(tour);
-            return ResponseEntity.ok(nuevoTour);
+        // Validar si la categoría existe
+        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(tour.getCategoriaTours().getId());
+        if (categoriaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: Categoría no encontrada.");
         }
 
-        return ResponseEntity.badRequest().body(null);
+        // Validar si las características existen
+        List<CaracteristicaTour> caracteristicas = caracteristicaTourService.obtenerPorIds(caracteristicasIds);
+        if (caracteristicas.isEmpty() || caracteristicas.size() != caracteristicasIds.size()) {
+            return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
+        }
+
+        // Asignar categoría y características
+        tour.setCategoriaTours(categoriaOpt.get());
+        tour.setCaracteristicas(caracteristicas);
+
+        // Guardar el tour
+        Tour nuevoTour = tourService.guardarTour(tour);
+        return ResponseEntity.ok(nuevoTour);
     }
-    @PutMapping
-    public ResponseEntity<String> actualizarTour(@RequestBody Tour tour) {
-        Optional<Tour> tourBuscado = tourService.consultarTour(tour.getId());
-        Optional<CategoriaTours> categoriaToursBuscado = categoriaToursService.buscarCategoriaToursPorId(tour.getCategoriaTours().getId());
 
-        if (tourBuscado.isPresent() && categoriaToursBuscado.isPresent()) {
-            tour.setCategoriaTours(categoriaToursBuscado.get());
+    @PutMapping("/{tourId}")
+    public ResponseEntity<String> actualizarTour(@PathVariable Long tourId, @RequestBody Tour tour) {
+        Optional<Tour> tourBuscado = tourService.consultarTour(tourId);
+        if (tourBuscado.isPresent()) {
+            tour.setId(tourId);
             tourService.guardarTour(tour);
             return ResponseEntity.ok("Actualizado con éxito");
         }
         return ResponseEntity.badRequest().body("Tour no encontrado por ID");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarTour(@PathVariable Long id) {
-        Optional<Tour> tourBuscado = tourService.consultarTour(id);
+    @DeleteMapping("/{tourId}")
+    public ResponseEntity<String> eliminarTour(@PathVariable Long tourId) {
+        Optional<Tour> tourBuscado = tourService.consultarTour(tourId);
         if (tourBuscado.isPresent()) {
-            tourService.eliminarTour(id);
+            tourService.eliminarTour(tourId);
             return ResponseEntity.ok("Tour eliminado con éxito");
         }
         return ResponseEntity.badRequest().body("Tour no encontrado");
+    }
+
+    @PutMapping("/{tourId}/categoria/{categoriaId}")
+    public ResponseEntity<String> asignarCategoriaATour(@PathVariable Long tourId, @PathVariable Long categoriaId) {
+        Optional<Tour> tourBuscado = tourService.consultarTour(tourId);
+        Optional<CategoriaTours> categoriaBuscada = categoriaToursService.buscarCategoriaToursPorId(categoriaId);
+
+        if (tourBuscado.isPresent() && categoriaBuscada.isPresent()) {
+            Tour tour = tourBuscado.get();
+            tour.setCategoriaTours(categoriaBuscada.get());
+            tourService.guardarTour(tour);
+            return ResponseEntity.ok("Categoría asignada con éxito al tour");
+        }
+        return ResponseEntity.badRequest().body("Error: Tour o categoría no encontrados");
+    }
+
+    // Endpoint para buscar tours por ubicación
+    @GetMapping("/buscar/ubicacion")
+    public ResponseEntity<List<Tour>> buscarPorUbicacion(@RequestParam String ubicacion) {
+        List<Tour> tours = tourService.buscarToursPorUbicacion(ubicacion);
+        return ResponseEntity.ok(tours);
+    }
+
+    // Endpoint para buscar tours por ubicación y rango de fechas disponibles
+    @GetMapping("/buscar/ubicacion-fechas")
+    public ResponseEntity<List<Tour>> buscarPorUbicacionYFechas(
+            @RequestParam String ubicacion,
+            @RequestParam LocalDate fechaInicio,
+            @RequestParam LocalDate fechaFin) {
+        List<Tour> tours = tourService.buscarToursPorUbicacionYFechas(ubicacion, fechaInicio, fechaFin);
+        return ResponseEntity.ok(tours);
     }
 }

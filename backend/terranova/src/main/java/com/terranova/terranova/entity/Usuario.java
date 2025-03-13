@@ -22,9 +22,9 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(nullable = false)
     private String nombre;
-    @Column
+    @Column(nullable = false)
     private String apellido;
     @Column(unique = true, nullable = false)
     private String email;
@@ -32,6 +32,7 @@ public class Usuario implements UserDetails {
     private String password;
     @Getter
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UsuarioRole usuarioRole;
 
     public Usuario(String nombre, String apellido, String email, String password, UsuarioRole usuarioRole) {
