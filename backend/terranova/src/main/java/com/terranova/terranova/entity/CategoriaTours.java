@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,6 +23,8 @@ public class CategoriaTours {
     @Column (name = "url_icono", nullable = false)
     private String urlIcono;
 
+    @OneToMany(mappedBy = "categoriaTours", cascade = CascadeType.ALL)
+    private List<Tour> tours;
     public CategoriaTours(String nombre, String urlIcono) {
         this.nombre = nombre;
         this.urlIcono = urlIcono;

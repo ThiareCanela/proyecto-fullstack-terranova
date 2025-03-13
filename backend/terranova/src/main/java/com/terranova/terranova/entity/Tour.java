@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,16 +23,27 @@ public class Tour {
     private String titulo;
     @Enumerated(EnumType.STRING)
     private TipoDuracion tipoDuracion;
-    @Column(name = "duracion")
+    @Column(nullable = false)
     private int duracion;
-    @Column(name = "descripcion",columnDefinition = "JSON")
+    @Column(columnDefinition = "JSON")
     private String descripcion;
-    @Column(name = "precio",  nullable = false)
+    @Column(nullable = false)
     private double precio;
+    @Column(nullable = false)
+    private String ubicacion;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false )
     private CategoriaTours categoriaTours;
-    @Column(name= "ubicacion")
-    private String ubicacion;
+
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL)
+    private List<ImagenTour> imagenes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tour_x_caracteristicas",
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+    )
+    private List<CaracteristicaTour> caracteristicas;
 }

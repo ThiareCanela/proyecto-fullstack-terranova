@@ -22,8 +22,9 @@ public class DisponibilidadTour {
     private Tour tour;
 
     @Id
+    @Column(nullable = false)
     private LocalDate fecha;
-
+    @Column(nullable = false)
     private Boolean disponible;
 
 }

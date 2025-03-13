@@ -21,7 +21,7 @@ public class ImagenTour {
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
-    @Column(nullable = false)
+    @Column(name = "url_imagen",nullable = false)
     private String urlImagen;
 
     @Column
