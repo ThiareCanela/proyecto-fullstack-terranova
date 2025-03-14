@@ -9,7 +9,6 @@ export default function DetailCard() {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [guests, setGuests] = useState(1);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [message, setMessage] = useState("");
@@ -105,17 +104,6 @@ export default function DetailCard() {
                 />
               </div>
             </div>
-
-            <label className="text-xs font-medium text-[var(--color-default)] mt-3 block">Número de personas</label>
-            <select
-              value={guests}
-              onChange={(e) => setGuests(e.target.value)}
-              className="border border-[var(--color-secondary)] p-2 rounded text-sm w-full"
-            >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
 
             <button
               onClick={handleConsult}
