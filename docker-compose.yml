@@ -20,10 +20,17 @@ services:
     restart: always
     depends_on:
       - db
+    env_file:
+      - ./backend/terranova/.env
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: terranova
       SPRING_DATASOURCE_PASSWORD: terranova
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+      S3_BASE_URL: ${S3_BASE_URL}
     ports:
       - "8080:8080"
 
@@ -33,6 +40,8 @@ services:
     restart: always
     depends_on:
       - backend
+    env_file:
+      - ./backend/terranova/.env
     ports:
       - "3000:3000"
 
