@@ -1,5 +1,6 @@
 package com.terranova.terranova.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,11 +18,12 @@ import java.util.List;
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id",unique = true, nullable = false)
     private Long id;
     @Column(unique = true, name = "titulo",  nullable = false)
     private String titulo;
     @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_duracion", nullable = false)
     private TipoDuracion tipoDuracion;
     @Column(nullable = false)
     private int duracion;
@@ -33,13 +35,16 @@ public class Tour {
     private String ubicacion;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false )
     private CategoriaTours categoriaTours;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ImagenTour> imagenes;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "tour_x_caracteristicas",
             joinColumns = @JoinColumn(name = "tour_id"),
