@@ -71,7 +71,6 @@ public class TourController {
         Tour nuevoTour = tourService.guardarTour(tour);
         return ResponseEntity.ok(nuevoTour);
     }
-
     @PutMapping("/{tourId}")
     public ResponseEntity<String> actualizarTour(@PathVariable Long tourId, @RequestBody Tour tour) {
         Optional<Tour> tourBuscado = tourService.consultarTour(tourId);

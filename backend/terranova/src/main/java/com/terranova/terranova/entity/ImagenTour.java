@@ -1,5 +1,6 @@
 package com.terranova.terranova.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class ImagenTour {
 
     @ManyToOne
     @JoinColumn(name = "tour_id", nullable = false)
+    @JsonBackReference
     private Tour tour;
 
     @Column(name = "url_imagen",nullable = false)
