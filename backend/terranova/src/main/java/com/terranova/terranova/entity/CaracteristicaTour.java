@@ -1,5 +1,6 @@
 package com.terranova.terranova.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,5 +26,6 @@ public class CaracteristicaTour {
     private String urlIcono;
 
     @ManyToMany(mappedBy = "caracteristicas")
+    @JsonBackReference
     private List<Tour> tours;
 }

@@ -1,6 +1,7 @@
 package com.terranova.terranova.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,18 +36,18 @@ public class Tour {
     private String ubicacion;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonManagedReference
     @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false )
     private CategoriaTours categoriaTours;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<ImagenTour> imagenes;
 
     @ManyToMany
-    @JsonIgnore
+    @JsonManagedReference
     @JoinTable(
-            name = "tour_x_caracteristicas",
+            name = "tours_x_caracteristicas",
             joinColumns = @JoinColumn(name = "tour_id"),
             inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
     )

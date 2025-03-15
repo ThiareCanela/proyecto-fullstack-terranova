@@ -1,5 +1,6 @@
 package com.terranova.terranova.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +25,11 @@ public class CategoriaTours {
     private String urlIcono;
 
     @OneToMany(mappedBy = "categoriaTours", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Tour> tours;
-    public CategoriaTours(String nombre, String urlIcono) {
+    /*public CategoriaTours(String nombre, String urlIcono) {
         this.nombre = nombre;
         this.urlIcono = urlIcono;
-    }
+    }*/
 
 }
