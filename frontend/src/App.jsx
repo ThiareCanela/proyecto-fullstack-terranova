@@ -38,7 +38,7 @@ const App = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[var(--color-primary)]">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
