@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS categoria_tours (
 CREATE TABLE IF NOT EXISTS tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
-    tipo_duracion ENUM('horas', 'dias') NOT NULL DEFAULT 'dias',
+    tipo_duracion ENUM('HORAS', 'DIAS') NOT NULL DEFAULT 'DIAS',
     duracion INT NOT NULL,
     descripcion JSON NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
-    ubicacion VARCHAR(255), -- NUEVO CAMPO: Ubicación del tour
+    pais ENUM('MÉXICO','COLOMBIA','ARGENTINA','BRASIL','JAMAICA','URUGUAY','COSTA RICA','CHILE','PERÚ') NOT NULL DEFAULT 'MÉXICO',
     categoria_id BIGINT NOT NULL,
     FOREIGN KEY (categoria_id) REFERENCES categoria_tours(id) ON DELETE CASCADE
 );
@@ -104,17 +104,17 @@ INSERT INTO caracteristicas_tours (descripcion, url_icon) VALUES
 ('Actividades al aire libre', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-actividades.png');
 
 -- Insertar tours
-INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, ubicacion, categoria_id) VALUES
-('Tour en la Selva', 'dias', 3, '{"detalles": ["Explora la selva tropical.", "Incluye guía profesional y transporte.", "Disfruta de actividades al aire libre."]}', 250.00, 'Amazonas', 1),
-('Tour en Pirámides', 'horas', 5, '{"detalles": ["Visita guiada por pirámides históricas.", "Transporte incluido desde el hotel.", "Aprende sobre la cultura ancestral."]}', 120.00, 'Egipto', 2),
-('Tour en la Playa', 'dias', 2, '{"detalles": ["Relájate en una playa paradisíaca.", "Incluye comida gourmet y bebidas.", "Disfruta de deportes acuáticos."]}', 180.00, 'Maldivas', 3),
-('Tour en la Montaña', 'dias', 4, '{"detalles": ["Escalada y camping en montaña.", "Guía turístico experimentado.", "Vistas panorámicas impresionantes."]}', 300.00, 'Los Andes', 4),
-('Tour Gastronómico', 'horas', 3, '{"detalles": ["Degusta platillos locales auténticos.", "Visita mercados tradicionales.", "Aprende sobre la historia culinaria."]}', 90.00, 'Italia', 5),
-('Tour de Relajación', 'dias', 5, '{"detalles": ["Spa y masajes relajantes.", "Ambiente tranquilo y privado.", "Incluye yoga y meditación."]}', 400.00, 'Bali', 6),
-('Tour en el Desierto', 'dias', 2, '{"detalles": ["Explora dunas de arena dorada.", "Paseo en camello incluido.", "Noche bajo las estrellas."]}', 200.00, 'Sahara', 1),
-('Tour Histórico', 'horas', 4, '{"detalles": ["Recorrido por museos y monumentos.", "Guía experto en historia.", "Entradas incluidas."]}', 150.00, 'Roma', 2),
-('Tour Acuático', 'horas', 6, '{"detalles": ["Actividades como snorkel y buceo.", "Equipo completo proporcionado.", "Guía especializado en vida marina."]}', 170.00, 'Australia', 3),
-('Tour de Aventura Extrema', 'dias', 3, '{"detalles": ["Paracaidismo y rappel.", "Equipamiento seguro y certificado.", "Adrenalina garantizada."]}', 350.00, 'Nueva Zelanda', 4);
+INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, pais, categoria_id) VALUES
+('Tour en la Selva', 'DIAS', 3, '{"detalles": ["Explora la selva tropical.", "Incluye guía profesional y transporte.", "Disfruta de actividades al aire libre."]}', 250.00, 'MÉXICO', 1),
+('Tour en Pirámides', 'HORAS', 5, '{"detalles": ["Visita guiada por pirámides históricas.", "Transporte incluido desde el hotel.", "Aprende sobre la cultura ancestral."]}', 120.00, 'COLOMBIA', 2),
+('Tour en la Playa', 'DIAS', 2, '{"detalles": ["Relájate en una playa paradisíaca.", "Incluye comida gourmet y bebidas.", "Disfruta de deportes acuáticos."]}', 180.00, 'COLOMBIA', 3),
+('Tour en la Montaña', 'DIAS', 4, '{"detalles": ["Escalada y camping en montaña.", "Guía turístico experimentado.", "Vistas panorámicas impresionantes."]}', 300.00, 'CHILE', 4),
+('Tour Gastronómico', 'HORAS', 3, '{"detalles": ["Degusta platillos locales auténticos.", "Visita mercados tradicionales.", "Aprende sobre la historia culinaria."]}', 90.00, 'MÉXICO', 5),
+('Tour de Relajación', 'DIAS', 5, '{"detalles": ["Spa y masajes relajantes.", "Ambiente tranquilo y privado.", "Incluye yoga y meditación."]}', 400.00, 'CHILE', 6),
+('Tour en el Desierto', 'DIAS', 2, '{"detalles": ["Explora dunas de arena dorada.", "Paseo en camello incluido.", "Noche bajo las estrellas."]}', 200.00, 'MÉXICO', 1),
+('Tour Histórico', 'HORAS', 4, '{"detalles": ["Recorrido por museos y monumentos.", "Guía experto en historia.", "Entradas incluidas."]}', 150.00, 'CHILE', 2),
+('Tour Acuático', 'HORAS', 6, '{"detalles": ["Actividades como snorkel y buceo.", "Equipo completo proporcionado.", "Guía especializado en vida marina."]}', 170.00, 'PERÚ', 3),
+('Tour de Aventura Extrema', 'DIAS', 3, '{"detalles": ["Paracaidismo y rappel.", "Equipamiento seguro y certificado.", "Adrenalina garantizada."]}', 350.00, 'MÉXICO', 4);
 
 -- Insertar imágenes de los tours
 INSERT INTO imagenes_tours (tour_id, url_imagen, descripcion) VALUES
@@ -164,12 +164,12 @@ INSERT INTO tours_x_caracteristicas (tour_id, caracteristica_id) VALUES
 
 -- Insertar reservas
 INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas, total, estado) VALUES
-(2, 1, '2025-04-10', '2025-04-12', 3, 750.00, 'confirmada'),
-(2, 2, '2025-05-15', '2025-05-15', 2, 240.00, 'pendiente'),
-(2, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'confirmada'),
-(2, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'cancelada'),
-(2, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'confirmada'),
-(2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'pendiente');
+(2, 1, '2025-04-10', '2025-04-12', 3, 750.00, 'CONFIRMADA'),
+(2, 2, '2025-05-15', '2025-05-15', 2, 240.00, 'PENDIENTE'),
+(2, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'CONFIRMADA'),
+(2, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'CANCELADA'),
+(2, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'CONFIRMADA'),
+(2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'PENDIENTE');
 
 -- Disponibilidad para el tour 1 (ocupado del 2025-04-10 al 2025-04-12)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
