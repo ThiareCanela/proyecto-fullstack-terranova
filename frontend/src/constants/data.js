@@ -1,147 +1,164 @@
 const allPlaces = [
-    {
-      image:
-        "https://i.natgeofe.com/k/f576c284-661a-4046-ba51-fa95699e1a8b/hawaii-beach.png",
-      location: "Hawaii",
-      name: "Sunset Beach",
-      price: 250,
-      rating: 4.8,
-    },
-    {
-      image:
-        "https://www.intrepidtravel.com/adventures/wp-content/uploads/2018/09/shutterstock_219250780-800.jpg",
-      location: "Switzerland",
-      name: "Alpine Retreat",
-      price: 320,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://static.nationalgeographic.es/files/styles/image_3200/public/nationalgeographic1758450.webp?w=760&h=507",
-      location: "Canada",
-      name: "Whispering Pines",
-      price: 180,
-      rating: 4.7,
-    },
-    {
-      image: "https://www.travel-guide.es/media/new-york.jpeg",
-      location: "New York",
-      name: "City Lights Hotel",
-      price: 400,
-      rating: 4.6,
-    },
-    {
-      image:
-        "https://mediaim.expedia.com/destination/9/cd8a3f3db7149b0ce36d052aea1182df.jpg",
-      location: "Dubai",
-      name: "Sahara Oasis",
-      price: 290,
-      rating: 4.5,
-    },
-    {
-      image:
-        "https://static.barcelo.com/content/dam/bhg/master/es/hoteles/maldives/barcelo-whale-lagoon-maldives/main-photos/hotel/BWLM_VIEW_08.jpg",
-      location: "Maldives",
-      name: "Blue Lagoon",
-      price: 350,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://media.worldnomads.com/social-share-images/italy/italy-5-things-social.jpg",
-      location: "Italy",
-      name: "Lake Como Resort",
-      price: 270,
-      rating: 4.8,
-    },
-    {
-      image:
-        "https://cdn.forevervacation.com/uploads/blog/thailand-visitor-guide-things-to-do-4406.jpg",
-      location: "Thailand",
-      name: "Golden Pagoda",
-      price: 220,
-      rating: 4.7,
-    },
-    {
-      image:
-        "https://images.travelandleisureasia.com/wp-content/uploads/sites/2/2024/03/05150015/bergen.jpeg",
-      location: "Norway",
-      name: "Aurora Cabin",
-      price: 310,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://cdn.sanity.io/images/rizm0do5/production/31559d4749a707c3bb916abaadb05acbb3cb4eb2-1078x718.jpg",
-      location: "Japan",
-      name: "Kyoto Gardens",
-      price: 280,
-      rating: 4.8,
-    },
-    {
-      image:
-        "https://www.frenchclass.in/wp-content/uploads/2024/01/cities-in-france-paris-laforet.webp",
-      location: "France",
-      name: "Paris View",
-      price: 500,
-      rating: 4.7,
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb",
-      location: "Australia",
-      name: "Great Barrier Reef",
-      price: 320,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://cdn.britannica.com/71/73371-050-9DFAEC1E/Reykjavik-Iceland.jpg",
-      location: "Iceland",
-      name: "Glacier Lodge",
-      price: 360,
-      rating: 4.8,
-    },
-    {
-      image:
-        "https://www.intrepidtravel.com/v3/assets/blt0de87ff52d9c34a8/blt84e6f613930bd904/63c9c76e75a0df5fb06eec98/Intrepid_Travel-brazil_rio-de-janeiro_botafogo-bay-aerial_ss-435627745_2018.jpg?branch=prd",
-      location: "Brazil",
-      name: "Amazon Retreat",
-      price: 190,
-      rating: 4.6,
-    },
-    {
-      image:
-        "https://www.adventureworld.com/media/uvhb1u1l/south-africa-cape-town-table-mountain-national-park.jpg?center=0.3369099149035452%2C0.4887274510874777&format=webp&mode=crop&width=1920&height=600&quality=80",
-      location: "South Africa",
-      name: "Safari Escape",
-      price: 400,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://img.static-kl.com/images/media/B2A91919-D584-4762-B918AF2FCB63F775",
-      location: "Mexico",
-      name: "Cancún Paradise",
-      price: 230,
-      rating: 4.7,
-    },
-    {
-      image:
-        "https://www.omintassistance.com.ar/blog/wp-content/uploads/2018/01/Grecia.jpg",
-      location: "Greece",
-      name: "Santorini Sunset",
-      price: 450,
-      rating: 4.9,
-    },
-    {
-      image:
-        "https://static.nationalgeographicla.com/files/styles/image_3200/public/nationalgeographic_2744265.jpg?w=1900&h=1267",
-      location: "Argentina",
-      name: "Patagonia Adventure",
-      price: 250,
-      rating: 4.8,
-    },
-  ];
+  {
+    image:
+      "https://blogskystorage.s3.amazonaws.com/2022/10/skyairline_skyairline_image_856.jpeg",
+    location: "Brasil",
+    name: "Retiro en el Amazonas",
+    price: 190,
+    rating: 4.6,
+  },
+  {
+    image:
+      "https://tourslarivieramaya.com/wp-content/uploads/2022/12/cancun-o-riviera-maya-cual-es-mejor.jpg",
+    location: "México",
+    name: "Paraíso en Cancún",
+    price: 230,
+    rating: 4.7,
+  },
+  {
+    image:
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/b3/patagonia.jpg?w=1400&h=1400&s=1",
+    location: "Argentina",
+    name: "Aventura en la Patagonia",
+    price: 250,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://i.natgeofe.com/n/4c363dfb-f2c7-4a89-9547-a06318a87fc5/valley-moon-atacama-desert-chile.jpg",
+    location: "Chile",
+    name: "Desierto de Atacama",
+    price: 320,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Machu_Picchu%2C_Peru_%282018%29.jpg/1200px-Machu_Picchu%2C_Peru_%282018%29.jpg",
+    location: "Perú",
+    name: "Machu Picchu",
+    price: 180,
+    rating: 4.7,
+  },
+  {
+    image:
+      "https://horizontravel.info/wp-content/uploads/2024/03/colombia_Mesa-de-trabajo-1.png",
+    location: "Colombia",
+    name: "Cartagena",
+    price: 290,
+    rating: 4.5,
+  },
+  {
+    image:
+      "https://static.nationalgeographicla.com/files/styles/image_3200/public/nationalgeographic2714870_0.webp?w=1600&h=1069",
+    location: "Ecuador",
+    name: "Islas Galápagos",
+    price: 350,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://content.r9cdn.net/rimg/dimg/14/25/4e10637c-city-13850-16916acf1b1.jpg?width=1200&height=630&xhint=2585&yhint=977&crop=true",
+    location: "Uruguay",
+    name: "Punta del Este",
+    price: 270,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://t4.ftcdn.net/jpg/06/16/19/83/360_F_616198388_o4DS7ukH0bQJwmzHP0Ik2ekowCj5aZg4.jpg",
+    location: "Paraguay",
+    name: "Asunción",
+    price: 220,
+    rating: 4.7,
+  },
+  {
+    image:
+      "https://uploads.exoticca.com/global/destination/poi/salar-uyuni.png",
+    location: "Bolivia",
+    name: "Salar de Uyuni",
+    price: 310,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://ipsnoticias.net/wp-content/uploads/2021/06/SAlto-Angel-SOS-Orinoco-2.jpg",
+    location: "Venezuela",
+    name: "Salto Ángel",
+    price: 280,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://imagenes.eltiempo.com/files/image_1200_535/uploads/2023/06/15/648b500b999b6.jpeg",
+    location: "Panamá",
+    name: "Ciudad de Panamá",
+    price: 500,
+    rating: 4.7,
+  },
+  {
+    image:
+      "https://www.visitcostarica.com/sites/default/files/2024-10/Arenal%20volcano%20%28Costa%20Rica%2C%20La%20Fortuna%29..jpg",
+    location: "Costa Rica",
+    name: "Volcán Arenal",
+    price: 320,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://viajes.nationalgeographic.com.es/medio/2024/04/11/guatemala_e5c68847_240411181121_1280x720.jpg",
+    location: "Guatemala",
+    name: "Antigua",
+    price: 360,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://www.roatanlife.com/wp-content/uploads/2018/10/West-Bay-Aerial-DevonStephensPhotography.jpg",
+    location: "Honduras",
+    name: "Roatán",
+    price: 400,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://elsalvador.travel/system/wp-content/uploads/2024/06/santa-ana04.jpg",
+    location: "El Salvador",
+    name: "Volcán de Santa Ana",
+    price: 230,
+    rating: 4.7,
+  },
+  {
+    image:
+      "https://www.intur.gob.ni/wp-content/uploads/2018/08/Granada-Nicaragua-simpre-Linda4-1280x720.jpg",
+    location: "Nicaragua",
+    name: "Granada",
+    price: 450,
+    rating: 4.9,
+  },
+  {
+    image:
+      "https://www.viajes.cl/hubfs/La%20Habana%20Vieja%20en%20Cuba.png",
+    location: "Cuba",
+    name: "La Habana",
+    price: 250,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://images.visitarepublicadominicana.org/Punta-Cana-Republica-Dominicana.jpg",
+    location: "República Dominicana",
+    name: "Punta Cana",
+    price: 250,
+    rating: 4.8,
+  },
+  {
+    image:
+      "https://www.jetbluevacations.com/cdn-cgi/image/f=auto,width=804,height=1080/https://www.jetbluevacations.com/media/SJU_el_morro_17f01ff00f/SJU_el_morro_17f01ff00f.jpg",
+    location: "Puerto Rico",
+    name: "San Juan",
+    price: 250,
+    rating: 4.8,
+  },
+];
 
-  export default allPlaces;
+export default allPlaces;
