@@ -1,5 +1,7 @@
 package com.terranova.terranova.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terranova.terranova.dto.TourDTO;
 import com.terranova.terranova.entity.CaracteristicaTour;
 import com.terranova.terranova.entity.CategoriaTours;
@@ -10,6 +12,7 @@ import com.terranova.terranova.service.CategoriaToursService;
 import com.terranova.terranova.service.ImagenTourService;
 import com.terranova.terranova.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,6 +83,57 @@ public class TourController {
         Tour nuevoTour = tourService.guardarTour(tour);
         return ResponseEntity.ok(new TourDTO(nuevoTour)); // Devolver el DTO en la respuesta
     }
+
+    @PostMapping(value = "/agregar-con-imagenes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> agregarTourConImagenes(
+            @RequestPart("tour") String tourJson,
+            @RequestPart("imagenes") MultipartFile[] imagenes) throws JsonProcessingException {
+
+        //covertimos el JSON a un objeto DTO
+        TourDTO tourDTO = new ObjectMapper().readValue(tourJson, TourDTO.class);
+
+        // Validar si el tour ya existe por título
+        if (tourService.existePorTitulo(tourDTO.getTitulo())) {
+            return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
+        }
+
+        // Validar si la categoría existe
+        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(tourDTO.getCategoriaToursId());
+        if (categoriaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: Categoría no encontrada.");
+        }
+
+        // ✅ Validar si las características existen
+        List<CaracteristicaTour> caracteristicas = caracteristicaTourService.obtenerPorIds(tourDTO.getCaracteristicasIds());
+        if (caracteristicas.isEmpty() || caracteristicas.size() != tourDTO.getCaracteristicasIds().size()) {
+            return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
+        }
+
+        try {
+            // Crear objeto `Tour` desde `TourDTO`
+            Tour tour = new Tour();
+            tour.setTitulo(tourDTO.getTitulo());
+            tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion()));
+            tour.setDuracion(tourDTO.getDuracion());
+            tour.setDescripcion(tourDTO.getDescripcion().toString());
+            tour.setPrecio(tourDTO.getPrecio());
+            tour.setPais(tourDTO.getPais());
+            tour.setCategoriaTours(categoriaOpt.get());
+            tour.setCaracteristicas(caracteristicas);
+
+            // Guardar el tour y las imágenes
+            Tour nuevoTour = tourService.guardarTourEImagenes(tour, imagenes);
+
+            // Devolver el tour completo como respuesta
+            return ResponseEntity.ok(new TourDTO(nuevoTour));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al crear el tour: " + e.getMessage());
+        }
+    }
+
 
     @PutMapping("/{tourId}")
     public ResponseEntity<String> actualizarTour(@PathVariable Long tourId, @RequestBody Tour tour) {
