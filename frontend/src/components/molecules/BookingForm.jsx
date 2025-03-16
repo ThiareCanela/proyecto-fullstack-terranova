@@ -1,18 +1,44 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Importamos useNavigate
 import { InputField } from "../atoms/InputField";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const places = [
+  "Argentina", "Chile", "Perú", "Colombia", "Ecuador", "México", "Brasil", "Uruguay", 
+  "Paraguay", "Bolivia", "Venezuela", "Panamá", "Costa Rica", "Guatemala", "Honduras", 
+  "El Salvador", "Nicaragua", "Cuba", "República Dominicana", "Puerto Rico"
+];
 
 export const BookingForm = () => {
+  const navigate = useNavigate(); // Hook para redirigir
   const [formData, setFormData] = useState({
     location: "",
-    startDate: "",
-    endDate: "",
+    startDate: null,
+    endDate: null,
   });
   const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const datePickerRef = useRef(null);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     setErrors(""); // Limpiar errores cuando el usuario empieza a escribir
+
+    if (name === "location") {
+      const filtered = places.filter((place) =>
+        place.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredPlaces(filtered);
+    }
+  };
+
+  const handleSelectPlace = (place) => {
+    setFormData({ ...formData, location: place });
+    setFilteredPlaces([]);
   };
 
   const validateForm = () => {
@@ -41,7 +67,15 @@ export const BookingForm = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       
       console.log("Datos enviados:", formData);
-      // Aquí puedes hacer la llamada real a la API y manejar la respuesta
+      
+      // Redirección con los datos en la URL
+      const queryParams = new URLSearchParams({
+        location: formData.location,
+        startDate: formData.startDate.toISOString().split("T")[0],
+        endDate: formData.endDate.toISOString().split("T")[0],
+      }).toString();
+
+      navigate(`/resultados?${queryParams}`);
       
     } catch (error) {
       console.error("Error en la búsqueda:", error);
@@ -50,39 +84,84 @@ export const BookingForm = () => {
     }
   };
 
+  const handleClickOutside = (event) => {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+      setShowDatePicker(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showDatePicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDatePicker]);
+
   return (
     <div className="flex flex-col w-full p-6 gap-6 bg-white rounded-lg shadow-md">
       <h3 className="font-medium text-[var(--color-default)] text-3xl text-center w-full">
-        ¿Cuál es tu próxima aventura?
+        ¿Estás listo/a para tu próxima aventura en Latinoamérica?
       </h3>
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-        <InputField
-          label="Dónde"
-          type="text"
-          name="location"
-          placeholder="Encuentra tu aventura"
-          value={formData.location}
-          onChange={handleChange}
-          className="w-full"
+      <div className="flex w-full gap-4 items-center justify-center">
+  {/* Campo de ubicación */}
+  <div className="relative w-1/2">
+    <label className="text-sm font-semibold text-gray-700 block mb-1">Dónde</label>
+    <button
+      type="button"
+      className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
+      onClick={() => setFilteredPlaces(places)}
+    >
+      {formData.location || "Selecciona un destino"}
+    </button>
+    {filteredPlaces.length > 0 && (
+      <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-40 overflow-y-auto shadow-md">
+        {filteredPlaces.map((place) => (
+          <li
+            key={place}
+            className="p-2 cursor-pointer hover:bg-gray-200 transition-all"
+            onClick={() => handleSelectPlace(place)}
+          >
+            {place}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  {/* Campo de fecha */}
+  <div className="relative w-1/2">
+    <label className="text-sm font-semibold text-gray-700 block mb-1">Cuándo</label>
+    <button
+      type="button"
+      className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
+      onClick={() => setShowDatePicker(true)}
+    >
+      {formData.startDate && formData.endDate
+        ? `${formData.startDate.toLocaleDateString()} - ${formData.endDate.toLocaleDateString()}`
+        : "dd/mm/aaaa"}
+    </button>
+    {showDatePicker && (
+      <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2 p-2 border border-gray-300">
+        <DatePicker
+          selected={formData.startDate}
+          onChange={(update) => {
+            setFormData({ ...formData, startDate: update[0], endDate: update[1] });
+          }}
+          startDate={formData.startDate}
+          endDate={formData.endDate}
+          selectsRange
+          inline
         />
-        <div className="flex w-full justify-between gap-6">
-          <InputField
-            label="Inicio"
-            type="date"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            className="w-[50%]"
-          />
-          <InputField
-            label="Fin"
-            type="date"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleChange}
-            className="w-[50%]"
-          />
-        </div>
+      </div>
+    )}
+  </div>
+</div>
+
         {errors && <p className="text-red-600 font-medium">{errors}</p>}
         
         <button
