@@ -17,7 +17,7 @@ public class TourDTO {
     private int duracion;
     private Object descripcion;
     private double precio;
-    private String ubicacion;
+    private String pais;
     private Long categoriaToursId;
     private List<Long> caracteristicasIds; // IDs de características
 
@@ -29,7 +29,7 @@ public class TourDTO {
         this.duracion = tour.getDuracion();
         this.descripcion = tour.getDescripcion();
         this.precio = tour.getPrecio();
-        this.ubicacion = tour.getUbicacion();
+        this.pais = tour.getPais();
         this.categoriaToursId = tour.getCategoriaTours().getId();
     }
 }

@@ -32,13 +32,13 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     List<Tour> findByCaracteristicas(@Param("caracteristicaIds") List<Long> caracteristicaIds, @Param("cantidad") Long cantidad);
 
     // Búsqueda de tours por ubicación
-    List<Tour> findByUbicacionContainingIgnoreCase(String ubicacion);
+    List<Tour> findByPaisContainingIgnoreCase(String pais);
 
     // Búsqueda de tours por ubicación y disponibilidad en un rango de fechas
     @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id " +
-            "WHERE LOWER(t.ubicacion) LIKE LOWER(CONCAT('%', :ubicacion, '%')) " +
+            "WHERE LOWER(t.pais) LIKE LOWER(CONCAT('%', :pais, '%')) " +
             "AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
-    List<Tour> findByUbicacionAndDisponibilidad(@Param("ubicacion") String ubicacion,
+    List<Tour> findByPaisAndDisponibilidad(@Param("pais") String pais,
                                                 @Param("fechaInicio") LocalDate fechaInicio,
                                                 @Param("fechaFin") LocalDate fechaFin);
 }

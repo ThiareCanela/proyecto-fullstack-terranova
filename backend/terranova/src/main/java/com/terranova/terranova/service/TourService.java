@@ -61,12 +61,12 @@ public class TourService {
 
 
     // Buscar tours por ubicación
-    public List<Tour> buscarToursPorUbicacion(String ubicacion) {
-        return tourRepository.findByUbicacionContainingIgnoreCase(ubicacion);
+    public List<Tour> buscarToursPorPais(String ubicacion) {
+        return tourRepository.findByPaisContainingIgnoreCase(ubicacion);
     }
 
     // Buscar tours por ubicación y fechas de disponibilidad
-    public List<Tour> buscarToursPorUbicacionYFechas(String ubicacion, LocalDate fechaInicio, LocalDate fechaFin) {
-        return tourRepository.findByUbicacionAndDisponibilidad(ubicacion, fechaInicio, fechaFin);
+    public List<Tour> buscarToursPorPaisYFechas(String ubicacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        return tourRepository.findByPaisAndDisponibilidad(ubicacion, fechaInicio, fechaFin);
     }
 }

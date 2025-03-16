@@ -33,7 +33,7 @@ public class Tour {
     @Column(nullable = false)
     private double precio;
     @Column(nullable = false)
-    private String ubicacion;
+    private String pais;
 
     @ManyToOne
     @JsonManagedReference

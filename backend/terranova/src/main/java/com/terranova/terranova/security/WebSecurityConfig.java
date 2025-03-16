@@ -16,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 
 @Configuration
@@ -49,10 +54,28 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/usuarios/registrar","/auth/logout","/categoriaTours/*","/tour/*","/categoriaTours","/tour", "/*").permitAll() //✅ Permitir sin autenticación
-                        .requestMatchers("/usuarios/listar","/usuarios/cambiarRol/*","/usuarios/actualizar/*","/categoriaTours/registrar/","/categoriaTours/actualizar/","/tour/registrar/","/tour/actualizar/" ).hasRole("ADMIN")//
+                        .requestMatchers(
+                                "/auth/login",
+                                "/usuarios/registrar",
+                                "/auth/logout",
+                                "/categoriaTours/*",
+                                "/tour/*",
+                                "/categoriaTours",
+                                "/tour",
+                                "/*"
+                        ).permitAll() //✅ Permitir sin autenticación
+                        .requestMatchers(
+                                "/usuarios/listar",
+                                "/usuarios/cambiarRol/*",
+                                "/usuarios/actualizar/*",
+                                "/categoriaTours/registrar/",
+                                "/categoriaTours/actualizar/",
+                                "/tour/registrar/",
+                                "/tour/actualizar/"
+                        ).hasRole("ADMIN")//
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -60,6 +83,20 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); //
 
         return http.build();
+    }
+
+    // Configuración de CORS para permitir peticiones desde el frontend
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173")); // Origen del frontend (Vite o React)
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
+        config.setAllowedHeaders(List.of("*")); // Permitir cualquier cabecera
+        config.setAllowCredentials(true); // Permitir el envío de cookies o credenciales (si es necesario)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // Aplicar configuración a todos los endpoints
+        return source;
     }
 }
 

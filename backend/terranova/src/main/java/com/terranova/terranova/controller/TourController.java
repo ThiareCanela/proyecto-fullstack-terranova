@@ -72,7 +72,7 @@ public class TourController {
         tour.setDuracion(tourDTO.getDuracion());
         tour.setDescripcion(tourDTO.getDescripcion().toString());
         tour.setPrecio(tourDTO.getPrecio());
-        tour.setUbicacion(tourDTO.getUbicacion());
+        tour.setPais(tourDTO.getPais());
         tour.setCategoriaTours(categoriaOpt.get());
         tour.setCaracteristicas(caracteristicas);
 
@@ -118,18 +118,18 @@ public class TourController {
 
     // Endpoint para buscar tours por ubicación
     @GetMapping("/buscar/ubicacion")
-    public ResponseEntity<List<Tour>> buscarPorUbicacion(@RequestParam String ubicacion) {
-        List<Tour> tours = tourService.buscarToursPorUbicacion(ubicacion);
+    public ResponseEntity<List<Tour>> buscarPorPais(@RequestParam String ubicacion) {
+        List<Tour> tours = tourService.buscarToursPorPais(ubicacion);
         return ResponseEntity.ok(tours);
     }
 
     // Endpoint para buscar tours por ubicación y rango de fechas disponibles
     @GetMapping("/buscar/ubicacion-fechas")
-    public ResponseEntity<List<Tour>> buscarPorUbicacionYFechas(
-            @RequestParam String ubicacion,
+    public ResponseEntity<List<Tour>> buscarPorPaisYFechas(
+            @RequestParam String pais,
             @RequestParam LocalDate fechaInicio,
             @RequestParam LocalDate fechaFin) {
-        List<Tour> tours = tourService.buscarToursPorUbicacionYFechas(ubicacion, fechaInicio, fechaFin);
+        List<Tour> tours = tourService.buscarToursPorPaisYFechas(pais, fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
     }
 }
