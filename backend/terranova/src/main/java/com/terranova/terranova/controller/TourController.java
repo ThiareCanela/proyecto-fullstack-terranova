@@ -116,15 +116,15 @@ public class TourController {
         return ResponseEntity.badRequest().body("Error: Tour o categoría no encontrados");
     }
 
-    // Endpoint para buscar tours por ubicación
-    @GetMapping("/buscar/ubicacion")
-    public ResponseEntity<List<Tour>> buscarPorPais(@RequestParam String ubicacion) {
-        List<Tour> tours = tourService.buscarToursPorPais(ubicacion);
+    // Endpoint para buscar tours por pais
+    @GetMapping("/buscar/pais")
+    public ResponseEntity<List<Tour>> buscarPorPais(@RequestParam String pais) {
+        List<Tour> tours = tourService.buscarToursPorPais(pais);
         return ResponseEntity.ok(tours);
     }
 
-    // Endpoint para buscar tours por ubicación y rango de fechas disponibles
-    @GetMapping("/buscar/ubicacion-fechas")
+    // Endpoint para buscar tours por pais y rango de fechas disponibles
+    @GetMapping("/buscar/pais-fechas")
     public ResponseEntity<List<Tour>> buscarPorPaisYFechas(
             @RequestParam String pais,
             @RequestParam LocalDate fechaInicio,

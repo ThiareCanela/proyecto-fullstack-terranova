@@ -89,7 +89,10 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // Origen del frontend (Vite o React)
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173", // Vite (modo desarrollo)
+                "http://localhost:3000" // React en Docker Compose
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
         config.setAllowedHeaders(List.of("*")); // Permitir cualquier cabecera
         config.setAllowCredentials(true); // Permitir el envío de cookies o credenciales (si es necesario)
