@@ -1,52 +1,18 @@
-import { ArrowLeft, ArrowUpDown, CircleAlert, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { ITEMS_MENU_ADMIN, TOURS_DATA } from "../../constants";
+import { UsersTable } from "../organisms/usersTable";
+import { ToursTable } from "../organisms/ToursTable";
 
 export default function AdminPanel() {
+  const [selected, setSelected] = useState("Usuarios");
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    setUsers(storedUsers);
-  }, []);
-
-  const filteredUsers = users.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleRoleChange = (user) => {
-    setSelectedUser(user);
-    setShowModal(true);
-  };
-  const confirmRoleChange = (newRole) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id === selectedUser.id ? { ...u, role: newRole } : u
-      )
-    );
-    localStorage.setItem(
-      "users",
-      JSON.stringify(
-        users.map((u) =>
-          u.id === selectedUser.id ? { ...u, role: newRole } : u
-        )
-      )
-    );
-    setShowModal(false);
-  };
 
   return (
     <div className="px-6 py-24 mb-32">
-      <header className="flex w-full p-6 gap-4 justify-between mt-[80px] flex-col-reverse items-start md:flex-row ">
-        <h1 className="font-bold uppercase text-3xl text-gray-500">
+      <header className="flex w-full p-6 gap-4 justify-between mt-[30px] flex-col-reverse items-start md:flex-row ">
+        <h1 className="font-bold uppercase text-3xl text-gray-500 text-center md:text-start">
           PANEL DEL ADMINISTRADOR
         </h1>
         <button
@@ -57,23 +23,31 @@ export default function AdminPanel() {
         </button>
       </header>
 
-      <div className="flex gap-6 my-8">
-        <div className=" hidden md:flex flex-col bg-white shadow-lg p-4 rounded-lg w-64">
-          <h2 className="text-lg font-semibold mb-2">Menú</h2>
-          <ul className="space-y-2">
-            <li className="cursor-pointer text-gray-700 hover:text-black">
-              Usuarios
-            </li>
-            <li className="cursor-pointer text-gray-700 hover:text-black">
-              Categorías
-            </li>
-            <li className="cursor-pointer text-gray-700 hover:text-black">
-              Características de producto
-            </li>
+      <div className="flex gap-6 my-8 flex-col md:flex-row">
+        <div className=" flex flex-col bg-white shadow-lg p-4 rounded-lg  border border-gray-300 w-full md:w-[20%]">
+          <h2 className="text-lg font-semibold text-center md:text-start md:mb-2 md:py-5 border-b border-gray-300">
+            Menú
+          </h2>
+          <ul className="flex flex-row  w-full gap-6 md:flex-col md:gap-0 md:space-y-2 text-center md:text-start">
+            {ITEMS_MENU_ADMIN.map((item) => (
+              <li
+                key={item}
+                className={`cursor-pointer px-3 py-1 w-[50%] md:w-full rounded ${
+                  selected === item ? "text-black font-bold" : "text-gray-700"
+                } hover:text-black`}
+                onClick={() => setSelected(item)}
+              >
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className="flex-1">
+          {selected === "Usuarios" && <UsersTable />}
+          {selected === "Tours" && <ToursTable tours={TOURS_DATA} />}
+        </div>
+        {/* <div className="flex-1">
           <div className="flex justify-between mb-4">
             <button className="hidden md:flex items-center bg-gray-200 px-4 py-2 rounded-lg text-gray-700">
               <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
@@ -136,9 +110,9 @@ export default function AdminPanel() {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
       </div>
-      {showModal && (
+      {/* {showModal && (
         <div
           className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"
           onClick={() => setShowModal(false)}
@@ -176,7 +150,7 @@ export default function AdminPanel() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

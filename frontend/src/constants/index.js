@@ -55,3 +55,32 @@ export const CARACTERISTICAS = [
     name: "Guia incluido",
   },
 ];
+
+export const ITEMS_MENU_ADMIN = ["Usuarios", "Tours"];
+export const TOURS_DATA = [
+  {
+    id: 1,
+    name: "Machu Picchu",
+    category: "naturaleza",
+  },
+  {
+    id: 2,
+    name: "Huascarán",
+    category: "trekking",
+  },
+  {
+    id: 3,
+    name: "Uyuni",
+    category: "naturaleza",
+  },
+  {
+    id: 4,
+    name: "Cancun",
+    category: "naturaleza",
+  },
+  {
+    id: 4,
+    name: "Cartagena",
+    category: "naturaleza",
+  },
+];
