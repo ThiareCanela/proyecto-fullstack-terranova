@@ -14,7 +14,7 @@ export const ToursTable = ({ tours }) => {
         <div className="flex justify-between mb-4">
           <button
             onClick={() => setShowModal(true)}
-            className="flex font-bold cursor-pointer items-center bg-[var(--color-default)] px-4 py-2 rounded-2xl text-white shadow-lg hover:bg-white hover:text-black hover:border-black hover:border-2"
+            className="flex font-bold cursor-pointer items-center bg-[var(--color-secondary)] px-4 py-2 rounded-2xl text-white shadow-lg hover:bg-white hover:text-black hover:border-black hover:border-2"
           >
             <Plus className="w-4 h-4 mr-2 font-bold" /> Crear
           </button>
@@ -33,7 +33,7 @@ export const ToursTable = ({ tours }) => {
         <div className="bg-white rounded-lg p-4">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b">
+              <tr className="border-b bg-[var(--color-emphasis)] text-[var(--color-primary)]">
                 <th className="py-2">ID</th>
                 <th className="py-2">Tours</th>
                 <th className="py-2">Categoria</th>
@@ -50,7 +50,7 @@ export const ToursTable = ({ tours }) => {
                       {tour.name}
                     </td>
                     <td className="py-2">
-                      <span className=" uppercase text-[10px] font-bold rounded-2xl bg-amber-200 w-auto p-1 px-2">
+                      <span className=" uppercase text-[12px]  ">
                         {tour.category}
                       </span>
                     </td>

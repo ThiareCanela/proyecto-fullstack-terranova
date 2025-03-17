@@ -207,7 +207,7 @@ export const TourForm = ({ action }) => {
         )}
         <button
           type="submit"
-          className="w-full grid-cols-1 md:grid-cols-2 bg-black text-white py-2 rounded-md"
+          className="w-full grid-cols-1 md:grid-cols-2 bg-[var(--color-secondary)] text-white py-2 rounded-md"
         >
           Agregar Tour
         </button>
