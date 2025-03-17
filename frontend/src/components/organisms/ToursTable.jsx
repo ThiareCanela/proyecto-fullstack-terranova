@@ -14,7 +14,7 @@ export const ToursTable = ({ tours }) => {
         <div className="flex justify-between mb-4">
           <button
             onClick={() => setShowModal(true)}
-            className="hidden md:flex font-bold cursor-pointer items-center bg-[var(--color-default)] px-4 py-2 rounded-2xl text-white shadow-lg hover:bg-white hover:text-black hover:border-black hover:border-2"
+            className="flex font-bold cursor-pointer items-center bg-[var(--color-default)] px-4 py-2 rounded-2xl text-white shadow-lg hover:bg-white hover:text-black hover:border-black hover:border-2"
           >
             <Plus className="w-4 h-4 mr-2 font-bold" /> Crear
           </button>
@@ -81,11 +81,11 @@ export const ToursTable = ({ tours }) => {
       </div>
       {showModal && (
         <div
-          className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"
+          className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-start pt-20 overflow-y-auto md:top-12"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white  px-6 rounded-lg shadow-lg relative flex flex-col items-center justify-center"
+            className="bg-white pt-10 px-6 py-4 rounded-lg shadow-lg relative flex flex-col items-center justify-start w-[90%]  md:w-[700px]  md:h-[80%] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -94,7 +94,9 @@ export const ToursTable = ({ tours }) => {
             >
               ✖
             </button>
-            <TourForm action={"Nuevo"} />
+            <div className="w-full overflow-y-auto flex-1">
+              <TourForm action={"Nuevo"} />
+            </div>
           </div>
         </div>
       )}

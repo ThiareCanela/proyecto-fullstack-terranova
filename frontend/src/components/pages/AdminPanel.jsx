@@ -31,7 +31,7 @@ export default function AdminPanel() {
           <ul className="flex flex-row  w-full gap-6 md:flex-col md:gap-0 md:space-y-2 text-center md:text-start">
             {ITEMS_MENU_ADMIN.map((item) => (
               <li
-                key={item}
+                key={item + 3}
                 className={`cursor-pointer px-3 py-1 w-[50%] md:w-full rounded ${
                   selected === item ? "text-black font-bold" : "text-gray-700"
                 } hover:text-black`}
@@ -47,70 +47,6 @@ export default function AdminPanel() {
           {selected === "Usuarios" && <UsersTable />}
           {selected === "Tours" && <ToursTable tours={TOURS_DATA} />}
         </div>
-        {/* <div className="flex-1">
-          <div className="flex justify-between mb-4">
-            <button className="hidden md:flex items-center bg-gray-200 px-4 py-2 rounded-lg text-gray-700">
-              <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
-            </button>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Buscar usuario..."
-                className="border px-4 py-2 rounded-lg w-48 pl-10"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            </div>
-          </div>
-
-          <div className="bg-white shadow-lg rounded-lg p-4">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-2">ID</th>
-                  <th className="py-2">Nombre</th>
-                  <th className="py-2">Rol</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="py-2">{index + 1}</td>
-                      <td className="py-2 flex items-center gap-2">
-                        <img
-                          src={user.profilePicture || "src/assets/profile.webp"}
-                          alt="Avatar"
-                          className="w-8 h-8 rounded-full"
-                        />
-                        {user.name} {user.lastName}
-                      </td>
-                      <td className="py-2">
-                        <select
-                          className="border rounded-lg p-1"
-                          defaultValue={user.role.toLowerCase()}
-                          onChange={(e) =>
-                            handleRoleChange({ ...user, role: e.target.value })
-                          }
-                        >
-                          <option value="user">User</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center py-4">
-                      No users found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div> */}
       </div>
       {/* {showModal && (
         <div

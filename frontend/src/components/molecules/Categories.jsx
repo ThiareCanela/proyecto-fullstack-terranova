@@ -6,7 +6,7 @@ export const Categories = ({ categories }) => {
     <div className="flex gap-6 md:gap-9 overflow-x-auto whitespace-nowrap touch-pan-x [&::-webkit-scrollbar]:hidden scrollbar-none">
       {categories.map((category, index) => (
         <CategoryFilter
-          key={index}
+          key={`${index}-cat`}
           image={category.image}
           categoryName={category.name}
         />

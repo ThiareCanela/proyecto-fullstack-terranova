@@ -6,10 +6,13 @@ const TravelCardContainer = () => {
   const navigate = useNavigate();
 
   return (
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl px-4">
+    <div className=" flex items-center flex-col md:grid  md:grid-cols-3 gap-6 w-full max-w-6xl px-4">
       {allPlaces.map((place, index) => (
-        <TravelCard key={index} {...place} onDetail={() => navigate("/detalle")} />
+        <TravelCard
+          key={`${index}-card`}
+          {...place}
+          onDetail={() => navigate("/detalle")}
+        />
       ))}
     </div>
   );

@@ -6,7 +6,7 @@ export const ScoreCalification = ({ totalStars = 5 }) => {
   return (
     <div className="flex gap-5">
       {stars.map((_, index) => (
-        <Star key={index} className="text-2xl" />
+        <Star key={`${index}-star`} className="text-2xl" />
       ))}
     </div>
   );

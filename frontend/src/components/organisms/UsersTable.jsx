@@ -1,6 +1,5 @@
 import { ArrowUpDown, CircleAlert, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-// import { useAuth } from "../../context/AuthContext";
 
 export const UsersTable = () => {
   //   const { user } = useAuth();
@@ -75,7 +74,7 @@ export const UsersTable = () => {
             <tbody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user, index) => (
-                  <tr key={index} className="border-b">
+                  <tr key={`${user}-uss`} className="border-b">
                     <td className="py-2">{index + 1}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
@@ -87,7 +86,7 @@ export const UsersTable = () => {
                     </td>
                     <td className="py-2">
                       <select
-                        className="border rounded-lg p-1"
+                        className="border-none rounded-lg p-1"
                         defaultValue={user.role.toLowerCase()}
                         onChange={(e) =>
                           handleRoleChange({ ...user, role: e.target.value })
