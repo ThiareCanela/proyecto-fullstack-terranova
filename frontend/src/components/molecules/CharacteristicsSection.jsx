@@ -3,11 +3,15 @@ export const CharacteristicsSection = ({ characteristics }) => (
   <div className="w-full flex flex-col gap-1">
     <h4 className="font-semibold w-full">¿Qué encontrarás?</h4>
     <p className="text-gray-400 text-sm w-full text-justify">Características</p>
-    <div className="w-full grid grid-cols-3 gap-6 mt-4">
+
+    <div className="w-full grid grid-cols-4 gap-8 mt-4">
       {characteristics.map((item, index) => (
-        <div key={index} className="flex gap-2">
-          <img src={item.icon} />
-          <p>{item.name}</p>
+        <div
+          key={index}
+          className="flex flex-col items-center justify-center text-center"
+        >
+          <img src={item.icon} className="w-10 h-10" alt={item.name} />
+          <p className="text-sm">{item.name}</p>
         </div>
       ))}
     </div>

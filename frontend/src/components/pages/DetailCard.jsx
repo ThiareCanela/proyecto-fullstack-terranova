@@ -1,36 +1,112 @@
-import { ArrowLeft, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { DescriptionDetail } from "../molecules/DescriptionDetail";
 import { CARACTERISTICAS, DESCRIPTIONS } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const Modal = ({ isOpen, onClose, message }) => {
+  let icon, title, description;
+
+  if (message.includes("Reserva exitosa")) {
+    icon = <CheckCircle className="w-12 h-12 text-green-500" />;
+    title = "Reserva exitosa";
+    description = "Tu reserva se ha realizado con éxito.";
+  } else if (message.includes("Fecha no disponible")) {
+    icon = <AlertCircle className="w-12 h-12 text-yellow-500" />;
+    title = "Fecha no Disponible";
+    description = "La fecha de inicio debe ser anterior a la de fin.";
+  } else if (message.includes("Error en la reserva")) {
+    icon = <XCircle className="w-12 h-12 text-red-500" />;
+    title = "Error en la reserva";
+    description = "Hubo un problema con el servidor al procesar la fecha. Intenta nuevamente.";
+  } else {
+    icon = null;
+    title = "Error";
+    description = message;
+  }
+
+  return (
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-black/50 z-50 transition-opacity duration-300 ${
+        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4 relative transition-transform duration-300 ${
+          isOpen ? "scale-100" : "scale-90"
+        }`}
+      >
+        <div className="flex flex-col items-center">
+          {icon}
+          <h2 className="text-lg font-bold text-gray-800 mt-3">{title}</h2>
+          <p className="text-gray-600 mt-2 text-center">{description}</p>
+        </div>
+        <div className="mt-4 flex justify-center">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+            onClick={onClose}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function DetailCard() {
   const navigate = useNavigate();
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [message, setMessage] = useState("");
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
+  const [guests, setGuests] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const datePickerRef = useRef(null);
 
-  const handleConsult = () => {
+  const handleReserve = () => {
     if (!startDate || !endDate) {
-      setMessage("Error en la reserva: Selecciona ambas fechas.");
+      setModalMessage("Error en la reserva: Selecciona ambas fechas.");
+      setShowModal(true);
       return;
     }
     if (new Date(startDate) >= new Date(endDate)) {
-      setMessage("Fecha no disponible: La fecha de inicio debe ser anterior a la de fin.");
+      setModalMessage("Fecha no disponible: La fecha de inicio debe ser anterior a la de fin.");
+      setShowModal(true);
       return;
     }
-    setMessage("Reserva exitosa: Tu viaje ha sido reservado.");
+    setModalMessage("Reserva exitosa");
+    setShowModal(true);
   };
+
+  const handleClickOutside = (event) => {
+    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+      setShowDatePicker(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showDatePicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDatePicker]);
 
   return (
     <div className="flex flex-col bg-[var(--color-primary)]">
-      <header className="flex p-6 gap-4 justify-between mt-[80px] flex-col items-center md:flex-row text-center md:text-left">
-        <h1 className="font-bold uppercase text-2xl md:text-3xl text-[var(--color-default)]">SUNSET BEACH - HAWAI</h1>
+      <header className="flex p-6 gap-4 md:gap-6 justify-between mt-[80px] flex-col md:flex-row text-center md:text-left w-full">
+        <h1 className="font-bold uppercase text-2xl md:text-3xl text-[var(--color-default)] pl-4">
+          Retiro en el amazonas
+        </h1>
         <button
-          className="flex items-center bg-transparent border-none justify-center gap-2 text-[var(--color-emphasis)] text-sm font-medium"
+          className="flex items-center bg-transparent border-none justify-center gap-2 text-[var(--color-emphasis)] text-sm font-medium w-full md:w-auto self-start md:self-auto px-4 md:px-0 ml-4 md:ml-0"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft /> Volver atrás
@@ -38,89 +114,119 @@ export default function DetailCard() {
       </header>
 
       <main className="flex flex-col w-full p-4 md:py-8 md:px-16 gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-[66%_33%] gap-4 w-full max-w-full">
           <img
-            className="w-full object-cover object-center h-48 md:h-64 rounded-lg"
-            src="https://i.natgeofe.com/k/f576c284-661a-4046-ba51-fa95699e1a8b/hawaii-beach.png"
+            className="w-full object-cover h-full md:h-76 rounded-lg"
+            src="https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/b/r/brasil35.jpg?crop=0%2C231%2C4000%2C2200&wid=4000&hei=2200&scl=1.0"
             alt="Sunset Beach"
           />
-          <div className="grid grid-rows-2 gap-4">
+          <div className="grid grid-rows-2 gap-4 overflow-hidden">
             <img
-              className="w-full object-cover object-center h-24 md:h-32 rounded-lg"
-              src="https://delivery.gfobcontent.com/api/public/content/89dfacceb8eb4f5d8dc2aaff1e60ced6?v=5f8e8061"
-              alt="Imagen Secundaria 1"
+              className="w-full object-cover h-56 md:h-36 rounded-lg"
+              src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/bzngtenckauetvefmdai"
+              alt="Sunset Beach"
             />
             <img
-              className="w-full object-cover object-center h-24 md:h-32 rounded-lg"
-              src="https://www.jetstar.com/_/media/inspiration-hub/article-images/19oct/hawaii-honolulu-need-to-know/hero_hawaii_honolulu.jpg?rev=cf08627cd0164b12b48d7e2af03abec6&w=1050&rc=1&cw=1050&ch=590&cx=55&cy=0&hash=67AF8851437B4D5433D7F1886992F8120F580B73"
-              alt="Imagen Secundaria 2"
+              className="w-full object-cover h-56 md:h-36 rounded-lg"
+              src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/vs0bb8a9jx5w7bteecsj"
+              alt="Sunset Beach"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-[var(--color-default)]">Calificación:</span>
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                size={16}
-                className={`cursor-pointer transition-all ${
-                  (hoverRating || rating) >= star ? "fill-yellow-500 stroke-yellow-500" : "stroke-gray-400"
-                }`}
-                onMouseEnter={() => setHoverRating(star)}
-                onMouseLeave={() => setHoverRating(0)}
-                onClick={() => setRating(star)}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full flex flex-col md:flex-row gap-8 items-start">
-          <div className="md:w-2/5 text-center md:text-left pr-16">
-            <DescriptionDetail description={DESCRIPTIONS} subtitle={"Una isla que te transportará"} />
+        <div className="w-full flex flex-col md:flex-row gap-10 items-start">
+          <div className="md:w-[65%] text-center md:text-left pr10">
+            <DescriptionDetail
+              description={DESCRIPTIONS}
+              subtitle={"Una isla que te transportará"}
+            />
           </div>
 
-          <div className="md:w-1/3 bg-white shadow-md rounded-lg p-4 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
-            <h2 className="text-base md:text-lg font-semibold mb-4 text-[var(--color-default)]">Desde $90 por persona</h2>
-            
-            <div className="flex flex-wrap gap-3">
-              <div className="flex-1">
-                <label className="text-xs font-medium text-[var(--color-default)]">Fecha de inicio</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="border border-[var(--color-secondary)] p-2 rounded text-sm w-full"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-xs font-medium text-[var(--color-default)]">Fecha de fin</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="border border-[var(--color-secondary)] p-2 rounded text-sm w-full"
-                />
-              </div>
-            </div>
+          <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
+  <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
+    Desde <span className="text-[var(--color-emphasis)]">$90</span> por persona
+  </h2>
 
-            <button
-              onClick={handleConsult}
-              className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-4 py-2 rounded-lg hover:bg-[var(--color-secondary)] transition-all w-full mt-2"
-            >
-              Consultar
-            </button>
-            {message && (
-              <p className={`text-sm mt-2 ${message.includes("exitosa") ? "text-green-500" : "text-red-500"}`}>{message}</p>
-            )}
-          </div>
+  <div className="mb-4 relative">
+    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+      Selecciona fechas
+    </label>
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={startDate ? startDate.toLocaleDateString() : ""}
+        readOnly
+        className="border p-2 rounded-lg text-sm w-full"
+        placeholder="Fecha de inicio"
+        onClick={() => setShowDatePicker(true)}
+      />
+      <input
+        type="text"
+        value={endDate ? endDate.toLocaleDateString() : ""}
+        readOnly
+        className="border p-2 rounded-lg text-sm w-full"
+        placeholder="Fecha de fin"
+        onClick={() => setShowDatePicker(true)}
+      />
+    </div>
+    {showDatePicker && (
+      <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2">
+        <DatePicker
+          selected={startDate}
+          onChange={(update) => {
+            setDateRange(update);
+            setShowDatePicker(false);
+          }}
+          startDate={startDate}
+          endDate={endDate}
+          selectsRange
+          inline
+        />
+      </div>
+    )}
+  </div>
+
+  <div className="mb-4">
+    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+      Número de personas
+    </label>
+    <select
+      value={guests}
+      onChange={(e) => setGuests(e.target.value)}
+      className="border p-2 rounded-lg text-sm w-full"
+    >
+      {[...Array(5).keys()].map(i => (
+        <option key={i + 1} value={i + 1}>
+          {i + 1}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  <button
+    onClick={handleReserve}
+    className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
+  >
+    Reservar
+  </button>
+
+  <div className="mt-4 flex justify-between items-center">
+    <label className="text-sm font-semibold text-[var(--color-default)]">
+      Precio total
+    </label>
+    <p className="text-[var(--color-emphasis)] font-bold text-lg">
+      ${guests * 90}
+    </p>
+  </div>
+</div>
         </div>
 
         <div className="flex justify-center items-center w-full min-h-[20vh]">
           <CharacteristicsSection characteristics={CARACTERISTICAS} />
         </div>
       </main>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} message={modalMessage} />
     </div>
   );
 }
