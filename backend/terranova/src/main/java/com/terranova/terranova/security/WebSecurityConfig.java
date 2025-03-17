@@ -65,6 +65,8 @@ public class WebSecurityConfig {
                                 "/tour/*",
                                 "/categoriaTours",
                                 "/tour",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
                                 "/*"
                         ).permitAll() //✅ Permitir sin autenticación
                         .requestMatchers(
