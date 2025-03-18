@@ -13,6 +13,9 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # Ejecutar script SQL al iniciar
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
 
 volumes:
   db_data:

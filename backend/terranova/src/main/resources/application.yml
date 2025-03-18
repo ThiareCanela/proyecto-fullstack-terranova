@@ -19,6 +19,17 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        connection:
+          characterEncoding: UTF-8
+          useUnicode: true
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 springdoc:
   api-docs:
