@@ -1,35 +1,33 @@
 import { useState } from "react";
+import { API_TERRANOVA } from "../constants/endpoints";
 
 export const useRegister = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
+  const [data, setData] = useState([]);
+  const createUser = async (usuario) => {
+    try {
+      const respuesta = await fetch(`api/${API_TERRANOVA.REGISTER_USER}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(usuario),
+      });
 
-  const [error, setError] = useState("");
+      if (!respuesta.ok) {
+        throw new Error("Error al registrar usuario");
+      }
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 6 && /\d/.test(password);
-  };
-
-  const handleRegister = () => {
-    if (!validatePassword(formData.password)) {
-      setError("La contraseña debe tener al menos 6 caracteres y un número.");
-      return;
+      const res = await respuesta.json();
+      console.log("Usuario registrado:", data);
+      setData(res);
+      return data;
+    } catch (error) {
+      console.error(error);
     }
-
-    localStorage.setItem("userProfile", JSON.stringify(formData));
   };
 
   return {
-    error,
-    handleChange,
-    handleRegister,
+    data,
+    createUser,
   };
 };

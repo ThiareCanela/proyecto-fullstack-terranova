@@ -9,16 +9,33 @@ import TravelCard from "../organisms/TravelCard";
 import allPlaces from "../../constants/data";
 
 const places = [
-  "Argentina", "Chile", "Perú", "Colombia", "Ecuador", "México", "Brasil", "Uruguay", 
-  "Paraguay", "Bolivia", "Venezuela", "Panamá", "Costa Rica", "Guatemala", "Honduras", 
-  "El Salvador", "Nicaragua", "Cuba", "República Dominicana", "Puerto Rico"
+  "Argentina",
+  "Chile",
+  "Perú",
+  "Colombia",
+  "Ecuador",
+  "México",
+  "Brasil",
+  "Uruguay",
+  "Paraguay",
+  "Bolivia",
+  "Venezuela",
+  "Panamá",
+  "Costa Rica",
+  "Guatemala",
+  "Honduras",
+  "El Salvador",
+  "Nicaragua",
+  "Cuba",
+  "República Dominicana",
+  "Puerto Rico",
 ];
 
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  
+
   const locationParam = queryParams.get("location");
   const startDateParam = queryParams.get("startDate");
   const endDateParam = queryParams.get("endDate");
@@ -72,12 +89,12 @@ const SearchResults = () => {
     }
 
     setLoading(true);
-    
+
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       console.log("Datos enviados:", formData);
-      
+
       const queryParams = new URLSearchParams({
         location: formData.location,
         startDate: formData.startDate.toISOString().split("T")[0],
@@ -85,7 +102,6 @@ const SearchResults = () => {
       }).toString();
 
       navigate(`/resultados?${queryParams}`);
-      
     } catch (error) {
       console.error("Error en la búsqueda:", error);
     } finally {
@@ -94,7 +110,10 @@ const SearchResults = () => {
   };
 
   const handleClickOutside = (event) => {
-    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+    if (
+      datePickerRef.current &&
+      !datePickerRef.current.contains(event.target)
+    ) {
       setShowDatePicker(false);
     }
   };
@@ -110,13 +129,16 @@ const SearchResults = () => {
     };
   }, [showDatePicker]);
 
-  const filteredResults = allPlaces.filter(place => 
+  const filteredResults = allPlaces.filter((place) =>
     place.location.toLowerCase().includes(formData.location.toLowerCase())
   );
 
   return (
     <div className="p-6 mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2xl shadow-lg flex items-center gap-4 mx-auto max-w-4xl">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-4 rounded-2xl shadow-lg flex items-center gap-4 mx-auto max-w-4xl"
+      >
         {/* Botón de ubicación */}
         <div className="relative flex-1">
           <button
@@ -153,11 +175,18 @@ const SearchResults = () => {
               : "Cuándo"}
           </button>
           {showDatePicker && (
-            <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2">
+            <div
+              ref={datePickerRef}
+              className="absolute z-50 bg-white shadow-lg rounded-lg mt-2"
+            >
               <DatePicker
                 selected={formData.startDate}
                 onChange={(update) => {
-                  setFormData({ ...formData, startDate: update[0], endDate: update[1] });
+                  setFormData({
+                    ...formData,
+                    startDate: update[0],
+                    endDate: update[1],
+                  });
                   setShowDatePicker(false);
                 }}
                 startDate={formData.startDate}
@@ -199,7 +228,7 @@ const SearchResults = () => {
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredResults.map((place, index) => (
           <TravelCard
-            key={index}
+            key={`${index}-resulFilter`}
             image={place.image}
             location={place.location}
             name={place.name}

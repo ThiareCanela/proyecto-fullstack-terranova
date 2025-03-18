@@ -1,13 +1,29 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Importamos useNavigate
-import { InputField } from "../atoms/InputField";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const places = [
-  "Argentina", "Chile", "Perú", "Colombia", "Ecuador", "México", "Brasil", "Uruguay", 
-  "Paraguay", "Bolivia", "Venezuela", "Panamá", "Costa Rica", "Guatemala", "Honduras", 
-  "El Salvador", "Nicaragua", "Cuba", "República Dominicana", "Puerto Rico"
+  "Argentina",
+  "Chile",
+  "Perú",
+  "Colombia",
+  "Ecuador",
+  "México",
+  "Brasil",
+  "Uruguay",
+  "Paraguay",
+  "Bolivia",
+  "Venezuela",
+  "Panamá",
+  "Costa Rica",
+  "Guatemala",
+  "Honduras",
+  "El Salvador",
+  "Nicaragua",
+  "Cuba",
+  "República Dominicana",
+  "Puerto Rico",
 ];
 
 export const BookingForm = () => {
@@ -61,13 +77,13 @@ export const BookingForm = () => {
     }
 
     setLoading(true);
-    
+
     try {
       // Simulación de una llamada a API con retraso
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       console.log("Datos enviados:", formData);
-      
+
       // Redirección con los datos en la URL
       const queryParams = new URLSearchParams({
         location: formData.location,
@@ -76,7 +92,6 @@ export const BookingForm = () => {
       }).toString();
 
       navigate(`/resultados?${queryParams}`);
-      
     } catch (error) {
       console.error("Error en la búsqueda:", error);
     } finally {
@@ -85,7 +100,10 @@ export const BookingForm = () => {
   };
 
   const handleClickOutside = (event) => {
-    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+    if (
+      datePickerRef.current &&
+      !datePickerRef.current.contains(event.target)
+    ) {
       setShowDatePicker(false);
     }
   };
@@ -107,63 +125,74 @@ export const BookingForm = () => {
         ¿Estás listo/a para tu próxima aventura en Latinoamérica?
       </h3>
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-      <div className="flex w-full gap-4 items-center justify-center">
-  {/* Campo de ubicación */}
-  <div className="relative w-1/2">
-    <label className="text-sm font-semibold text-gray-700 block mb-1">Dónde</label>
-    <button
-      type="button"
-      className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
-      onClick={() => setFilteredPlaces(places)}
-    >
-      {formData.location || "Selecciona un destino"}
-    </button>
-    {filteredPlaces.length > 0 && (
-      <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-40 overflow-y-auto shadow-md">
-        {filteredPlaces.map((place) => (
-          <li
-            key={place}
-            className="p-2 cursor-pointer hover:bg-gray-200 transition-all"
-            onClick={() => handleSelectPlace(place)}
-          >
-            {place}
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
+        <div className="flex w-full gap-4 items-center justify-center">
+          {/* Campo de ubicación */}
+          <div className="relative w-1/2">
+            <label className="text-sm font-semibold text-gray-700 block mb-1">
+              Dónde
+            </label>
+            <button
+              type="button"
+              className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
+              onClick={() => setFilteredPlaces(places)}
+            >
+              {formData.location || "Selecciona un destino"}
+            </button>
+            {filteredPlaces.length > 0 && (
+              <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-40 overflow-y-auto shadow-md">
+                {filteredPlaces.map((place) => (
+                  <li
+                    key={`${place}-places3`}
+                    className="p-2 cursor-pointer hover:bg-gray-200 transition-all"
+                    onClick={() => handleSelectPlace(place)}
+                  >
+                    {place}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-  {/* Campo de fecha */}
-  <div className="relative w-1/2">
-    <label className="text-sm font-semibold text-gray-700 block mb-1">Cuándo</label>
-    <button
-      type="button"
-      className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
-      onClick={() => setShowDatePicker(true)}
-    >
-      {formData.startDate && formData.endDate
-        ? `${formData.startDate.toLocaleDateString()} - ${formData.endDate.toLocaleDateString()}`
-        : "dd/mm/aaaa"}
-    </button>
-    {showDatePicker && (
-      <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2 p-2 border border-gray-300">
-        <DatePicker
-          selected={formData.startDate}
-          onChange={(update) => {
-            setFormData({ ...formData, startDate: update[0], endDate: update[1] });
-          }}
-          startDate={formData.startDate}
-          endDate={formData.endDate}
-          selectsRange
-          inline
-        />
-      </div>
-    )}
-  </div>
-</div>
+          {/* Campo de fecha */}
+          <div className="relative w-1/2">
+            <label className="text-sm font-semibold text-gray-700 block mb-1">
+              Cuándo
+            </label>
+            <button
+              type="button"
+              className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
+              onClick={() => setShowDatePicker(true)}
+            >
+              {formData.startDate && formData.endDate
+                ? `${formData.startDate.toLocaleDateString()} - ${formData.endDate.toLocaleDateString()}`
+                : "dd/mm/aaaa"}
+            </button>
+            {showDatePicker && (
+              <div
+                ref={datePickerRef}
+                className="absolute z-50 bg-white shadow-lg rounded-lg mt-2 p-2 border border-gray-300"
+              >
+                <DatePicker
+                  selected={formData.startDate}
+                  onChange={(update) => {
+                    setFormData({
+                      ...formData,
+                      startDate: update[0],
+                      endDate: update[1],
+                    });
+                  }}
+                  startDate={formData.startDate}
+                  endDate={formData.endDate}
+                  selectsRange
+                  inline
+                />
+              </div>
+            )}
+          </div>
+        </div>
 
         {errors && <p className="text-red-600 font-medium">{errors}</p>}
-        
+
         <button
           type="submit"
           className="w-full rounded-2xl bg-[var(--color-secondary)] text-white font-normal text-center h-[40px] disabled:opacity-50 transition-all duration-300 ease-in-out hover:bg-[var(--color-emphasis)] disabled:hover:bg-[var(--color-secondary)]"

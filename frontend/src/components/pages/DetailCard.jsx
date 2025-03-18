@@ -6,7 +6,7 @@ import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
 import { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+/* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
 
@@ -21,7 +21,8 @@ const Modal = ({ isOpen, onClose, message }) => {
   } else if (message.includes("Error en la reserva")) {
     icon = <XCircle className="w-12 h-12 text-red-500" />;
     title = "Error en la reserva";
-    description = "Hubo un problema con el servidor al procesar la fecha. Intenta nuevamente.";
+    description =
+      "Hubo un problema con el servidor al procesar la fecha. Intenta nuevamente.";
   } else {
     icon = null;
     title = "Error";
@@ -74,7 +75,9 @@ export default function DetailCard() {
       return;
     }
     if (new Date(startDate) >= new Date(endDate)) {
-      setModalMessage("Fecha no disponible: La fecha de inicio debe ser anterior a la de fin.");
+      setModalMessage(
+        "Fecha no disponible: La fecha de inicio debe ser anterior a la de fin."
+      );
       setShowModal(true);
       return;
     }
@@ -83,7 +86,10 @@ export default function DetailCard() {
   };
 
   const handleClickOutside = (event) => {
-    if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+    if (
+      datePickerRef.current &&
+      !datePickerRef.current.contains(event.target)
+    ) {
       setShowDatePicker(false);
     }
   };
@@ -101,12 +107,12 @@ export default function DetailCard() {
 
   return (
     <div className="flex flex-col bg-[var(--color-primary)]">
-      <header className="flex p-6 gap-4 md:gap-6 justify-between mt-[80px] flex-col md:flex-row text-center md:text-left w-full">
+      <header className="flex p-6 flex-col-reverse gap-4 md:gap-6 justify-between mt-[80px]  md:flex-row text-center md:text-left w-full">
         <h1 className="font-bold uppercase text-2xl md:text-3xl text-[var(--color-default)] pl-4">
           Retiro en el amazonas
         </h1>
         <button
-          className="flex items-center bg-transparent border-none justify-center gap-2 text-[var(--color-emphasis)] text-sm font-medium w-full md:w-auto self-start md:self-auto px-4 md:px-0 ml-4 md:ml-0"
+          className="flex items-center justify-start  bg-transparent border-none gap-2 text-[var(--color-emphasis)] text-sm font-medium w-full md:w-auto self-start md:self-auto px-4 md:px-0 ml-4 md:ml-0"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft /> Volver atrás
@@ -143,82 +149,86 @@ export default function DetailCard() {
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
-  <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
-    Desde <span className="text-[var(--color-emphasis)]">$90</span> por persona
-  </h2>
+            <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
+              Desde <span className="text-[var(--color-emphasis)]">$90</span>{" "}
+              por persona
+            </h2>
 
-  <div className="mb-4 relative">
-    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-      Selecciona fechas
-    </label>
-    <div className="flex gap-2">
-      <input
-        type="text"
-        value={startDate ? startDate.toLocaleDateString() : ""}
-        readOnly
-        className="border p-2 rounded-lg text-sm w-full"
-        placeholder="Fecha de inicio"
-        onClick={() => setShowDatePicker(true)}
-      />
-      <input
-        type="text"
-        value={endDate ? endDate.toLocaleDateString() : ""}
-        readOnly
-        className="border p-2 rounded-lg text-sm w-full"
-        placeholder="Fecha de fin"
-        onClick={() => setShowDatePicker(true)}
-      />
-    </div>
-    {showDatePicker && (
-      <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2">
-        <DatePicker
-          selected={startDate}
-          onChange={(update) => {
-            setDateRange(update);
-            setShowDatePicker(false);
-          }}
-          startDate={startDate}
-          endDate={endDate}
-          selectsRange
-          inline
-        />
-      </div>
-    )}
-  </div>
+            <div className="mb-4 relative">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Selecciona fechas
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={startDate ? startDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de inicio"
+                  onClick={() => setShowDatePicker(true)}
+                />
+                <input
+                  type="text"
+                  value={endDate ? endDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de fin"
+                  onClick={() => setShowDatePicker(true)}
+                />
+              </div>
+              {showDatePicker && (
+                <div
+                  ref={datePickerRef}
+                  className="absolute z-50 bg-white shadow-lg rounded-lg mt-2"
+                >
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(update) => {
+                      setDateRange(update);
+                      setShowDatePicker(false);
+                    }}
+                    startDate={startDate}
+                    endDate={endDate}
+                    selectsRange
+                    inline
+                  />
+                </div>
+              )}
+            </div>
 
-  <div className="mb-4">
-    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-      Número de personas
-    </label>
-    <select
-      value={guests}
-      onChange={(e) => setGuests(e.target.value)}
-      className="border p-2 rounded-lg text-sm w-full"
-    >
-      {[...Array(5).keys()].map(i => (
-        <option key={i + 1} value={i + 1}>
-          {i + 1}
-        </option>
-      ))}
-    </select>
-  </div>
+            <div className="mb-4">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Número de personas
+              </label>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                className="border p-2 rounded-lg text-sm w-full"
+              >
+                {[...Array(5).keys()].map((i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-  <button
-    onClick={handleReserve}
-    className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
-  >
-    Reservar
-  </button>
+            <button
+              onClick={handleReserve}
+              className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
+            >
+              Reservar
+            </button>
 
-  <div className="mt-4 flex justify-between items-center">
-    <label className="text-sm font-semibold text-[var(--color-default)]">
-      Precio total
-    </label>
-    <p className="text-[var(--color-emphasis)] font-bold text-lg">
-      ${guests * 90}
-    </p>
-  </div>
-</div>
+            <div className="mt-4 flex justify-between items-center">
+              <label className="text-sm font-semibold text-[var(--color-default)]">
+                Precio total
+              </label>
+              <p className="text-[var(--color-emphasis)] font-bold text-lg">
+                ${guests * 90}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-center items-center w-full min-h-[20vh]">
@@ -226,7 +236,11 @@ export default function DetailCard() {
         </div>
       </main>
 
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} message={modalMessage} />
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        message={modalMessage}
+      />
     </div>
   );
 }

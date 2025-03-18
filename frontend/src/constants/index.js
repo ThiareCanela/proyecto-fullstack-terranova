@@ -84,3 +84,32 @@ export const TOURS_DATA = [
     category: "naturaleza",
   },
 ];
+
+export const OPTIONS_CHARAC = [
+  { value: "guia", label: "Guía incluido" },
+  { value: "miradores", label: "Miradores cercanos" },
+  { value: "acampado", label: "Zona de acampado" },
+];
+
+export const CITIES_TOUR = [
+  { label: "MÉXICO", value: "MÉXICO" },
+  { label: "COLOMBIA", value: "COLOMBIA" },
+  { label: "ARGENTINA", value: "ARGENTINA" },
+  { label: "BRASIL", value: "BRASIL" },
+  { label: "JAMAICA", value: "JAMAICA" },
+  { label: "URUGUAY", value: "URUGUAY" },
+  { label: "COSTA RICA", value: "COSTA RICA" },
+  { label: "CHILE", value: "CHILE" },
+  { label: "PERÚ", value: "PERÚ" },
+];
+
+export const CATEGORIES_TOUR = [
+  {
+    label: "Aventura",
+    value: "Aventura",
+  },
+  {
+    label: "Cultural",
+    value: "Cultural",
+  },
+];

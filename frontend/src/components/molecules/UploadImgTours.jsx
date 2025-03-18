@@ -19,7 +19,7 @@ export const UploadImgTours = () => {
         <div className="flex flex-wrap gap-2">
           {images.map((img, index) => (
             <img
-              key={index}
+              key={`${index}-img`}
               src={img}
               alt={`Imagen ${index + 1}`}
               className="w-1/3 h-24 object-cover rounded"

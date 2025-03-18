@@ -4,10 +4,10 @@ export const CharacteristicsSection = ({ characteristics }) => (
     <h4 className="font-semibold w-full">¿Qué encontrarás?</h4>
     <p className="text-gray-400 text-sm w-full text-justify">Características</p>
 
-    <div className="w-full grid grid-cols-4 gap-8 mt-4">
+    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-8 mt-4">
       {characteristics.map((item, index) => (
         <div
-          key={index}
+          key={`${index}-charac`}
           className="flex flex-col items-center justify-center text-center"
         >
           <img src={item.icon} className="w-10 h-10" alt={item.name} />
