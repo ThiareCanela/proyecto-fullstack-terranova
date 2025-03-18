@@ -10,4 +10,6 @@ import java.util.List;
 public interface DisponibilidadTourRepository  extends JpaRepository<DisponibilidadTour, DisponibilidadTourPK> {
     @Query("SELECT d FROM DisponibilidadTour d WHERE d.tour.id = :tourId")
     List<DisponibilidadTour> findByTourId(@Param("tourId") Long tourId);
+
+    List<DisponibilidadTour> findByDisponibleTrue();
 }

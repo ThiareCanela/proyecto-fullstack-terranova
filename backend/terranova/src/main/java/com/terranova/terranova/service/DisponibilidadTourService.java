@@ -28,4 +28,7 @@ public class DisponibilidadTourService {
         return repository.save(disponibilidad); }
     public void deleteById(DisponibilidadTourPK id) {
         repository.deleteById(id); }
+
+    public List<DisponibilidadTour> obtenerDisponibilidades() {
+        return repository.findByDisponibleTrue(); }
 }

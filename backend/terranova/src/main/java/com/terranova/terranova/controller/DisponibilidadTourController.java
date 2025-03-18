@@ -19,8 +19,10 @@ public class DisponibilidadTourController {
         this.disponibilidadTourService = service;
     }
     @GetMapping
-    public List<DisponibilidadTour> findAll() { return disponibilidadTourService.findAll(); }
-
+    public ResponseEntity<List<DisponibilidadTour>> obtenerTodasLasDisponibilidades() {
+        List<DisponibilidadTour> disponibilidades = disponibilidadTourService.obtenerDisponibilidades();
+        return ResponseEntity.ok(disponibilidades);
+    }
     @GetMapping("/{tourId}")
     public ResponseEntity<List<DisponibilidadTour>> obtenerDisponibilidadPorTour(@PathVariable Long tourId) {
         List<DisponibilidadTour> disponibilidad = disponibilidadTourService.obtenerDisponibilidadPorTour(tourId);

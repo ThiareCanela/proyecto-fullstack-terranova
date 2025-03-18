@@ -222,4 +222,13 @@ public class TourController {
         List<Tour> tours = tourService.buscarToursPorPaisYFechas(pais, fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
     }
+
+    @GetMapping("/buscar/fechas")
+    public ResponseEntity<List<Tour>> filtrarToursPorFechas(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        List<Tour> tours = tourService.filtrarToursPorFechas(fechaInicio, fechaFin);
+        return ResponseEntity.ok(tours);
+    }
 }

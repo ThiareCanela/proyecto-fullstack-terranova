@@ -112,4 +112,8 @@ public class TourService {
     public List<Tour> buscarToursPorPaisYFechas(List<String> pais, LocalDate fechaInicio, LocalDate fechaFin) {
         return tourRepository.findByPaisAndDisponibilidad(pais, fechaInicio, fechaFin);
     }
+
+    public List<Tour> filtrarToursPorFechas(LocalDate fechaInicio, LocalDate fechaFin) {
+        return tourRepository.findByDisponibilidadEntreFechas(fechaInicio, fechaFin);
+    }
 }

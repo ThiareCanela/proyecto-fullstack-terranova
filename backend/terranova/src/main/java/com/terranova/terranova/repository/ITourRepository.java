@@ -17,7 +17,7 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     List<Tour> findByTituloContainingOrDescripcionContaining(String titulo, String descripcion);
 
     // Buscar por rango de fechas usando la disponibilidad de los tours
-    @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
+    @Query("SELECT DISTINCT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
     List<Tour> findByDisponibilidadEntreFechas(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
     // Buscar por palabra clave y rango de fechas
