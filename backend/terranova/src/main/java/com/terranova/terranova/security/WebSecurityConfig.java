@@ -63,6 +63,7 @@ public class WebSecurityConfig {
                                 "/auth/logout",
                                 "/categoriaTours/*",
                                 "/tour/*",
+                                "/tour/buscar/**",
                                 "/categoriaTours",
                                 "/tour",
                                 "/swagger-ui/**",

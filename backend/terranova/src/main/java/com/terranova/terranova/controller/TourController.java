@@ -7,11 +7,13 @@ import com.terranova.terranova.entity.CaracteristicaTour;
 import com.terranova.terranova.entity.CategoriaTours;
 import com.terranova.terranova.entity.TipoDuracion;
 import com.terranova.terranova.entity.Tour;
+import com.terranova.terranova.exception.ResourceNotFoundException;
 import com.terranova.terranova.service.CaracteristicaTourService;
 import com.terranova.terranova.service.CategoriaToursService;
 import com.terranova.terranova.service.ImagenTourService;
 import com.terranova.terranova.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -144,6 +146,39 @@ public class TourController {
             return ResponseEntity.ok("Actualizado con éxito");
         }
         return ResponseEntity.badRequest().body("Tour no encontrado por ID");
+    }
+
+    //endpoint para agregar o modificar categoria a un tour
+    @PutMapping("/agregar-categoria")
+    public ResponseEntity<String> actualizarCategoriaTour(
+            @RequestParam Long tourId,
+            @RequestParam Long categoriaId) {
+
+        Optional<Tour> tourOptional = tourService.consultarTour(tourId);
+        if (tourOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Tour no encontrado");
+        }
+
+        Optional<CategoriaTours> categoriaOptional = categoriaToursService.buscarCategoriaToursPorId(categoriaId);
+        if (categoriaOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Categoría no encontrada");
+        }
+
+        Tour tour = tourOptional.get();
+        tour.setCategoriaTours(categoriaOptional.get());
+        tourService.guardarTour(tour);
+
+        return ResponseEntity.ok("Categoría actualizada correctamente");
+    }
+
+
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<Optional<Tour>> buscarPorId(@PathVariable Long id) throws ResourceNotFoundException{
+        Optional<Tour> tourBuscado = tourService.buscarPorId(id);
+        if (tourBuscado.isPresent()){
+            return new ResponseEntity<>(tourBuscado, HttpStatus.OK);
+        }
+        throw new ResourceNotFoundException("Tour no encontrado por ID");
     }
 
     @DeleteMapping("/{tourId}")

@@ -69,6 +69,14 @@ public class TourService {
 
         return nuevoTour;
     }
+    public void actualizarCaracteristicaTour(Tour tour){
+        tourRepository.save(tour);
+    }
+
+    public Optional<Tour> buscarPorId(Long id){
+        return tourRepository.findById(id);
+    }
+
     public List<Tour> buscarTourPorCategoria(Long id) {
         return tourRepository.findByCategoriaToursId(id);
     }
