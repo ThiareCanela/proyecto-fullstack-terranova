@@ -36,9 +36,9 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
 
     // Búsqueda de tours por pais y disponibilidad en un rango de fechas
     @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id " +
-            "WHERE LOWER(t.pais) LIKE LOWER(CONCAT('%', :pais, '%')) " +
+            "WHERE t.pais IN :pais " +
             "AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
-    List<Tour> findByPaisAndDisponibilidad(@Param("pais") String pais,
+    List<Tour> findByPaisAndDisponibilidad(@Param("pais") List<String> pais,
                                                 @Param("fechaInicio") LocalDate fechaInicio,
                                                 @Param("fechaFin") LocalDate fechaFin);
 }

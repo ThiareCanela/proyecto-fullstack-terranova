@@ -13,6 +13,7 @@ import com.terranova.terranova.service.CategoriaToursService;
 import com.terranova.terranova.service.ImagenTourService;
 import com.terranova.terranova.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -207,7 +208,7 @@ public class TourController {
 
     // Endpoint para buscar tours por pais
     @GetMapping("/buscar/pais")
-    public ResponseEntity<List<Tour>> buscarPorPais(@RequestParam String pais) {
+    public ResponseEntity<List<Tour>> buscarPorPais(@PathVariable String pais) {
         List<Tour> tours = tourService.buscarToursPorPais(pais);
         return ResponseEntity.ok(tours);
     }
@@ -215,9 +216,9 @@ public class TourController {
     // Endpoint para buscar tours por pais y rango de fechas disponibles
     @GetMapping("/buscar/pais-fechas")
     public ResponseEntity<List<Tour>> buscarPorPaisYFechas(
-            @RequestParam String pais,
-            @RequestParam LocalDate fechaInicio,
-            @RequestParam LocalDate fechaFin) {
+            @RequestParam List<String> pais,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
         List<Tour> tours = tourService.buscarToursPorPaisYFechas(pais, fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
     }
