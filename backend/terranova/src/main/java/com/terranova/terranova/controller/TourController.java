@@ -208,8 +208,8 @@ public class TourController {
 
     // Endpoint para buscar tours por pais
     @GetMapping("/buscar/pais")
-    public ResponseEntity<List<Tour>> buscarPorPais(@PathVariable String pais) {
-        List<Tour> tours = tourService.buscarToursPorPais(pais);
+    public ResponseEntity<List<Tour>> buscarPorPais(@RequestParam List<String> pais) {
+        List<Tour> tours = tourService.filtrarToursPorPais(pais);
         return ResponseEntity.ok(tours);
     }
 

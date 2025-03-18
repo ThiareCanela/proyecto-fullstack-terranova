@@ -105,10 +105,9 @@ public class TourService {
 
 
     // Buscar tours por pais
-    public List<Tour> buscarToursPorPais(String pais) {
-        return tourRepository.findByPaisContainingIgnoreCase(pais);
+    public List<Tour> filtrarToursPorPais(List<String> pais) {
+        return tourRepository.findToursByPais(pais);
     }
-
     // Buscar tours por pais y fechas de disponibilidad
     public List<Tour> buscarToursPorPaisYFechas(List<String> pais, LocalDate fechaInicio, LocalDate fechaFin) {
         return tourRepository.findByPaisAndDisponibilidad(pais, fechaInicio, fechaFin);
