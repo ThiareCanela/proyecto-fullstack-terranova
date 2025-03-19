@@ -31,7 +31,7 @@ export const TourForm = ({ action, tour = {} }) => {
   const [error, setError] = useState(null);
   const { categoryData } = useCategory();
   const { characTour } = useCharacterTour();
-  const { createTourWithImages, updateCategoryTour, getDataTours } = useTours();
+  const { updateCategoryTour, getDataTours, createTour } = useTours();
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -83,27 +83,21 @@ export const TourForm = ({ action, tour = {} }) => {
       caracteristicas,
       tipoDuracion,
       duracion,
-      imagenes: fotos.map(({ id, urlImagen, descripcion }) => ({
-        id,
-        urlImagen,
-        descripcion,
-      })),
     };
-
-    const imageFiles = fotos
-      .filter((foto) => foto.file)
-      .map((foto) => foto.file);
 
     try {
       if (action === "Nuevo") {
-        const result = await createTourWithImages(tourData, imageFiles);
+        const result = await createTour(tourData);
+        // const result = await createTourWithImages(tourData, imageFiles);
         console.log("Resultado del API:", result);
 
         if (result) {
           setIsOpen(true);
+          getDataTours();
         } else {
           setError("Error al crear el tour. Intenta nuevamente.");
         }
+        setIsOpen(false);
       } else if (action === "Editar") {
         const result = await updateCategoryTour(
           tour.id,
@@ -126,9 +120,11 @@ export const TourForm = ({ action, tour = {} }) => {
     if (tour) {
       setCategoria(tour?.categoriaTours?.id || ""); // Asegúrate de usar el ID correcto
       setUbicacion(tour?.pais || "");
-      setCaracteristicas(tour.caracteristicas.map((c) => c.descripcion) || []);
+      setCaracteristicas(
+        tour?.caracteristicas?.map((c) => c.descripcion) || []
+      );
     }
-  }, [tour]);
+  }, []);
 
   return (
     <>

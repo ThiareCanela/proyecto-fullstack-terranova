@@ -40,6 +40,23 @@ export const getTourByIdApi = async (id) => {
   }
 };
 
+export const postTour = async (tour) => {
+  try {
+    const response = await fetch("http://localhost:8080/tour/agregar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tour),
+    });
+
+    if (!response.ok) throw new Error("Error al agregar el tour");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return { error: error.message };
+  }
+};
+
 export const postTourWithImagesApi = async (tour, imagenes) => {
   const formData = new FormData();
 

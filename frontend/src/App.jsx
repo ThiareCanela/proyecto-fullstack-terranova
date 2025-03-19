@@ -12,14 +12,12 @@ import SearchResults from "./components/pages/SearchResults";
 // eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
-  console.log("AdminRoute - Usuario:", user);
   return user?.role === "admin" ? children : <Navigate to="/" replace />;
 };
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
-  console.log("PrivateRoute - Usuario:", user);
   return user ? children : <Navigate to="/" replace />;
 };
 

@@ -29,7 +29,7 @@ export const searchTourApi = async (pais, fechaInicio, fechaFin) => {
 export const searchCountryApi = async (pais) => {
   try {
     const response = await fetch(
-      `/tour/buscar/pais?pais=${encodeURIComponent(pais)}`
+      `http://localhost:8080/tour/buscar/pais?pais=${encodeURIComponent(pais)}`
     );
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.statusText}`);
@@ -40,6 +40,3 @@ export const searchCountryApi = async (pais) => {
     return null;
   }
 };
-
-// Ejemplo de uso:
-searchCountryApi("Argentina").then((data) => console.log(data));

@@ -85,7 +85,12 @@ export const UsersTable = () => {
                     </td>
                     <td className="py-2">
                       <select
-                        className="border-none rounded-lg p-1"
+                        className={`border-none rounded-lg p-1 ${
+                          user.role === "admin"
+                            ? "bg-blue-100"
+                            : "bg-transparent"
+                        }`}
+                        disabled={user.role === "admin" ? true : false}
                         defaultValue={user.role.toLowerCase()}
                         onChange={(e) =>
                           handleRoleChange({ ...user, role: e.target.value })

@@ -3,12 +3,13 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSearchTour } from "../../hooks/useSearchTour";
+import { useSearchCountry } from "../../hooks/useSearchTour";
 import { PAIS } from "../../constants";
 
 export const BookingForm = () => {
   const navigate = useNavigate();
-  const { resultTours, loading, searchTour, setLoading } = useSearchTour();
+  const { data: resultTours, loading } = useSearchCountry();
+  // const { resultTours, loading, searchTour, setLoading } = useSearchTour();
   const [formData, setFormData] = useState({
     location: "",
     startDate: null,
@@ -27,7 +28,7 @@ export const BookingForm = () => {
 
   const validateForm = () => {
     const { location, startDate, endDate } = formData;
-    if (!location || !startDate || !endDate) {
+    if (!location) {
       return "Todos los campos deben estar llenos.";
     }
     if (new Date(startDate) > new Date(endDate)) {
@@ -44,28 +45,32 @@ export const BookingForm = () => {
       return;
     }
 
-    setLoading(true);
+    // setLoading(true);
 
-    const formattedStartDate = formData.startDate.toISOString().split("T")[0]; // YYYY-MM-DD
-    const formattedEndDate = formData.endDate.toISOString().split("T")[0]; // YYYY-MM-DD
+    // const formattedStartDate = formData.startDate.toISOString().split("T")[0]; // YYYY-MM-DD
+    // const formattedEndDate = formData.endDate.toISOString().split("T")[0]; // YYYY-MM-DD
 
-    await searchTour(formData.location, formattedStartDate, formattedEndDate);
-
-    // if (resultTours.length > 0) {
-    //   const queryParams = new URLSearchParams({
-    //     location: formData.location,
-    //     startDate: formattedStartDate,
-    //     endDate: formattedEndDate,
-    //   }).toString();
-    //   setLoading(false);
-    //   navigate(`/resultados?${queryParams}`);
-    // }
+    // await searchTour(formData.location, formattedStartDate, formattedEndDate);
   };
 
-  useEffect(() => {
-    console.log("🔄 Verificando resultTours:", resultTours); // Verifica si cambia
+  // useEffect(() => {
+  //   console.log("🔄 Verificando resultTours:", resultTours); // Verifica si cambia
 
-    if (!loading && resultTours.length > 0) {
+  //   if (!loading && resultTours.length > 0) {
+  //     console.log("✅ Resultados encontrados. Redirigiendo...");
+  //     const queryParams = new URLSearchParams({
+  //       location: formData.location,
+  //       startDate: formData.startDate.toISOString().split("T")[0],
+  //       endDate: formData.endDate.toISOString().split("T")[0],
+  //     }).toString();
+
+  //     navigate(`/resultados?${queryParams}`);
+  //   }
+  // }, [resultTours, loading, navigate]);
+
+  useEffect(() => {
+    console.log("🔄 Verificando resultTours:", resultTours);
+    if (!loading && resultTours?.length > 0) {
       console.log("✅ Resultados encontrados. Redirigiendo...");
       const queryParams = new URLSearchParams({
         location: formData.location,
