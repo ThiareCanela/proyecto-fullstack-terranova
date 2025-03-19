@@ -1,13 +1,15 @@
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ITEMS_MENU_ADMIN, TOURS_DATA } from "../../constants";
+import { ITEMS_MENU_ADMIN } from "../../constants";
 import { UsersTable } from "../organisms/usersTable";
 import { ToursTable } from "../organisms/ToursTable";
+import { useTours } from "../../hooks/useTour";
 
 export default function AdminPanel() {
   const [selected, setSelected] = useState("Usuarios");
   const navigate = useNavigate();
+  const { tours } = useTours();
 
   return (
     <div className="px-6 py-24 mb-32">
@@ -45,7 +47,7 @@ export default function AdminPanel() {
 
         <div className="flex-1">
           {selected === "Usuarios" && <UsersTable />}
-          {selected === "Tours" && <ToursTable tours={TOURS_DATA} />}
+          {selected === "Tours" && <ToursTable tours={tours} />}
         </div>
       </div>
       {/* {showModal && (
