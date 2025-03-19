@@ -15,21 +15,6 @@ export const getToursApi = async () => {
   }
 };
 
-// export const getTourByIdApi = async (id) => {
-//   try {
-//     const response = await fetch(`http://localhost:8080/tour/buscar/${id}`);
-
-//     if (!response.ok) {
-//       throw new Error(`Error al obtener el tour: ${response.statusText}`);
-//     }
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error en getTourById:", error);
-//     return null;
-//   }
-// };
-
 export const getTourByIdApi = async (id) => {
   try {
     const response = await fetch(`http://localhost:8080/tour/buscar/${id}`);
@@ -40,7 +25,6 @@ export const getTourByIdApi = async (id) => {
 
     const data = await response.json();
 
-    // Verifica si "description" es un string JSON y lo parsea
     if (data.description && typeof data.description === "string") {
       try {
         data.description = JSON.parse(data.description);
@@ -56,74 +40,11 @@ export const getTourByIdApi = async (id) => {
   }
 };
 
-// export const postAddTour = async (tourData) => {
-//   try {
-//     const response = await fetch("http://localhost:8080/tour/agregar", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(tourData),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`Error al agregar el tour: ${response.statusText}`);
-//     }
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error en addTour:", error);
-//     throw error;
-//   }
-// };
-
-// export const postTourWithImagesApi = async (tourData, images) => {
-//   try {
-//     const formData = new FormData();
-
-//     // Agregar el objeto JSON convertido a string
-//     formData.append(
-//       "tour",
-//       new Blob([JSON.stringify(tourData)], { type: "application/json" })
-//     );
-
-//     // Agregar imágenes
-//     images.forEach((image) => {
-//       formData.append(`imagenes`, image);
-//     });
-
-//     console.log("FormData enviado:");
-//     for (let pair of formData.entries()) {
-//       console.log(pair[0], pair[1]);
-//     }
-
-//     const response = await fetch(
-//       "http://localhost:8080/tour/agregar-con-imagenes",
-//       {
-//         method: "POST",
-//         body: formData,
-//       }
-//     );
-
-//     if (!response.ok) {
-//       const errorText = await response.text();
-//       throw new Error(`Error al agregar el tour: ${errorText}`);
-//     }
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error en addTourWithImagesApi:", error);
-//     return null;
-//   }
-// };
-
 export const postTourWithImagesApi = async (tour, imagenes) => {
   const formData = new FormData();
 
-  // Agregar el objeto tour como JSON
   formData.append("tour", JSON.stringify(tour));
 
-  // Agregar múltiples imágenes con el mismo nombre de campo
   imagenes.forEach((imagen) => {
     formData.append("imagenes", imagen);
   });

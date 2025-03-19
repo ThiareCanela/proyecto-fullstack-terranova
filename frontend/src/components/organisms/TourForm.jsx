@@ -1,51 +1,4 @@
 /* eslint-disable react/prop-types */
-// const handleFileUpload = (event) => {
-//   const files = Array.from(event.target.files);
-
-//   if (fotos.length + files.length > 3) {
-//     setError("Solo puedes subir hasta 3 imágenes.");
-//     return;
-//   }
-
-//   setFotos((prevFotos) => [...prevFotos, ...files].slice(0, 3));
-// };
-// const handleSubmit = (e) => {
-//   e.preventDefault();
-
-//   if (titulo.trim() === "" && descripcion === "") {
-//     setError("El título es obligatorio.");
-//     return;
-//   }
-//   const tourData = {
-//     titulo,
-//     descripcion,
-//     categoria,
-//     ubicacion,
-//     costo,
-//     caracteristicas,
-//     fotos,
-//   };
-//   console.log({
-//     titulo,
-//     descripcion,
-//     categoria,
-//     ubicacion,
-//     costo,
-//     caracteristicas,
-//     fotos,
-//   });
-
-//   if (action === "Nuevo") {
-//     const result = createTourWithImages(tourData, imageUrl);
-//     if (result) {
-//       setIsOpen(true);
-//     } else {
-//       setError("Error al crear el tour. Intenta nuevamente.");
-//     }
-//   } else {
-//     setIsOpen(true); // Para edición, solo mostramos el modal de éxito
-//   }
-// };
 
 import { useState } from "react";
 import { CITIES_TOUR } from "../../constants";
@@ -68,7 +21,6 @@ export const TourForm = ({ action, tour = {} }) => {
   const [caracteristicas, setCaracteristicas] = useState(
     tour?.caracteristicas || []
   );
-  // const [fotos, setFotos] = useState(tour?.imagenes || []);
   const [fotos, setFotos] = useState(
     tour?.imagenes?.map((img) => ({
       id: img.id || null,
@@ -80,14 +32,6 @@ export const TourForm = ({ action, tour = {} }) => {
   const { categoryData } = useCategory();
   const { characTour } = useCharacterTour();
   const { createTourWithImages } = useTours();
-  // const { oneTour } = useTourById();
-
-  // const handleCheckboxChange = (e) => {
-  //   setCaracteristicas({
-  //     ...caracteristicas,
-  //     [e.target.name]: e.target.checked,
-  //   });
-  // };
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -104,70 +48,14 @@ export const TourForm = ({ action, tour = {} }) => {
     }
 
     const newImages = files.map((file) => ({
-      id: null, // Se generará en el backend
-      urlImagen: URL.createObjectURL(file), // Para vista previa
-      descripcion: "", // Se puede agregar un campo de entrada para descripción
-      file, // Guardamos el archivo para enviarlo al backend
+      id: null,
+      urlImagen: URL.createObjectURL(file),
+      descripcion: "",
+      file,
     }));
 
     setFotos((prevFotos) => [...prevFotos, ...newImages].slice(0, 3));
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (error) setError("");
-
-  //   if (
-  //     titulo.trim() === "" ||
-  //     descripcion.trim() === "" ||
-  //     !ubicacion ||
-  //     !categoria ||
-  //     costo.trim() === "" ||
-  //     tipoDuracion.trim() === "" ||
-  //     duracion.trim() === 0
-  //   ) {
-  //     setError(
-  //       "Los campos título, descripción, características, ubicación, categoría, costo, duración, tipoDuración e imágenes  son requeridos."
-  //     );
-  //     return;
-  //   }
-
-  //   const tourData = {
-  //     titulo,
-  //     descripcion,
-  //     categoria,
-  //     ubicacion,
-  //     costo,
-  //     caracteristicas,
-  //     tipoDuracion,
-  //     duracion,
-  //     imagenes: fotos.map(({ id, urlImagen, descripcion }) => ({
-  //       id,
-  //       urlImagen,
-  //       descripcion,
-  //     })),
-  //   };
-
-  //   const imageFiles = fotos
-  //     .filter((foto) => foto.file)
-  //     .map((foto) => foto.file);
-
-  //   try {
-  //     if (action === "Nuevo") {
-  //       const result = await createTourWithImages(tourData, imageFiles);
-  //       if (result) {
-  //         setIsOpen(true);
-  //       } else {
-  //         setError("Error al crear el tour. Intenta nuevamente.");
-  //       }
-  //     } else {
-  //       setIsOpen(true); // Para edición
-  //     }
-  //   } catch (error) {
-  //     console.error("Error en handleSubmit:", error);
-  //     setError("Ocurrió un error inesperado.");
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

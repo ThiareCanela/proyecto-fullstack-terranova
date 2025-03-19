@@ -2,7 +2,6 @@ import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const UsersTable = () => {
-  //   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);

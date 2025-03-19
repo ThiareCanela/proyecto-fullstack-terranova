@@ -41,21 +41,6 @@ export const useTours = () => {
     }
   };
 
-  // const createTour = async (tourData) => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     const newTour = await postAddTour(tourData);
-  //     setNewTour(newTour);
-  //     return newTour;
-  //   } catch (err) {
-  //     setError(err.message);
-  //     return null;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const deleteTour = async (tourId) => {
     setLoading(true);
     setError(null);
