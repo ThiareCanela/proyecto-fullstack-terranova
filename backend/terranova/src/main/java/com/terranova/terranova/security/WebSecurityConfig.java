@@ -62,13 +62,13 @@ public class WebSecurityConfig {
                                 "/usuarios/registrar",
                                 "/auth/logout",
                                 "/categoriaTours/*",
-                                "/tour/*",
+                                "/tour/**",
                                 "/tour/buscar/**",
                                 "/categoriaTours",
                                 "/tour",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/*"
+                                "/**"
                         ).permitAll() //✅ Permitir sin autenticación
                         .requestMatchers(
                                 "/usuarios/listar",

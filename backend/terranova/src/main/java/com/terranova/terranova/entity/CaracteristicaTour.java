@@ -22,7 +22,7 @@ public class CaracteristicaTour {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(name= "url_icono",nullable = false)
+    @Column(name= "url_icon",nullable = false)
     private String urlIcono;
 
     @ManyToMany(mappedBy = "caracteristicas")
