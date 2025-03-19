@@ -7,8 +7,8 @@ export const Categories = ({ categories }) => {
       {categories.map((category, index) => (
         <CategoryFilter
           key={`${index}-cat`}
-          image={category.image}
-          categoryName={category.name}
+          image={category.urlIcono}
+          categoryName={category.nombre}
         />
       ))}
     </div>

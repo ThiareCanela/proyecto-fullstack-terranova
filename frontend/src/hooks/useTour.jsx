@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getTourByIdApi, getToursApi, postAddTour } from "../apis/tour";
+import {
+  deleteTourApi,
+  getTourByIdApi,
+  getToursApi,
+  postTourWithImagesApi,
+} from "../apis/tour";
 /* eslint-disable react-hooks/exhaustive-deps */
 export const useTours = () => {
   const [tours, setTours] = useState([]);
@@ -20,13 +25,14 @@ export const useTours = () => {
     }
   };
 
-  const createTour = async (tourData) => {
+  const createTourWithImages = async (tourData, images) => {
     setLoading(true);
     setError(null);
+
     try {
-      const newTour = await postAddTour(tourData);
-      setNewTour(newTour);
-      return newTour;
+      const createdTour = await postTourWithImagesApi(tourData, images);
+      setNewTour(createdTour);
+      return createdTour;
     } catch (err) {
       setError(err.message);
       return null;
@@ -35,11 +41,48 @@ export const useTours = () => {
     }
   };
 
+  // const createTour = async (tourData) => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const newTour = await postAddTour(tourData);
+  //     setNewTour(newTour);
+  //     return newTour;
+  //   } catch (err) {
+  //     setError(err.message);
+  //     return null;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const deleteTour = async (tourId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await deleteTourApi(tourId);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     getDataTours();
   }, []);
 
-  return { tours, newTour, loading, error, createTour, getDataTours };
+  return {
+    tours,
+    newTour,
+    loading,
+    error,
+    createTourWithImages,
+    deleteTour,
+    getDataTours,
+  };
 };
 
 export const useTourById = (id) => {

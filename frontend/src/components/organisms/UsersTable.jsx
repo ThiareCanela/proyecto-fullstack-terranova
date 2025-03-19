@@ -1,4 +1,4 @@
-import { ArrowUpDown, CircleAlert, Search } from "lucide-react";
+import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const UsersTable = () => {
@@ -50,7 +50,7 @@ export const UsersTable = () => {
           <button className="hidden md:flex items-center bg-white px-4 py-2 rounded-full text-gray-700 shadow-lg">
             <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
           </button>
-          <div className="relative">
+          {/* <div className="relative">
             <input
               type="text"
               placeholder="Buscar usuario..."
@@ -59,7 +59,7 @@ export const UsersTable = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-white rounded-lg p-4">

@@ -1,11 +1,11 @@
 import { ArrowLeft, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { DescriptionDetail } from "../molecules/DescriptionDetail";
-import { CARACTERISTICAS, DESCRIPTIONS } from "../../constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
 import { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useTourById } from "../../hooks/useTour";
 /* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
@@ -60,12 +60,14 @@ const Modal = ({ isOpen, onClose, message }) => {
 
 export default function DetailCard() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [guests, setGuests] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { oneTour } = useTourById(id);
   const datePickerRef = useRef(null);
 
   const handleReserve = () => {
@@ -105,11 +107,15 @@ export default function DetailCard() {
     };
   }, [showDatePicker]);
 
+  if (!oneTour) {
+    return <div>Error al cargar el tour</div>;
+  }
+
   return (
     <div className="flex flex-col bg-[var(--color-primary)]">
       <header className="flex p-6 flex-col-reverse gap-4 md:gap-6 justify-between mt-[80px]  md:flex-row text-center md:text-left w-full">
         <h1 className="font-bold uppercase text-2xl md:text-3xl text-[var(--color-default)] pl-4">
-          Retiro en el amazonas
+          {oneTour.titulo}
         </h1>
         <button
           className="flex items-center justify-start  bg-transparent border-none gap-2 text-[var(--color-emphasis)] text-sm font-medium w-full md:w-auto self-start md:self-auto px-4 md:px-0 ml-4 md:ml-0"
@@ -123,34 +129,34 @@ export default function DetailCard() {
         <div className="grid grid-cols-[66%_33%] gap-4 w-full max-w-full">
           <img
             className="w-full object-cover h-full md:h-76 rounded-lg"
-            src="https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/b/r/brasil35.jpg?crop=0%2C231%2C4000%2C2200&wid=4000&hei=2200&scl=1.0"
-            alt="Sunset Beach"
+            src={oneTour.imagenes[0]}
+            alt={oneTour.titulo}
           />
           <div className="grid grid-rows-2 gap-4 overflow-hidden">
             <img
               className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/bzngtenckauetvefmdai"
-              alt="Sunset Beach"
+              src={oneTour.imagenes[1]}
+              alt={oneTour.titulo}
             />
             <img
               className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/vs0bb8a9jx5w7bteecsj"
-              alt="Sunset Beach"
+              src={oneTour.imagenes[2]}
+              alt={oneTour.titulo}
             />
           </div>
         </div>
 
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
-            <DescriptionDetail
-              description={DESCRIPTIONS}
-              subtitle={"Una isla que te transportará"}
-            />
+            <DescriptionDetail description={oneTour.description} />
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
             <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
-              Desde <span className="text-[var(--color-emphasis)]">$90</span>{" "}
+              Desde{" "}
+              <span className="text-[var(--color-emphasis)]">
+                ${oneTour.precio}
+              </span>{" "}
               por persona
             </h2>
 
@@ -232,7 +238,7 @@ export default function DetailCard() {
         </div>
 
         <div className="flex justify-center items-center w-full min-h-[20vh]">
-          <CharacteristicsSection characteristics={CARACTERISTICAS} />
+          <CharacteristicsSection characteristics={oneTour.caracteristicas} />
         </div>
       </main>
 

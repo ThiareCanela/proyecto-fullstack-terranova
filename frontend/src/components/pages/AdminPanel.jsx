@@ -2,9 +2,9 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ITEMS_MENU_ADMIN } from "../../constants";
-import { UsersTable } from "../organisms/usersTable";
 import { ToursTable } from "../organisms/ToursTable";
 import { useTours } from "../../hooks/useTour";
+import { UsersTable } from "../organisms/UsersTable";
 
 export default function AdminPanel() {
   const [selected, setSelected] = useState("Usuarios");
@@ -50,45 +50,6 @@ export default function AdminPanel() {
           {selected === "Tours" && <ToursTable tours={tours} />}
         </div>
       </div>
-      {/* {showModal && (
-        <div
-          className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white py-8 px-6 rounded-lg shadow-lg relative flex flex-col items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-              onClick={() => setShowModal(false)}
-            >
-              ✖
-            </button>
-            <CircleAlert className="h-20 w-20 text-[#e67e24]" />
-            <h3 className="text-3xl font-semibold py-3">Confirmar</h3>
-            <p className="text-lg mb-4">
-              {`¿Estás seguro de cambiar el rol de ${selectedUser?.name} a 
-              ${selectedUser?.role}"?`}
-            </p>
-
-            <div className="flex gap-4">
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded"
-                onClick={() => confirmRoleChange(selectedUser?.role)}
-              >
-                Confirmar
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded"
-                onClick={() => setShowModal(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
