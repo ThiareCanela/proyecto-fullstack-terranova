@@ -1,49 +1,48 @@
--- Crear la base de datos con utf8mb4
+-- Crear la base de datos con utf8
 CREATE DATABASE IF NOT EXISTS terranova_db
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
 USE terranova_db;
 
 -- Configurar el juego de caracteres y la collation para la sesión actual
-SET NAMES 'utf8mb4';
-SET CHARACTER SET utf8mb4;
+SET NAMES 'utf8';
+SET CHARACTER SET utf8;
 
 -- Crear la tabla de categorías
 CREATE TABLE IF NOT EXISTS categoria_tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
-    url_icono VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    nombre VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL UNIQUE,
+    url_icono VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de tours
 CREATE TABLE IF NOT EXISTS tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    tipo_duracion ENUM('HORAS', 'DIAS') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'DIAS',
+    titulo VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    tipo_duracion ENUM('HORAS', 'DIAS') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'DIAS',
     duracion INT NOT NULL,
     descripcion JSON NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
-    pais ENUM('MÉXICO','COLOMBIA','ARGENTINA','BRASIL','JAMAICA','URUGUAY','COSTA RICA','CHILE','PERÚ') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'MÉXICO',
+    pais ENUM('MÉXICO','COLOMBIA','ARGENTINA','BRASIL','JAMAICA','URUGUAY','COSTA RICA','CHILE','PERÚ') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'MÉXICO',
     categoria_id BIGINT NOT NULL,
     FOREIGN KEY (categoria_id) REFERENCES categoria_tours(id) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de imágenes de los tours
 CREATE TABLE IF NOT EXISTS imagenes_tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     tour_id BIGINT NOT NULL,
-    url_imagen VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    descripcion VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    url_imagen VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    descripcion VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci,
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de características
 CREATE TABLE IF NOT EXISTS caracteristicas_tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    url_icon VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    descripcion VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    url_icon VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de relación tours_x_caracteristicas
 CREATE TABLE IF NOT EXISTS tours_x_caracteristicas (
@@ -52,17 +51,17 @@ CREATE TABLE IF NOT EXISTS tours_x_caracteristicas (
     PRIMARY KEY (tour_id, caracteristica_id),
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
     FOREIGN KEY (caracteristica_id) REFERENCES caracteristicas_tours(id) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    apellido VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    email VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
-    password VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    usuario_role ENUM('ROLE_USER', 'ROLE_ADMIN') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'ROLE_USER'
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    nombre VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    apellido VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    email VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL UNIQUE,
+    password VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    usuario_role ENUM('ROLE_USER', 'ROLE_ADMIN') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'ROLE_USER'
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de reservas
 CREATE TABLE IF NOT EXISTS reservas (
@@ -73,12 +72,12 @@ CREATE TABLE IF NOT EXISTS reservas (
     fecha_fin DATE NOT NULL,
     hora_inicio TIME,
     hora_fin TIME,
-    estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'PENDIENTE',
+    estado ENUM('PENDIENTE', 'CONFIRMADA', 'CANCELADA') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'PENDIENTE',
     num_personas INT NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Crear la tabla de disponibilidades
 CREATE TABLE IF NOT EXISTS disponibilidades_tours (
@@ -87,7 +86,7 @@ CREATE TABLE IF NOT EXISTS disponibilidades_tours (
     disponible BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (tour_id, fecha),
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- Insertar usuarios
 INSERT INTO usuarios (nombre, apellido, email, password, usuario_role) VALUES

@@ -8,14 +8,19 @@ services:
       MYSQL_DATABASE: terranova_db
       MYSQL_USER: terranova
       MYSQL_PASSWORD: terranova
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      MYSQL_INIT_CONNECT: "SET NAMES 'utf8';"
+      CHARACTER_SET_SERVER: utf8
+      COLLATION_SERVER: utf8_general_ci
     ports:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
 
   backend:
     build: ./backend/terranova
@@ -26,7 +31,7 @@ services:
     env_file:
       - ./backend/terranova/.env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8mb4
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/terranova_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: terranova
       SPRING_DATASOURCE_PASSWORD: terranova
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
