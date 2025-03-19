@@ -4,6 +4,7 @@ import {
   getTourByIdApi,
   getToursApi,
   postTourWithImagesApi,
+  updateTourCategoryApi,
 } from "../apis/tour";
 /* eslint-disable react-hooks/exhaustive-deps */
 export const useTours = () => {
@@ -55,6 +56,22 @@ export const useTours = () => {
       setLoading(false);
     }
   };
+
+  const updateCategoryTour = async (tourId, categoriaId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await updateTourCategoryApi(tourId, categoriaId);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getDataTours();
   }, []);
@@ -67,6 +84,7 @@ export const useTours = () => {
     createTourWithImages,
     deleteTour,
     getDataTours,
+    updateCategoryTour,
   };
 };
 

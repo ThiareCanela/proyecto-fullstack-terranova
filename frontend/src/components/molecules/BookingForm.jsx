@@ -27,7 +27,7 @@ const places = [
 ];
 
 export const BookingForm = () => {
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     location: "",
     startDate: null,

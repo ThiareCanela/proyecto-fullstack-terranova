@@ -85,3 +85,26 @@ export const deleteTourApi = async (tourId) => {
     return { success: false, message: error.message };
   }
 };
+
+export const updateTourCategoryApi = async (tourId, categoriaId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/tour/${tourId}/categoria/${categoriaId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar la categoría del tour");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

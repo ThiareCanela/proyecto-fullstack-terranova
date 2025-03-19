@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CITIES_TOUR } from "../../constants";
 import { useCategory } from "../../hooks/useCategory";
 import { useCharacterTour } from "../../hooks/useCharacterTour";
@@ -31,7 +31,7 @@ export const TourForm = ({ action, tour = {} }) => {
   const [error, setError] = useState(null);
   const { categoryData } = useCategory();
   const { characTour } = useCharacterTour();
-  const { createTourWithImages } = useTours();
+  const { createTourWithImages, updateCategoryTour, getDataTours } = useTours();
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -66,9 +66,7 @@ export const TourForm = ({ action, tour = {} }) => {
       descripcion.trim() === "" ||
       !ubicacion ||
       !categoria ||
-      costo.trim() === "" ||
-      tipoDuracion.trim() === "" ||
-      duracion.trim() === 0
+      !duracion
     ) {
       setError(
         "Los campos título, descripción, características, ubicación, categoría, costo, duración, tipoDuración e imágenes son requeridos."
@@ -99,21 +97,38 @@ export const TourForm = ({ action, tour = {} }) => {
     try {
       if (action === "Nuevo") {
         const result = await createTourWithImages(tourData, imageFiles);
-        console.log("Resultado del API:", result); // <-- Agregar este log
+        console.log("Resultado del API:", result);
 
         if (result) {
           setIsOpen(true);
         } else {
           setError("Error al crear el tour. Intenta nuevamente.");
         }
-      } else {
-        setIsOpen(true); // Para edición
+      } else if (action === "Editar") {
+        const result = await updateCategoryTour(
+          tour.id,
+          tour.categoriaTours.id
+        );
+        if (result) {
+          setIsOpen(true);
+          getDataTours();
+        } else {
+          setError("Error al actualizar el tour. Intenta nuevamente.");
+        }
       }
     } catch (error) {
       console.error("Error en handleSubmit:", error);
       setError(`Ocurrió un error inesperado: ${error.message || error}`);
     }
   };
+
+  useEffect(() => {
+    if (tour) {
+      setCategoria(tour?.categoriaTours?.id || ""); // Asegúrate de usar el ID correcto
+      setUbicacion(tour?.pais || "");
+      setCaracteristicas(tour.caracteristicas.map((c) => c.descripcion) || []);
+    }
+  }, [tour]);
 
   return (
     <>
@@ -157,19 +172,29 @@ export const TourForm = ({ action, tour = {} }) => {
                 <input
                   type="text"
                   value={titulo}
+                  disabled={action === "Editar" ? true : false}
                   onChange={(e) => setTitulo(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                    action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                  }`}
                 />
               </label>
               <label className="block">
                 <span className="text-gray-700">Descripción</span>
                 <textarea
                   value={descripcion}
+                  disabled={action === "Editar" ? true : false}
                   onChange={(e) => setDescripcion(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                    action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                  }`}
                 ></textarea>
               </label>
-              <fieldset className="border border-gray-300 p-3 rounded-md">
+              <fieldset
+                className={`border border-gray-300 p-3 rounded-md  ${
+                  action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                }`}
+              >
                 <legend className="text-gray-700 font-semibold">
                   Características
                 </legend>
@@ -181,6 +206,7 @@ export const TourForm = ({ action, tour = {} }) => {
                   >
                     <input
                       type="checkbox"
+                      disabled={action === "Editar" ? true : false}
                       name={op.descripcion}
                       // checked={caracteristicas[op.descripcion]}
                       checked={caracteristicas.includes(op.descripcion)}
@@ -213,8 +239,11 @@ export const TourForm = ({ action, tour = {} }) => {
                   <span className="text-gray-700">Ubicación</span>
                   <select
                     value={ubicacion}
+                    disabled={action === "Editar" ? true : false}
                     onChange={(e) => setUbicacion(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                      action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                    }`}
                   >
                     <option value="" disabled>
                       Selecciona una ubicación
@@ -231,8 +260,11 @@ export const TourForm = ({ action, tour = {} }) => {
                   <input
                     type="text"
                     value={costo}
+                    disabled={action === "Editar" ? true : false}
                     onChange={(e) => setCosto(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                      action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                    }`}
                   />
                 </label>
               </div>
@@ -242,8 +274,11 @@ export const TourForm = ({ action, tour = {} }) => {
                   <input
                     type="text"
                     value={tipoDuracion}
+                    disabled={action === "Editar" ? true : false}
                     onChange={(e) => setTipoDuracion(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                      action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                    }`}
                   />
                 </label>
                 <label className="block">
@@ -251,8 +286,11 @@ export const TourForm = ({ action, tour = {} }) => {
                   <input
                     type="number"
                     value={duracion}
+                    disabled={action === "Editar" ? true : false}
                     onChange={(e) => setDuracion(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${
+                      action === "Editar" ? "bg-blue-100" : "bg-transparent"
+                    }`}
                   />
                 </label>
               </div>
