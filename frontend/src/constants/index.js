@@ -103,6 +103,18 @@ export const CITIES_TOUR = [
   { label: "PERÚ", value: "PERÚ" },
 ];
 
+export const PAIS = [
+  "MÉXICO",
+  "COLOMBIA",
+  "ARGENTINA",
+  "BRASIL",
+  "JAMAICA",
+  "URUGUAY",
+  "COSTA RICA",
+  "CHILE",
+  "PERÚ",
+];
+
 export const CATEGORIES_TOUR = [
   {
     label: "Aventura",

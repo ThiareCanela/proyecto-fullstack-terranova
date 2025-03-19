@@ -1,68 +1,35 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Search } from "lucide-react";
 import { Categories } from "../molecules/Categories";
-import { CATEGORIES } from "../../constants";
+import { PAIS } from "../../constants";
 import TravelCard from "../organisms/TravelCard";
-import allPlaces from "../../constants/data";
-
-const places = [
-  "Argentina",
-  "Chile",
-  "Perú",
-  "Colombia",
-  "Ecuador",
-  "México",
-  "Brasil",
-  "Uruguay",
-  "Paraguay",
-  "Bolivia",
-  "Venezuela",
-  "Panamá",
-  "Costa Rica",
-  "Guatemala",
-  "Honduras",
-  "El Salvador",
-  "Nicaragua",
-  "Cuba",
-  "República Dominicana",
-  "Puerto Rico",
-];
+// import allPlaces from "../../constants/data";
+import { useSearchTour } from "../../hooks/useSearchTour";
+import { useCategory } from "../../hooks/useCategory";
 
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-
   const locationParam = queryParams.get("location");
   const startDateParam = queryParams.get("startDate");
   const endDateParam = queryParams.get("endDate");
-
+  const { resultTours, searchTour, loading, setLoading } = useSearchTour();
+  const { categoryData } = useCategory();
   const [formData, setFormData] = useState({
     location: locationParam || "",
     startDate: startDateParam ? new Date(startDateParam) : null,
     endDate: endDateParam ? new Date(endDateParam) : null,
   });
   const [errors, setErrors] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const datePickerRef = useRef(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors("");
-
-    if (name === "location") {
-      const filtered = places.filter((place) =>
-        place.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredPlaces(filtered);
-    }
-  };
 
   const handleSelectPlace = (place) => {
     setFormData({ ...formData, location: place });
@@ -87,8 +54,10 @@ const SearchResults = () => {
       setErrors(errorMessage);
       return;
     }
-
+    setErrors("");
     setLoading(true);
+    setFilteredPlaces([]);
+    setShowDatePicker(false);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -129,9 +98,15 @@ const SearchResults = () => {
     };
   }, [showDatePicker]);
 
-  const filteredResults = allPlaces.filter((place) =>
-    place.location.toLowerCase().includes(formData.location.toLowerCase())
-  );
+  useEffect(() => {
+    if (formData.location && formData.startDate && formData.endDate) {
+      searchTour(formData.location, startDateParam, endDateParam);
+    }
+  }, [formData.location, formData.startDate, formData.endDate]);
+
+  // const filteredResults = allPlaces.filter((place) =>
+  //   place.location.toLowerCase().includes(formData.location.toLowerCase())
+  // );
 
   return (
     <div className="p-6 mt-20">
@@ -139,12 +114,11 @@ const SearchResults = () => {
         onSubmit={handleSubmit}
         className="bg-white p-4 rounded-2xl shadow-lg flex items-center gap-4 mx-auto max-w-4xl"
       >
-        {/* Botón de ubicación */}
         <div className="relative flex-1">
           <button
             type="button"
             className="bg-gray-100 px-4 py-2 rounded-lg text-sm w-full text-left"
-            onClick={() => setFilteredPlaces(places)}
+            onClick={() => setFilteredPlaces(PAIS)}
           >
             {formData.location || "Dónde"}
           </button>
@@ -214,19 +188,16 @@ const SearchResults = () => {
         </button>
       </form>
 
-      {/* Sección de categorías */}
       <div className="mt-8">
-        <Categories categories={CATEGORIES} />
+        <Categories categories={categoryData} />
       </div>
 
-      {/* Texto centrado */}
       <div className="mt-8 text-center">
         <p className="text-lg font-semibold">Resultados de tu búsqueda</p>
       </div>
 
-      {/* Resultados de búsqueda */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredResults.map((place, index) => (
+        {resultTours.map((place, index) => (
           <TravelCard
             key={`${index}-resulFilter`}
             image={place.image}
@@ -238,6 +209,12 @@ const SearchResults = () => {
           />
         ))}
       </div>
+      {resultTours.length === 0 && (
+        <p className="text-center text-gray-500 mt-4">
+          No se encontraron tours para la fecha seleccionada. Intenta con otra
+          fecha o destino.
+        </p>
+      )}
     </div>
   );
 };
