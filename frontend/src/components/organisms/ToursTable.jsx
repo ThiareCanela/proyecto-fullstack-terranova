@@ -1,26 +1,37 @@
-import { EditIcon, Plus, Search, Trash2 } from "lucide-react";
+import { EditIcon, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-// import { TourForm } from "./TourForm";
 import { ModalTour } from "../molecules/ModalTour";
 
 import { ModalTourUpdate } from "../molecules/ModalTourUpdate";
-import { useTourById } from "../../hooks/useTour";
+import { useTourById, useTours } from "../../hooks/useTour";
+import { ModalConfirmDelete } from "../atoms/ModalConfirmDelete";
 
 /* eslint-disable react/prop-types */
 export const ToursTable = ({ tours }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const { oneTour } = useTourById(selectedId);
-
-  // const handleOpenModal = () => {
-  //   setShowModal(true);
-  // };
+  const { deleteTour, getDataTours } = useTours();
 
   const handleOpenModalEdit = (id) => {
     setSelectedId(id);
+    console.log("Tour seleccionado:", id);
     setShowModalEdit(true);
   };
+  console.log("oneTour:", oneTour);
+  const handleOpenModalDelete = (id) => {
+    setSelectedId(id);
+    setShowModalDelete(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    await deleteTour(selectedId);
+    setShowModalDelete(false);
+    getDataTours();
+  };
+
   return (
     <>
       <div className="flex-1">
@@ -34,16 +45,6 @@ export const ToursTable = ({ tours }) => {
           >
             <Plus className="w-4 h-4 mr-2 font-bold" /> Crear
           </button>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Buscar tours..."
-              className=" px-4 py-2 rounded-full w-48 pl-10 bg-white  shadow-lg"
-              //   value={search}
-              //   onChange={(e) => setSearch(e.target.value)}
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          </div>
         </div>
 
         <div className="bg-white rounded-lg p-4">
@@ -80,6 +81,7 @@ export const ToursTable = ({ tours }) => {
                         width={20}
                         height={20}
                         className="hover:text-gray-500 cursor-pointer"
+                        onClick={() => handleOpenModalDelete(tour.id)}
                       />
                     </td>
                   </tr>
@@ -100,6 +102,12 @@ export const ToursTable = ({ tours }) => {
         <ModalTourUpdate
           showModal={() => setShowModalEdit(false)}
           tour={oneTour}
+        />
+      )}
+      {showModalDelete && (
+        <ModalConfirmDelete
+          showModal={() => setShowModalDelete(false)}
+          onConfirm={handleDeleteConfirmed}
         />
       )}
     </>

@@ -45,9 +45,8 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/detalle" element={<DetailCard />} />
+        <Route path="/detalle/:id" element={<DetailCard />} />
         <Route path="/resultados" element={<Resultados />} />{" "}
-        {/* ✅ Nueva ruta añadida */}
         <Route
           path="/perfil"
           element={

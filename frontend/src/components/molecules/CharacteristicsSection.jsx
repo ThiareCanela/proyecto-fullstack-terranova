@@ -10,8 +10,8 @@ export const CharacteristicsSection = ({ characteristics }) => (
           key={`${index}-charac`}
           className="flex flex-col items-center justify-center text-center"
         >
-          <img src={item.icon} className="w-10 h-10" alt={item.name} />
-          <p className="text-sm">{item.name}</p>
+          <img src={item.icon} className="w-10 h-10" alt={item.urlIcono} />
+          <p className="text-sm">{item.descripcion}</p>
         </div>
       ))}
     </div>

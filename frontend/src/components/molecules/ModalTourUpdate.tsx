@@ -4,7 +4,6 @@ import { TourForm } from "../organisms/TourForm";
 export const ModalTourUpdate = ({ showModal, tour }) => (
   <div
     className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-start pt-20 overflow-y-auto md:top-12"
-    // onClick={() => setShowModal(false)}
     onClick={showModal}
   >
     <div
@@ -13,7 +12,6 @@ export const ModalTourUpdate = ({ showModal, tour }) => (
     >
       <button
         className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-        // onClick={() => setShowModal(false)}
         onClick={showModal}
       >
         ✖
