@@ -1,10 +1,26 @@
 import { EditIcon, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { TourForm } from "./TourForm";
+// import { TourForm } from "./TourForm";
+import { ModalTour } from "../molecules/ModalTour";
+
+import { ModalTourUpdate } from "../molecules/ModalTourUpdate";
+import { useTourById } from "../../hooks/useTour";
 
 /* eslint-disable react/prop-types */
 export const ToursTable = ({ tours }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const { oneTour } = useTourById(selectedId);
+
+  // const handleOpenModal = () => {
+  //   setShowModal(true);
+  // };
+
+  const handleOpenModalEdit = (id) => {
+    setSelectedId(id);
+    setShowModalEdit(true);
+  };
   return (
     <>
       <div className="flex-1">
@@ -44,14 +60,13 @@ export const ToursTable = ({ tours }) => {
               {tours.length > 0 ? (
                 tours.map((tour, index) => (
                   <tr key={`tour-${index}`} className="border-b">
-                    {/* <td className="py-2">{index + 1}</td> */}
                     <td className="py-2">{tour.id}</td>
                     <td className="py-2 flex items-center gap-2">
-                      {tour.name}
+                      {tour.titulo}
                     </td>
                     <td className="py-2">
                       <span className=" uppercase text-[12px]  ">
-                        {tour.category}
+                        {tour.categoriaTours.nombre}
                       </span>
                     </td>
                     <td className="py-2 flex  gap-3 w-full">
@@ -59,6 +74,7 @@ export const ToursTable = ({ tours }) => {
                         width={20}
                         height={20}
                         className="hover:text-gray-500 cursor-pointer"
+                        onClick={() => handleOpenModalEdit(tour.id)}
                       />
                       <Trash2
                         width={20}
@@ -79,26 +95,12 @@ export const ToursTable = ({ tours }) => {
           </table>
         </div>
       </div>
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-start pt-20 overflow-y-auto md:top-12"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white pt-10 px-6 py-4 rounded-lg shadow-lg relative flex flex-col items-center justify-start w-[90%]  md:w-[700px]  md:h-[80%] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-              onClick={() => setShowModal(false)}
-            >
-              ✖
-            </button>
-            <div className="w-full overflow-y-auto flex-1">
-              <TourForm action={"Nuevo"} />
-            </div>
-          </div>
-        </div>
+      {showModal && <ModalTour showModal={() => setShowModal(false)} />}
+      {showModalEdit && (
+        <ModalTourUpdate
+          showModal={() => setShowModalEdit(false)}
+          tour={oneTour}
+        />
       )}
     </>
   );
