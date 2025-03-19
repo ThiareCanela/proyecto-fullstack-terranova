@@ -148,7 +148,7 @@ export default function DetailCard() {
 
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
-            <DescriptionDetail description={oneTour.description} />
+            <DescriptionDetail description={oneTour.descripcion} />
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
