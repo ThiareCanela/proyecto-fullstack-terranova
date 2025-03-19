@@ -129,18 +129,18 @@ export default function DetailCard() {
         <div className="grid grid-cols-[66%_33%] gap-4 w-full max-w-full">
           <img
             className="w-full object-cover h-full md:h-76 rounded-lg"
-            src={oneTour.imagenes[0]}
+            src={oneTour.imagenes[0].urlImagen}
             alt={oneTour.titulo}
           />
           <div className="grid grid-rows-2 gap-4 overflow-hidden">
             <img
               className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[1]}
+              src={oneTour.imagenes[1].urlImagen}
               alt={oneTour.titulo}
             />
             <img
               className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[2]}
+              src={oneTour.imagenes[2].urlImagen}
               alt={oneTour.titulo}
             />
           </div>

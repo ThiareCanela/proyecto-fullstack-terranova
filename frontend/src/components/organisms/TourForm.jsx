@@ -182,7 +182,8 @@ export const TourForm = ({ action, tour = {} }) => {
                     <input
                       type="checkbox"
                       name={op.descripcion}
-                      checked={caracteristicas[op.descripcion]}
+                      // checked={caracteristicas[op.descripcion]}
+                      checked={caracteristicas.includes(op.descripcion)}
                       onChange={handleCheckboxChange}
                     />
                     <span>{op.descripcion}</span>
@@ -248,7 +249,7 @@ export const TourForm = ({ action, tour = {} }) => {
                 <label className="block">
                   <span className="text-gray-700">Duración</span>
                   <input
-                    type="text"
+                    type="number"
                     value={duracion}
                     onChange={(e) => setDuracion(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"

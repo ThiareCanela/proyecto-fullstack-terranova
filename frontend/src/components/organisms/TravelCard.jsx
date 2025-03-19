@@ -10,7 +10,7 @@ const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
     >
       <div className="relative">
         <img
-          src={imagenes[0]}
+          src={imagenes[0].urlImagen}
           alt={titulo}
           className="w-full h-48 object-cover"
         />

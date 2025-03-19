@@ -17,9 +17,10 @@ export const ToursTable = ({ tours }) => {
 
   const handleOpenModalEdit = (id) => {
     setSelectedId(id);
+    console.log("Tour seleccionado:", id);
     setShowModalEdit(true);
   };
-
+  console.log("oneTour:", oneTour);
   const handleOpenModalDelete = (id) => {
     setSelectedId(id);
     setShowModalDelete(true);
