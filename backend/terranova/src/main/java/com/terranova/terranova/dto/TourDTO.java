@@ -15,7 +15,7 @@ public class TourDTO {
     private String titulo;
     private String tipoDuracion;
     private int duracion;
-    private Object descripcion;
+    private String descripcion;
     private double precio;
     private String pais;
     private Long categoriaToursId;

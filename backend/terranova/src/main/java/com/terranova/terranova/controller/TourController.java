@@ -95,6 +95,7 @@ public class TourController {
         //covertimos el JSON a un objeto DTO
         TourDTO tourDTO = new ObjectMapper().readValue(tourJson, TourDTO.class);
 
+        System.out.println("Tour recibido: " + tourDTO);
         // Validar si el tour ya existe por título
         if (tourService.existePorTitulo(tourDTO.getTitulo())) {
             return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
@@ -112,6 +113,8 @@ public class TourController {
             return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
         }
 
+        // Log para verificar las características obtenidas
+    System.out.println("Características obtenidas: " + caracteristicas);
         try {
             // Crear objeto `Tour` desde `TourDTO`
             Tour tour = new Tour();
