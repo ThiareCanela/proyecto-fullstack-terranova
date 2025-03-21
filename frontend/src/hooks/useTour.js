@@ -3,6 +3,7 @@ import {
   deleteTourApi,
   getTourByIdApi,
   getToursApi,
+  postTour,
   postTourWithImagesApi,
   updateTourCategoryApi,
 } from "../apis/tour";
@@ -21,6 +22,22 @@ export const useTours = () => {
       setTours(data || []);
     } catch (err) {
       setError(err?.message || "Error desconocido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createTour = async (tourData) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const createdTour = await postTour(tourData);
+      setNewTour(createdTour);
+      return createdTour;
+    } catch (err) {
+      setError(err.message);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -81,6 +98,7 @@ export const useTours = () => {
     newTour,
     loading,
     error,
+    createTour,
     createTourWithImages,
     deleteTour,
     getDataTours,

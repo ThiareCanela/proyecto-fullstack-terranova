@@ -6,20 +6,18 @@ import Home from "./components/pages/Home";
 import DetailCard from "./components/pages/DetailCard";
 import Profile from "./components/pages/Profile";
 import AdminPanel from "./components/pages/AdminPanel";
-import Resultados from "./components/pages/SearchResults"; // ✅ Importación añadida
 import { useAuth } from "./context/AuthContext";
+import SearchResults from "./components/pages/SearchResults";
 
 // eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
-  console.log("AdminRoute - Usuario:", user);
   return user?.role === "admin" ? children : <Navigate to="/" replace />;
 };
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
-  console.log("PrivateRoute - Usuario:", user);
   return user ? children : <Navigate to="/" replace />;
 };
 
@@ -46,7 +44,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detalle/:id" element={<DetailCard />} />
-        <Route path="/resultados" element={<Resultados />} />{" "}
+        <Route path="/resultados" element={<SearchResults />} />{" "}
         <Route
           path="/perfil"
           element={

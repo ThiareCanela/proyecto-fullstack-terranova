@@ -11,8 +11,8 @@ export const useCategory = () => {
     setLoading(true);
     try {
       const result = await get_categories_api();
-      setCategoryData(result || []);
-      console.log(result, "result");
+      console.log("Datos recibidos de la API:", result);  // Verifica que los datos sean correctos
+      setCategoryData(result || []);  // Asegúrate de que si no hay datos, pongas un arreglo vacío
     } catch (err) {
       setError(err.message);
     } finally {
@@ -20,6 +20,7 @@ export const useCategory = () => {
     }
   };
   useEffect(() => {
+    console.log("categoryData", categoryData);
     getCategory();
   }, []);
 

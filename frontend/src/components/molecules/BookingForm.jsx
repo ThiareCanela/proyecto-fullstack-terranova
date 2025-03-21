@@ -1,56 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const places = [
-  "Argentina",
-  "Chile",
-  "Perú",
-  "Colombia",
-  "Ecuador",
-  "México",
-  "Brasil",
-  "Uruguay",
-  "Paraguay",
-  "Bolivia",
-  "Venezuela",
-  "Panamá",
-  "Costa Rica",
-  "Guatemala",
-  "Honduras",
-  "El Salvador",
-  "Nicaragua",
-  "Cuba",
-  "República Dominicana",
-  "Puerto Rico",
-];
+import { useSearchCountry } from "../../hooks/useSearchTour";
+import { PAIS } from "../../constants";
 
 export const BookingForm = () => {
   const navigate = useNavigate();
+  const { data: resultTours, loading } = useSearchCountry();
+  // const { resultTours, loading, searchTour, setLoading } = useSearchTour();
   const [formData, setFormData] = useState({
     location: "",
     startDate: null,
     endDate: null,
   });
   const [errors, setErrors] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const datePickerRef = useRef(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors(""); // Limpiar errores cuando el usuario empieza a escribir
-
-    if (name === "location") {
-      const filtered = places.filter((place) =>
-        place.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredPlaces(filtered);
-    }
-  };
 
   const handleSelectPlace = (place) => {
     setFormData({ ...formData, location: place });
@@ -59,7 +28,7 @@ export const BookingForm = () => {
 
   const validateForm = () => {
     const { location, startDate, endDate } = formData;
-    if (!location || !startDate || !endDate) {
+    if (!location) {
       return "Todos los campos deben estar llenos.";
     }
     if (new Date(startDate) > new Date(endDate)) {
@@ -76,15 +45,33 @@ export const BookingForm = () => {
       return;
     }
 
-    setLoading(true);
+    // setLoading(true);
 
-    try {
-      // Simulación de una llamada a API con retraso
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // const formattedStartDate = formData.startDate.toISOString().split("T")[0]; // YYYY-MM-DD
+    // const formattedEndDate = formData.endDate.toISOString().split("T")[0]; // YYYY-MM-DD
 
-      console.log("Datos enviados:", formData);
+    // await searchTour(formData.location, formattedStartDate, formattedEndDate);
+  };
 
-      // Redirección con los datos en la URL
+  // useEffect(() => {
+  //   console.log("🔄 Verificando resultTours:", resultTours); // Verifica si cambia
+
+  //   if (!loading && resultTours.length > 0) {
+  //     console.log("✅ Resultados encontrados. Redirigiendo...");
+  //     const queryParams = new URLSearchParams({
+  //       location: formData.location,
+  //       startDate: formData.startDate.toISOString().split("T")[0],
+  //       endDate: formData.endDate.toISOString().split("T")[0],
+  //     }).toString();
+
+  //     navigate(`/resultados?${queryParams}`);
+  //   }
+  // }, [resultTours, loading, navigate]);
+
+  useEffect(() => {
+    console.log("🔄 Verificando resultTours:", resultTours);
+    if (!loading && resultTours?.length > 0) {
+      console.log("✅ Resultados encontrados. Redirigiendo...");
       const queryParams = new URLSearchParams({
         location: formData.location,
         startDate: formData.startDate.toISOString().split("T")[0],
@@ -92,12 +79,8 @@ export const BookingForm = () => {
       }).toString();
 
       navigate(`/resultados?${queryParams}`);
-    } catch (error) {
-      console.error("Error en la búsqueda:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [resultTours, loading, navigate]);
 
   const handleClickOutside = (event) => {
     if (
@@ -118,7 +101,11 @@ export const BookingForm = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showDatePicker]);
-
+  useEffect(() => {
+    if (formData.startDate && formData.endDate) {
+      setErrors("");
+    }
+  }, [formData.startDate, formData.endDate]);
   return (
     <div className="flex flex-col w-full p-6 gap-6 bg-white rounded-lg shadow-md">
       <h3 className="font-medium text-[var(--color-default)] text-3xl text-center w-full">
@@ -134,7 +121,7 @@ export const BookingForm = () => {
             <button
               type="button"
               className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
-              onClick={() => setFilteredPlaces(places)}
+              onClick={() => setFilteredPlaces(PAIS)}
             >
               {formData.location || "Selecciona un destino"}
             </button>
