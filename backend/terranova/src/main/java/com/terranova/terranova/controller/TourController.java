@@ -103,8 +103,17 @@ public class TourController {
 
             System.out.println("Tour guardado con éxito: " + nuevoTour.getId());
 
-            // Devolver el tour completo como respuesta
-            return ResponseEntity.ok(nuevoTour);
+            //buscamos el tour guardado para obtener todas las relaciones
+            Optional<Tour> tourGuardado = tourService.buscarPorId(nuevoTour.getId());
+
+            if (tourGuardado.isEmpty()) {
+                return ResponseEntity.status(500).body("Error al obtener el tour guardado.");
+            }
+
+            // Asegurar que las imágenes están cargadas antes de devolver el objeto
+            Tour tourFinal = tourGuardado.get();
+
+            return ResponseEntity.ok(tourFinal);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Error en los datos del tour: " + e.getMessage());

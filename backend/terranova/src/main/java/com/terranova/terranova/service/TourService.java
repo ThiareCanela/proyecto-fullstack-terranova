@@ -8,6 +8,7 @@ import com.terranova.terranova.repository.ImagenTourRepository;
 import com.terranova.terranova.s3Config.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,8 @@ public class TourService {
     public List<Tour> listarTodosLosTour() {
         return tourRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
     public Optional<Tour> consultarTour(Long id) {
         return tourRepository.findById(id);
     }

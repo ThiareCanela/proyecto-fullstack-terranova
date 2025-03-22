@@ -1,6 +1,7 @@
 package com.terranova.terranova.repository;
 
 import com.terranova.terranova.entity.Tour;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface ITourRepository extends JpaRepository <Tour, Long> {
+
+    @EntityGraph(attributePaths = {"imagenes", "caracteristicas", "categoriaTours"})
+    Optional<Tour> findById(Long id);
+
     List<Tour> findByCategoriaToursId(Long id);
 
     // Buscar por palabra clave en título o descripción
