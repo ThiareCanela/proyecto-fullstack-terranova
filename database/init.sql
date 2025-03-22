@@ -15,13 +15,13 @@ CREATE TABLE IF NOT EXISTS categoria_tours (
     url_icono VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
--- Crear la tabla de tours
+-- Crear la tabla de tours con descripcion como TEXT en lugar de JSON
 CREATE TABLE IF NOT EXISTS tours (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     tipo_duracion ENUM('HORAS', 'DIAS') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'DIAS',
     duracion INT NOT NULL,
-    descripcion JSON NOT NULL,
+    descripcion TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     pais ENUM('MÉXICO','COLOMBIA','ARGENTINA','BRASIL','JAMAICA','URUGUAY','COSTA RICA','CHILE','PERÚ') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'MÉXICO',
     categoria_id BIGINT NOT NULL,
@@ -109,18 +109,19 @@ INSERT INTO caracteristicas_tours (descripcion, url_icon) VALUES
 ('Comida incluida', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-comida.png'),
 ('Actividades al aire libre', 'https://terranova-tours-images.s3.us-east-1.amazonaws.com/icon-actividades.png');
 
--- Insertar tours
+-- Insertar tours con descripcion como STRING
 INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, pais, categoria_id) VALUES
-('Tour en la Selva', 'DIAS', 3, '{"detalles": ["Explora la selva tropical.", "Incluye guía profesional y transporte.", "Disfruta de actividades al aire libre."]}', 250.00, 'MÉXICO', 1),
-('Tour en Pirámides', 'HORAS', 5, '{"detalles": ["Visita guiada por pirámides históricas.", "Transporte incluido desde el hotel.", "Aprende sobre la cultura ancestral."]}', 120.00, 'COLOMBIA', 2),
-('Tour en la Playa', 'DIAS', 2, '{"detalles": ["Relájate en una playa paradisíaca.", "Incluye comida gourmet y bebidas.", "Disfruta de deportes acuáticos."]}', 180.00, 'COLOMBIA', 3),
-('Tour en la Montaña', 'DIAS', 4, '{"detalles": ["Escalada y camping en montaña.", "Guía turístico experimentado.", "Vistas panorámicas impresionantes."]}', 300.00, 'CHILE', 4),
-('Tour Gastronómico', 'HORAS', 3, '{"detalles": ["Degusta platillos locales auténticos.", "Visita mercados tradicionales.", "Aprende sobre la historia culinaria."]}', 90.00, 'MÉXICO', 5),
-('Tour de Relajación', 'DIAS', 5, '{"detalles": ["Spa y masajes relajantes.", "Ambiente tranquilo y privado.", "Incluye yoga y meditación."]}', 400.00, 'CHILE', 6),
-('Tour en el Desierto', 'DIAS', 2, '{"detalles": ["Explora dunas de arena dorada.", "Paseo en camello incluido.", "Noche bajo las estrellas."]}', 200.00, 'MÉXICO', 1),
-('Tour Histórico', 'HORAS', 4, '{"detalles": ["Recorrido por museos y monumentos.", "Guía experto en historia.", "Entradas incluidas."]}', 150.00, 'CHILE', 2),
-('Tour Acuático', 'HORAS', 6, '{"detalles": ["Actividades como snorkel y buceo.", "Equipo completo proporcionado.", "Guía especializado en vida marina."]}', 170.00, 'PERÚ', 3),
-('Tour de Aventura Extrema', 'DIAS', 3, '{"detalles": ["Paracaidismo y rappel.", "Equipamiento seguro y certificado.", "Adrenalina garantizada."]}', 350.00, 'MÉXICO', 4);
+('Tour en la Selva', 'DIAS', 3, 'Explora la selva tropical. Incluye guía profesional y transporte. Disfruta de actividades al aire libre.', 250.00, 'MÉXICO', 1),
+('Tour en Pirámides', 'HORAS', 5, 'Visita guiada por pirámides históricas. Transporte incluido desde el hotel. Aprende sobre la cultura ancestral.', 120.00, 'MÉXICO', 2),
+('Tour en la Playa', 'DIAS', 2, 'Relájate en una playa paradisíaca. Incluye comida gourmet y bebidas. Disfruta de deportes acuáticos.', 180.00, 'COLOMBIA', 3),
+('Tour en la Montaña', 'DIAS', 4, 'Escalada y camping en montaña. Guía turístico experimentado. Vistas panorámicas impresionantes.', 300.00, 'CHILE', 4),
+('Tour Gastronómico', 'HORAS', 3, 'Degusta platillos locales auténticos. Visita mercados tradicionales. Aprende sobre la historia culinaria.', 90.00, 'MÉXICO', 5),
+('Tour de Relajación', 'DIAS', 5, 'Spa y masajes relajantes. Ambiente tranquilo y privado. Incluye yoga y meditación.', 400.00, 'CHILE', 6),
+('Tour en el Desierto', 'DIAS', 2, 'Explora dunas de arena dorada. Paseo en camello incluido. Noche bajo las estrellas.', 200.00, 'MÉXICO', 1),
+('Tour Histórico', 'HORAS', 4, 'Recorrido por museos y monumentos. Guía experto en historia. Entradas incluidas.', 150.00, 'CHILE', 2),
+('Tour Acuático', 'HORAS', 6, 'Actividades como snorkel y buceo. Equipo completo proporcionado. Guía especializado en vida marina.', 170.00, 'PERÚ', 3),
+('Tour de Aventura Extrema', 'DIAS', 3, 'Paracaidismo y rappel. Equipamiento seguro y certificado. Adrenalina garantizada.', 350.00, 'MÉXICO', 4);
+
 
 -- Insertar imágenes de los tours
 INSERT INTO imagenes_tours (tour_id, url_imagen, descripcion) VALUES

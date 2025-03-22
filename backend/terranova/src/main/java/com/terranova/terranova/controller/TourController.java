@@ -52,8 +52,16 @@ public class TourController {
         return ResponseEntity.ok(resultados);
     }
 
-    @PostMapping("/agregar")
-    public ResponseEntity<?> agregarTour(@RequestBody TourDTO tourDTO) {
+    @PostMapping(value = "/agregar-con-imagenes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> agregarTourConImagenes(
+            @RequestPart("tour") String tourJson,
+            @RequestPart("imagenes") MultipartFile[] imagenes) throws JsonProcessingException {
+
+        // Convertimos el JSON a un objeto DTO
+        TourDTO tourDTO = new ObjectMapper().readValue(tourJson, TourDTO.class);
+
+        System.out.println("Tour recibido: " + tourDTO);
+
         // Validar si el tour ya existe por título
         if (tourService.existePorTitulo(tourDTO.getTitulo())) {
             return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
@@ -71,57 +79,20 @@ public class TourController {
             return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
         }
 
-        // Crear objeto `Tour` desde `TourDTO`
-        Tour tour = new Tour();
-        tour.setTitulo(tourDTO.getTitulo());
-        tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion())); // Convertir String a Enum
-        tour.setDuracion(tourDTO.getDuracion());
-        tour.setDescripcion(tourDTO.getDescripcion().toString());
-        tour.setPrecio(tourDTO.getPrecio());
-        tour.setPais(tourDTO.getPais());
-        tour.setCategoriaTours(categoriaOpt.get());
-        tour.setCaracteristicas(caracteristicas);
-
-        // Guardar el tour
-        Tour nuevoTour = tourService.guardarTour(tour);
-        return ResponseEntity.ok(new TourDTO(nuevoTour)); // Devolver el DTO en la respuesta
-    }
-
-    @PostMapping(value = "/agregar-con-imagenes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> agregarTourConImagenes(
-            @RequestPart("tour") String tourJson,
-            @RequestPart("imagenes") MultipartFile[] imagenes) throws JsonProcessingException {
-
-        //covertimos el JSON a un objeto DTO
-        TourDTO tourDTO = new ObjectMapper().readValue(tourJson, TourDTO.class);
-
-        System.out.println("Tour recibido: " + tourDTO);
-        // Validar si el tour ya existe por título
-        if (tourService.existePorTitulo(tourDTO.getTitulo())) {
-            return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
+        // Validación de imágenes: máx. 3 imágenes permitidas
+        if (imagenes.length > 3) {
+            return ResponseEntity.badRequest().body("Error: Solo se permiten hasta 3 imágenes por tour.");
         }
 
-        // Validar si la categoría existe
-        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(tourDTO.getCategoriaToursId());
-        if (categoriaOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body("Error: Categoría no encontrada.");
-        }
+        System.out.println("Características obtenidas: " + caracteristicas);
 
-        // ✅ Validar si las características existen
-        List<CaracteristicaTour> caracteristicas = caracteristicaTourService.obtenerPorIds(tourDTO.getCaracteristicasIds());
-        if (caracteristicas.isEmpty() || caracteristicas.size() != tourDTO.getCaracteristicasIds().size()) {
-            return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
-        }
-
-        // Log para verificar las características obtenidas
-    System.out.println("Características obtenidas: " + caracteristicas);
         try {
             // Crear objeto `Tour` desde `TourDTO`
             Tour tour = new Tour();
             tour.setTitulo(tourDTO.getTitulo());
             tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion()));
             tour.setDuracion(tourDTO.getDuracion());
-            tour.setDescripcion(tourDTO.getDescripcion().toString());
+            tour.setDescripcion(tourDTO.getDescripcion());  //AHORA SOLO ES TEXTO
             tour.setPrecio(tourDTO.getPrecio());
             tour.setPais(tourDTO.getPais());
             tour.setCategoriaTours(categoriaOpt.get());
@@ -130,16 +101,17 @@ public class TourController {
             // Guardar el tour y las imágenes
             Tour nuevoTour = tourService.guardarTourEImagenes(tour, imagenes);
 
+            System.out.println("Tour guardado con éxito: " + nuevoTour.getId());
+
             // Devolver el tour completo como respuesta
             return ResponseEntity.ok(new TourDTO(nuevoTour));
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Error en los datos del tour: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al crear el tour: " + e.getMessage());
         }
     }
-
 
     @PutMapping("/{tourId}")
     public ResponseEntity<String> actualizarTour(@PathVariable Long tourId, @RequestBody Tour tour) {
@@ -152,28 +124,34 @@ public class TourController {
         return ResponseEntity.badRequest().body("Tour no encontrado por ID");
     }
 
-    //endpoint para agregar o modificar categoria a un tour
-    @PutMapping("/agregar-categoria")
-    public ResponseEntity<String> actualizarCategoriaTour(
+    //actualizar categoria de un tour
+    @PatchMapping("/actualizar-categoria")
+    public ResponseEntity<?> actualizarCategoriaTour(
             @RequestParam Long tourId,
             @RequestParam Long categoriaId) {
 
+        // Validar si el tour existe
         Optional<Tour> tourOptional = tourService.consultarTour(tourId);
         if (tourOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("Tour no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: Tour con ID " + tourId + " no encontrado.");
         }
 
+        //Validar si la categoría existe
         Optional<CategoriaTours> categoriaOptional = categoriaToursService.buscarCategoriaToursPorId(categoriaId);
         if (categoriaOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("Categoría no encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: Categoría con ID " + categoriaId + " no encontrada.");
         }
 
+        // Actualizar la categoría del tour
         Tour tour = tourOptional.get();
         tour.setCategoriaTours(categoriaOptional.get());
         tourService.guardarTour(tour);
 
-        return ResponseEntity.ok("Categoría actualizada correctamente");
+        return ResponseEntity.ok("Categoría del tour actualizada correctamente.");
     }
+
 
 
     @GetMapping("/buscar/{id}")

@@ -21,17 +21,23 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",unique = true, nullable = false)
     private Long id;
+
     @Column(unique = true, name = "titulo",  nullable = false)
     private String titulo;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_duracion", nullable = false)
     private TipoDuracion tipoDuracion;
+
     @Column(nullable = false)
     private int duracion;
-    @Column(columnDefinition = "JSON")
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
+
     @Column(nullable = false)
     private double precio;
+
     @Column(nullable = false)
     private String pais;
 
