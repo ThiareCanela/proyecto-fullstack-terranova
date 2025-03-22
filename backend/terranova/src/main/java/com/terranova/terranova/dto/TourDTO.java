@@ -31,6 +31,7 @@ public class TourDTO {
         this.precio = tour.getPrecio();
         this.pais = tour.getPais();
         this.categoriaToursId = tour.getCategoriaTours().getId();
+
     }
 }
 

@@ -104,7 +104,7 @@ public class TourController {
             System.out.println("Tour guardado con éxito: " + nuevoTour.getId());
 
             // Devolver el tour completo como respuesta
-            return ResponseEntity.ok(new TourDTO(nuevoTour));
+            return ResponseEntity.ok(nuevoTour);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Error en los datos del tour: " + e.getMessage());
