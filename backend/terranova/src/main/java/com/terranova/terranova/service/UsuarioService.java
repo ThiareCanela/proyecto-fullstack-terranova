@@ -35,8 +35,8 @@ public class UsuarioService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
     @Transactional
-    public void registrar(String nombre, String apellido, String email, String password, String password2) throws ResourceNotFoundException {
-        validar(nombre, email, password, password2);
+    public void registrar(String nombre, String apellido, String email, String password) throws ResourceNotFoundException {
+        validar(nombre, email, password);
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setApellido(apellido);
@@ -47,18 +47,13 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void actualizar(Long idUsuario, String nombre, String email, String password, String password2) throws ResourceNotFoundException {
-        validar(nombre, email, password, password2);
+    public void actualizar(Long idUsuario, String nombre, String email, String password) throws ResourceNotFoundException {
+        validar(nombre, email, password);
         Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
         if (respuesta.isPresent()) {
             Usuario usuario = respuesta.get();
             usuario.setNombre(nombre);
             usuario.setEmail(email);
-
-            // Solo actualizar la contraseña si ambas contraseñas son enviadas y coinciden
-            if (password != null && password2 != null && password.equals(password2)) {
-                usuario.setPassword(new BCryptPasswordEncoder().encode(password));
-            }
 
             // Mantener el rol original del usuario, no sobrescribirlo con ROLE_USER
             usuarioRepository.save(usuario);
@@ -93,7 +88,7 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    private void validar(String nombre, String email, String password, String password2) throws ResourceNotFoundException {
+    private void validar(String nombre, String email, String password) throws ResourceNotFoundException {
 
         if (nombre.isEmpty() || nombre == null) {
             throw new ResourceNotFoundException("El nombre no puede ser nulo o estar vacío");
@@ -104,11 +99,6 @@ public class UsuarioService implements UserDetailsService {
         if (password.isEmpty() || password == null || password.length() <= 5) {
             throw new ResourceNotFoundException("La contraseña no puede estar vacía, y debe tener más de 5 dígitos");
         }
-
-        if (!password.equals(password2)) {
-            throw new ResourceNotFoundException("Las contraseñas ingresadas deben ser iguales");
-        }
-
     }
 
     @Override

@@ -31,10 +31,9 @@ public class UsuarioController {
             @RequestParam String nombre,
             @RequestParam String apellido,
             @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String password2) {
+            @RequestParam String password) {
         try {
-            usuarioService.registrar(nombre, apellido, email, password, password2);
+            usuarioService.registrar(nombre, apellido, email, password);
             return ResponseEntity.ok("Usuario registrado con éxito");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -61,7 +60,7 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
+    // Endpoint para cambiar el rol de un usuario
     @PutMapping("/cambiarRol/{id}")
     public ResponseEntity<String> cambiarRol(@PathVariable Long id) {
         usuarioService.cambiarRol(id);
@@ -73,10 +72,9 @@ public class UsuarioController {
             @PathVariable Long id,
             @RequestParam String nombre,
             @RequestParam String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String password2) {
+            @RequestParam(required = false) String password) {
         try {
-            usuarioService.actualizar(id, nombre, email, password, password2);
+            usuarioService.actualizar(id, nombre, email, password);
             return ResponseEntity.ok("Usuario actualizado con éxito");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -100,8 +98,4 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // Endpoint para cambiar el rol de un usuario
-
-
 }

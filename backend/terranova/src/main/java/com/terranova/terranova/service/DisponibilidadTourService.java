@@ -29,6 +29,9 @@ public class DisponibilidadTourService {
     public void deleteById(DisponibilidadTourPK id) {
         repository.deleteById(id); }
 
+    public List<DisponibilidadTour> obtenerNoDisponibilidades() {
+        return repository.findByDisponibleFalse(); }
+
     public List<DisponibilidadTour> obtenerDisponibilidades() {
         return repository.findByDisponibleTrue(); }
 }
