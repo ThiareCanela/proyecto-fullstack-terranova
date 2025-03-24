@@ -103,7 +103,7 @@ public class TourService {
         return false;
     }
     public boolean existePorTitulo(String titulo) {
-        return tourRepository.existsByTitulo(titulo);
+        return tourRepository.existsByTituloIgnoreCase(titulo.trim());
     }
 
 

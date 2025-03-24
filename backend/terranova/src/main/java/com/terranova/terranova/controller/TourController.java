@@ -62,9 +62,10 @@ public class TourController {
 
         System.out.println("Tour recibido: " + tourDTO);
 
-        // Validar si el tour ya existe por título
-        if (tourService.existePorTitulo(tourDTO.getTitulo())) {
-            return ResponseEntity.badRequest().body("Error: El nombre del tour ya existe.");
+        // Validar si el tour ya existe por título (ignorando mayúsculas y espacios)
+        boolean existeTour = tourService.existePorTitulo(tourDTO.getTitulo().trim().toLowerCase());
+        if (existeTour) {
+            return ResponseEntity.badRequest().body("Error: Ya existe un tour con el nombre '" + tourDTO.getTitulo() + "'.");
         }
 
         // Validar si la categoría existe

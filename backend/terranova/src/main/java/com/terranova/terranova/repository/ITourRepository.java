@@ -32,6 +32,8 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     Optional<Tour> findByTitulo(String titulo);
     boolean existsByTitulo(String titulo);
 
+    boolean existsByTituloIgnoreCase(String titulo);
+
     // Buscar por caracteristicas
     @Query("SELECT t FROM Tour t JOIN t.caracteristicas c WHERE c.id IN :caracteristicaIds GROUP BY t HAVING COUNT(DISTINCT c.id) = :cantidad")
     List<Tour> findByCaracteristicas(@Param("caracteristicaIds") List<Long> caracteristicaIds, @Param("cantidad") Long cantidad);
