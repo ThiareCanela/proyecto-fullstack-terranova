@@ -5,6 +5,7 @@ import com.terranova.terranova.repository.DisponibilidadTourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -34,4 +35,5 @@ public class DisponibilidadTourService {
 
     public List<DisponibilidadTour> obtenerDisponibilidades() {
         return repository.findByDisponibleTrue(); }
+
 }

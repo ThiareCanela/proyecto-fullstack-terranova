@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class ReservaService {
     @Autowired
-    private final ReservaRepository repository;
+    private ReservaRepository repository;
 
     @Autowired
     private DisponibilidadTourRepository disponibilidadTourRepository;
@@ -50,7 +50,16 @@ public class ReservaService {
         reserva.setFechaInicio(fechaInicio);
         reserva.setFechaFin(fechaFin); // Puede ser el mismo día
         reserva.setNumPersonas(numPersonas);
-        reserva.setEstado(EstadoReserva.PENDIENTE);
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
+        reserva.setTotal(numPersonas * tour.getPrecio());
+
+        try {
+            DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fechaInicio);
+            disp.setDisponible(false);
+            disponibilidadTourRepository.save(disp);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         return repository.save(reserva);
     }
@@ -60,5 +69,32 @@ public class ReservaService {
     public List<Reserva> findAll() { return repository.findAll(); }
     public Optional<Reserva> findById(Long id) { return repository.findById(id); }
     public Reserva save(Reserva reserva) { return repository.save(reserva); }
-    public void deleteById(Long id) { repository.deleteById(id); }
+    public void deleteById(Long id) {
+        try {
+            Reserva reserva = repository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+
+            Long tourId = reserva.getTour().getId();
+            LocalDate fechaInicio = reserva.getFechaInicio();
+
+            // Actualizar la disponibilidad del tour
+            DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fechaInicio);
+            if (disp != null) {
+                disp.setDisponible(true); // Se vuelve a marcar como disponible
+                disponibilidadTourRepository.save(disp);
+            }
+
+            // Eliminar la reserva
+            repository.deleteById(id);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al eliminar la reserva: " + ex.getMessage(), ex);
+        }
+    }
+    public List<Reserva> obtenerReservasPorUsuario(Long usuarioId) {
+        try {
+            return repository.findByUsuarioId(usuarioId);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al encontrar las reservas: " + ex.getMessage(), ex);
+        }
+    }
 }

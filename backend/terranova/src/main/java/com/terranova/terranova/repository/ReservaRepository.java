@@ -12,4 +12,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     // Buscar reservas activas en una fecha específica para un tour
     @Query("SELECT r FROM Reserva r WHERE r.tour.id = :tourId AND r.fechaInicio = :fecha AND r.estado = 'CONFIRMADA'")
     List<Reserva> findReservasByTourAndFecha(@Param("tourId") Long tourId, @Param("fecha") LocalDate fecha);
+
+    List<Reserva> findByUsuarioId(Long usuarioId);
 }
