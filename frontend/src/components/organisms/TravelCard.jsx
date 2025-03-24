@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
+/* eslint-disable react/prop-types */
+
 import { Heart, MapPin } from "lucide-react";
 
-// eslint-disable-next-line react/prop-types
 const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
   return (
     <div
@@ -9,11 +9,7 @@ const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
       onClick={onDetail}
     >
       <div className="relative">
-        <img
-          src={imagenes[0].urlImagen}
-          alt={titulo}
-          className="w-full h-48 object-cover"
-        />
+        <img src={imagenes} alt={titulo} className="w-full h-48 object-cover" />
         <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md">
           <Heart className="text-[var(--color-emphasis)]" />
         </button>
@@ -39,15 +35,6 @@ const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
       </div>
     </div>
   );
-};
-
-// ✅ Agregamos PropTypes para validar las props
-TravelCard.propTypes = {
-  image: PropTypes.string.isRequired, // La imagen debe ser un string (URL)
-  location: PropTypes.string.isRequired, // La ubicación debe ser un string
-  name: PropTypes.string.isRequired, // El nombre del lugar debe ser un string
-  rating: PropTypes.number.isRequired, // El rating debe ser un número
-  price: PropTypes.number.isRequired, // El precio debe ser un número
 };
 
 export default TravelCard;

@@ -15,16 +15,28 @@ const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const locationParam = queryParams.get("location");
-  const startDateParam = queryParams.get("startDate");
-  const endDateParam = queryParams.get("endDate");
-  const { resultTours, searchTour, loading, setLoading } = useSearchTour();
+  // const locationParam = queryParams.get("location");
+  // const startDateParam = queryParams.get("startDate");
+  // const endDateParam = queryParams.get("endDate");
+  const { dataResult, searchTours, loading, setLoading } = useSearchTour();
   const { categoryData } = useCategory();
+  // const [formData, setFormData] = useState({
+  //   location: locationParam || "",
+  //   startDate: startDateParam ? new Date(startDateParam) : null,
+  //   endDate: endDateParam ? new Date(endDateParam) : null,
+  // });
+  // const queryParams = new URLSearchParams(location.search);
+  const paisParam = queryParams.get("pais");
+  const fechaInicioParam = queryParams.get("fechaInicio");
+  const fechaFinParam = queryParams.get("fechaFin");
+
+  console.log(dataResult, "dataresult");
   const [formData, setFormData] = useState({
-    location: locationParam || "",
-    startDate: startDateParam ? new Date(startDateParam) : null,
-    endDate: endDateParam ? new Date(endDateParam) : null,
+    location: paisParam || "",
+    startDate: fechaInicioParam ? new Date(fechaInicioParam) : null,
+    endDate: fechaFinParam ? new Date(fechaFinParam) : null,
   });
+
   const [errors, setErrors] = useState("");
   // const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -65,9 +77,9 @@ const SearchResults = () => {
       console.log("Datos enviados:", formData);
 
       const queryParams = new URLSearchParams({
-        location: formData.location,
-        startDate: formData.startDate.toISOString().split("T")[0],
-        endDate: formData.endDate.toISOString().split("T")[0],
+        pais: formData.location,
+        fechaInicio: formData.startDate.toISOString().split("T")[0],
+        fechaFin: formData.endDate.toISOString().split("T")[0],
       }).toString();
 
       navigate(`/resultados?${queryParams}`);
@@ -99,10 +111,20 @@ const SearchResults = () => {
   }, [showDatePicker]);
 
   useEffect(() => {
-    if (formData.location && formData.startDate && formData.endDate) {
-      searchTour(formData.location, startDateParam, endDateParam);
+    if (paisParam && fechaInicioParam && fechaFinParam) {
+      searchTours({
+        pais: paisParam,
+        fechaInicio: fechaInicioParam,
+        fechaFin: fechaFinParam,
+      });
     }
-  }, [formData.location, formData.startDate, formData.endDate]);
+  }, [paisParam, fechaInicioParam, fechaFinParam]);
+
+  // useEffect(() => {
+  //   if (formData.location && formData.startDate && formData.endDate) {
+  //     searchTour(formData.location, startDateParam, endDateParam);
+  //   }
+  // }, [formData.location, formData.startDate, formData.endDate]);
 
   // const filteredResults = allPlaces.filter((place) =>
   //   place.location.toLowerCase().includes(formData.location.toLowerCase())
@@ -137,7 +159,6 @@ const SearchResults = () => {
           )}
         </div>
 
-        {/* Campo de fecha */}
         <div className="relative flex-1">
           <button
             type="button"
@@ -172,7 +193,6 @@ const SearchResults = () => {
           )}
         </div>
 
-        {/* Botón de búsqueda */}
         <button
           type="submit"
           className="bg-[var(--color-secondary)] text-white rounded-lg h-10 w-10 flex items-center justify-center transition-all duration-300 hover:bg-[var(--color-emphasis)]"
@@ -197,19 +217,19 @@ const SearchResults = () => {
       </div>
 
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {resultTours.map((place, index) => (
+        {dataResult.map((place, i) => (
           <TravelCard
-            key={`${index}-resulFilter`}
-            image={place.image}
-            location={place.location}
-            name={place.name}
-            rating={place.rating}
-            price={place.price}
+            key={`${i}-resulFilterTour`}
+            imagenes={place.imagenes[0].urlImagen}
+            pais={place.pais}
+            titulo={place.titulo}
+            // rating={place.rating}
+            precio={place.precio}
             onDetail={() => console.log(`Detalles de ${place.name}`)}
           />
         ))}
       </div>
-      {resultTours.length === 0 && (
+      {dataResult.length === 0 && (
         <p className="text-center text-gray-500 mt-4">
           No se encontraron tours para la fecha seleccionada. Intenta con otra
           fecha o destino.

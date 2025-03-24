@@ -18,7 +18,6 @@ export const useTours = () => {
     setLoading(true);
     try {
       const data = await getToursApi();
-      console.log(data, "data");
       setTours(data || []);
     } catch (err) {
       setError(err?.message || "Error desconocido");

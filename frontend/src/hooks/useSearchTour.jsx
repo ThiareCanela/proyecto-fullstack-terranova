@@ -1,29 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { searchCountryApi, searchTourApi } from "../apis/booking";
 
 export const useSearchTour = () => {
-  const [resultTours, setResultTours] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [dataResult, setDataResult] = useState([]);
 
-  const searchTour = useCallback(async (pais, fechaInicio, fechaFin) => {
+  const searchTours = async (filters) => {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await searchTourApi(pais, fechaInicio, fechaFin);
-      if (data) setResultTours(data);
+      const result = await searchTourApi(filters);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      setDataResult(result.payload);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
-  console.log(resultTours, "resultours");
-  useEffect(() => {
-    console.log("Verificando resultTours:", resultTours);
-  }, [resultTours]);
-  return { resultTours, loading, error, searchTour, setLoading };
+  };
+
+  return { dataResult, loading, error, searchTours };
 };
 
 export const useSearchCountry = (pais) => {

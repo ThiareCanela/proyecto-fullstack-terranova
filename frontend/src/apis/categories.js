@@ -7,7 +7,6 @@ export const get_categories_api = async () => {
     }
 
     const data = await response.json();
-    console.log("Categorías de tours:", data);
     return data;
   } catch (error) {
     console.error("Error:", error);

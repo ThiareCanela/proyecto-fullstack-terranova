@@ -24,7 +24,10 @@ export const TravelCardContainer = () => {
       {places.map((place, index) => (
         <TravelCard
           key={`${index}-card`}
-          {...place}
+          imagenes={place.imagenes[0].urlImagen}
+          titulo={place.titulo}
+          pais={place.pais}
+          precio={place.precio}
           onDetail={() => navigate(`/detalle/${place.id}`)}
         />
       ))}

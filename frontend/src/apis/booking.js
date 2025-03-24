@@ -1,28 +1,25 @@
-export const searchTourApi = async (pais, fechaInicio, fechaFin) => {
-  const url = new URL("http://localhost:8080/tour/buscar/pais-fechas");
-
-  url.searchParams.append("pais", encodeURIComponent(pais));
-  url.searchParams.append("fechaInicio", fechaInicio);
-  url.searchParams.append("fechaFin", fechaFin);
-
+export const searchTourApi = async (params) => {
   try {
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const filters = {};
+
+    if (params.pais) filters.pais = params.pais;
+    if (params.fechaInicio) filters.fechaInicio = params.fechaInicio;
+    if (params.fechaFin) filters.fechaFin = params.fechaFin;
+
+    const query_params = new URLSearchParams(filters).toString();
+    const response = await fetch(
+      `http://localhost:8080/tour/buscar/pais-fechas?${query_params}`
+    );
 
     if (!response.ok) {
-      throw new Error(`Error en la API: ${response.statusText}`);
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log("Tours encontrados:", data);
-    return data;
+    return { payload: data };
   } catch (error) {
-    console.error("Error al buscar tours:", error);
-    return null;
+    console.error("Error fetching tours:", error);
+    return { error: error.message };
   }
 };
 
