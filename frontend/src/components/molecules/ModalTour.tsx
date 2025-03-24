@@ -17,7 +17,8 @@ export const ModalTour = ({ showModal }) => (
         ✖
       </button>
       <div className="w-full overflow-y-auto flex-1">
-        <TourForm action="Nuevo" />
+      <TourForm action="Nuevo" onClose={showModal} />
+
       </div>
     </div>
   </div>
