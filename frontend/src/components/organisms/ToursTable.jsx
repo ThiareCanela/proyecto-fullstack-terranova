@@ -2,18 +2,20 @@ import { EditIcon, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ModalTour } from "../molecules/ModalTour";
 
+
 import { ModalTourUpdate } from "../molecules/ModalTourUpdate";
 import { useTourById, useTours } from "../../hooks/useTour";
 import { ModalConfirmDelete } from "../atoms/ModalConfirmDelete";
 
 /* eslint-disable react/prop-types */
-export const ToursTable = ({ tours }) => {
+export const ToursTable = () => {
+  
+  const { tours, getDataTours, deleteTour } = useTours(); // Obtener todo en una sola declaración
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const { oneTour } = useTourById(selectedId);
-  const { deleteTour, getDataTours } = useTours();
 
   const handleOpenModalEdit = (id) => {
     setSelectedId(id);
@@ -24,12 +26,18 @@ export const ToursTable = ({ tours }) => {
   const handleOpenModalDelete = (id) => {
     setSelectedId(id);
     setShowModalDelete(true);
+    
   };
 
   const handleDeleteConfirmed = async () => {
     await deleteTour(selectedId);
     setShowModalDelete(false);
-    getDataTours();
+    await getDataTours(); // sin setTimeout, se ejecuta una sola vez
+  };
+
+  const handleCloseEditModal = async () => {
+    setShowModalEdit(false);
+    await getDataTours(); //  Se ejecuta solo una vez después de cerrar
   };
 
   return (
@@ -97,13 +105,24 @@ export const ToursTable = ({ tours }) => {
           </table>
         </div>
       </div>
-      {showModal && <ModalTour showModal={() => setShowModal(false)} />}
+      {showModal && (
+        <ModalTour
+          showModal={() => {
+            setShowModal(false);
+            setTimeout(() => {
+              getDataTours(); // Recargar lista después de crear
+            }, 300);
+          }}
+        />
+      )}
+
       {showModalEdit && (
         <ModalTourUpdate
-          showModal={() => setShowModalEdit(false)}
+          showModal={handleCloseEditModal}
           tour={oneTour}
         />
       )}
+
       {showModalDelete && (
         <ModalConfirmDelete
           showModal={() => setShowModalDelete(false)}

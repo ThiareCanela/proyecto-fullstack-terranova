@@ -18,14 +18,21 @@ export const useTours = () => {
     setLoading(true);
     try {
       const data = await getToursApi();
-      console.log(data, "data");
-      setTours(data || []);
+      console.log("Datos actualizados de la API:", data);
+      
+      if (data) {
+        setTours([]); // Resetear antes de actualizar
+        setTimeout(() => {
+          setTours([...data]); // Forzar re-render con nuevo array
+        }, 100);
+      }
     } catch (err) {
       setError(err?.message || "Error desconocido");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const createTour = async (tourData) => {
     setLoading(true);
@@ -62,9 +69,17 @@ export const useTours = () => {
   const deleteTour = async (tourId) => {
     setLoading(true);
     setError(null);
-
+  
     try {
       const result = await deleteTourApi(tourId);
+      
+      if (result.success) {
+        console.log("Tour eliminado correctamente");
+        await getDataTours(); // Esperar a que los datos se actualicen después de eliminar
+      } else {
+        console.error("Error al eliminar el tour:", result.message);
+      }
+      
       return result;
     } catch (err) {
       setError(err.message);
@@ -77,9 +92,17 @@ export const useTours = () => {
   const updateCategoryTour = async (tourId, categoriaId) => {
     setLoading(true);
     setError(null);
-
+  
     try {
       const result = await updateTourCategoryApi(tourId, categoriaId);
+      
+      if (result) {
+        console.log("Tour actualizado correctamente");
+        await getDataTours(); // Esperar a que los datos se actualicen después de editar
+      } else {
+        console.error("Error al actualizar el tour");
+      }
+      
       return result;
     } catch (err) {
       setError(err.message);
@@ -88,9 +111,12 @@ export const useTours = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
-    getDataTours();
+    if (tours.length === 0) {
+      getDataTours();
+    }
   }, []);
 
   return {
