@@ -197,6 +197,7 @@ export default function DetailCard() {
                     endDate={endDate}
                     selectsRange
                     inline
+                    minDate={new Date()}
                   />
                 </div>
               )}

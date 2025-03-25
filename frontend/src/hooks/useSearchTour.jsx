@@ -26,7 +26,7 @@ export const useSearchTour = () => {
     }
   };
 
-  return { dataResult, loading, error, searchTours };
+  return { dataResult, loading, error, searchTours, setLoading };
 };
 
 export const useSearchCountry = (pais) => {
