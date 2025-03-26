@@ -37,3 +37,18 @@ export const searchCountryApi = async (pais) => {
     return null;
   }
 };
+
+export const getTourAvailability = async (idTour) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/disponibilidades/${idTour}`
+    );
+    if (!response.ok) {
+      throw new Error(`Error en la solicitud: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error al obtener la disponibilidad:", error);
+    return { error: error.message };
+  }
+};
