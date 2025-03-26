@@ -18,7 +18,14 @@ export const useTours = () => {
     setLoading(true);
     try {
       const data = await getToursApi();
-      setTours(data || []);
+      console.log("Datos actualizados de la API:", data);
+
+      if (data) {
+        setTours([]); // Resetear antes de actualizar
+        setTimeout(() => {
+          setTours([...data]); // Forzar re-render con nuevo array
+        }, 100);
+      }
     } catch (err) {
       setError(err?.message || "Error desconocido");
     } finally {
@@ -64,6 +71,14 @@ export const useTours = () => {
 
     try {
       const result = await deleteTourApi(tourId);
+
+      if (result.success) {
+        console.log("Tour eliminado correctamente");
+        await getDataTours(); // Esperar a que los datos se actualicen después de eliminar
+      } else {
+        console.error("Error al eliminar el tour:", result.message);
+      }
+
       return result;
     } catch (err) {
       setError(err.message);
@@ -79,6 +94,14 @@ export const useTours = () => {
 
     try {
       const result = await updateTourCategoryApi(tourId, categoriaId);
+
+      if (result) {
+        console.log("Tour actualizado correctamente");
+        await getDataTours(); // Esperar a que los datos se actualicen después de editar
+      } else {
+        console.error("Error al actualizar el tour");
+      }
+
       return result;
     } catch (err) {
       setError(err.message);
@@ -89,7 +112,9 @@ export const useTours = () => {
   };
 
   useEffect(() => {
-    getDataTours();
+    if (tours.length === 0) {
+      getDataTours();
+    }
   }, []);
 
   return {

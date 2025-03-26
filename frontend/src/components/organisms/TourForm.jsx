@@ -7,7 +7,7 @@ import { useCharacterTour } from "../../hooks/useCharacterTour";
 import { ModalConfirm } from "../atoms/ModalConfirm";
 import { useTours } from "../../hooks/useTour";
 
-export const TourForm = ({ action, tour = {} }) => {
+export const TourForm = ({ action, tour = {}, onClose }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [titulo, setTitulo] = useState(tour?.titulo || "");
   const [tipoDuracion, setTipoDuracion] = useState(tour?.tipoDuracion || "");
@@ -36,30 +36,31 @@ export const TourForm = ({ action, tour = {} }) => {
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
+
+    console.log("📂 Archivos seleccionados:", files);
+    console.log("📂 Cantidad de archivos seleccionados:", files.length);
   
     if (files.length > 3) {
       setError("Solo puedes subir hasta 3 imágenes.");
+      console.log("Error: Más de 3 imágenes seleccionadas.");
       return;
     }
   
     setError(""); // Limpiar errores previos si la selección es válida
-    setFotos(files); // Actualizar el estado con las imágenes seleccionadas
+    setFotos(files); // Almacena correctamente las imágenes en el estado
+    console.log("✅ Imágenes almacenadas en el estado:", files);
   };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (error) setError("");
   
-    // Obtener las imágenes del input file
-    const imagesInput = document.getElementById("imagenes");
-    const imageFiles = imagesInput ? Array.from(imagesInput.files) : [];
-  
     // Validación de campos obligatorios (excepto categoría)
     if (
       titulo.trim() === "" ||
       descripcion.trim() === "" ||
       !pais ||
-      !precio || // Cambio aquí de costo a precio
+      !precio ||
       !tipoDuracion ||
       !duracion ||
       caracteristicas.length === 0
@@ -69,17 +70,15 @@ export const TourForm = ({ action, tour = {} }) => {
     }
   
     // Validación de imágenes
-    if (imageFiles.length === 0) {
+    if (fotos.length < 1) {
       setError("Debes subir al menos una imagen.");
       return;
     }
-    if (imageFiles.length > 3) {
+    if (fotos.length > 3) {
       setError("Solo puedes subir hasta 3 imágenes.");
-      console.log("Renderizando TourForm con datos:", { pais, titulo, descripcion, categoria, costo });
       return;
     }
   
-    // Convertir las descripciones de características en sus respectivos IDs
     const caracteristicasIds = characTour
       .filter((charac) => caracteristicas.includes(charac.descripcion))
       .map((charac) => charac.id);
@@ -89,38 +88,40 @@ export const TourForm = ({ action, tour = {} }) => {
       descripcion,
       categoriaToursId: categoria !== "" ? categoria : null,
       pais,
-      precio, // Cambio aquí de costo a precio
+      precio,
       caracteristicasIds,
       tipoDuracion,
       duracion,
     };
   
     try {
-      if (action === "Nuevo") {
-        const result = await createTourWithImages(tourData, imageFiles);
-        console.log("Resultado del API:", result);
+      let result = false;
   
-        if (result) {
-          setIsOpen(true);
-          getDataTours();
-        } else {
-          setError("Error al crear el tour. Intenta nuevamente.");
-        }
-        setIsOpen(false);
+      if (action === "Nuevo") {
+        result = await createTourWithImages(tourData, fotos);
       } else if (action === "Editar") {
-        const result = await updateCategoryTour(tour.id, tour.categoriaTours.id);
-        if (result) {
-          setIsOpen(true);
-          getDataTours();
-        } else {
-          setError("Error al actualizar el tour. Intenta nuevamente.");
-        }
+        result = await updateCategoryTour(tour.id, tour.categoriaTours.id);
+      }
+  
+      if (result) {
+        console.log("✅ Tour creado/actualizado con éxito. Mostrando modal...");
+        setIsOpen(true);
+  
+        setTimeout(() => {
+          setIsOpen(false);
+          if (onClose) {
+            onClose(); // Cierra el formulario después de mostrar el modal
+          }
+        }, 2000);
+      } else {
+        setError("Error al procesar el tour. Intenta nuevamente.");
       }
     } catch (error) {
       console.error("Error en handleSubmit:", error);
       setError(`Ocurrió un error inesperado: ${error.message || error}`);
     }
   };
+  
   
   
   
@@ -138,6 +139,7 @@ export const TourForm = ({ action, tour = {} }) => {
     }
   }, []);
 
+  
   return (
     <>
       <div className="w-full mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -280,28 +282,42 @@ export const TourForm = ({ action, tour = {} }) => {
               </label>
   
               {/* Precio */}
-              <label className="block">
-                <span className="text-gray-700">Precio</span>
-                <input
-                  type="text"
-                  value={precio} // Cambio aquí de costo a precio
-                  onChange={(e) => setPrecio(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Precio del tour"
-                />
-              </label>
+                <label className="block">
+                  <span className="text-gray-700">Precio</span>
+                  <input
+                    type="number"
+                    value={precio}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*\.?\d*$/.test(value)) { // Permite números enteros y decimales
+                        setPrecio(value);
+                      }
+                    }}
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Precio del tour"
+                    min="0"
+                    step="0.01"
+                  />
+                </label>
   
-              {/* Ubicación/pais */}
-              <label className="block">
-                <span className="text-gray-700">País</span>
-                <input
-                  type="text"
-                  value={pais}
-                  onChange={(e) => setPais(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="País donde se realiza el tour"
-                />
-              </label>
+              {/* Ubicación/país */}
+                <label className="block">
+                  <span className="text-gray-700">País</span>
+                  <select
+                    value={pais}
+                    onChange={(e) => setPais(e.target.value)}
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  >
+                    <option value="" disabled>Selecciona un país</option>
+                    {["MÉXICO", "COLOMBIA", "ARGENTINA", "BRASIL", "JAMAICA", "URUGUAY", "COSTA RICA", "CHILE", "PERÚ"]
+                      .sort((a, b) => a.localeCompare(b))
+                      .map((pais) => (
+                      <option key={pais} value={pais}>
+                        {pais}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
             </div>
           </div>
@@ -322,13 +338,22 @@ export const TourForm = ({ action, tour = {} }) => {
       </div>
   
       {isOpen && (
-        <ModalConfirm
-          isOpen={isOpen}
-          message={action === "Nuevo" ? "El tour se agregó exitosamente" : "El tour se actualizó exitosamente"}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
-    </>
+  <ModalConfirm
+    isOpen={isOpen}
+    message={action === "Nuevo" ? "El tour se agregó exitosamente" : "El tour se actualizó exitosamente"}
+    onClose={() => {
+      setIsOpen(false);
+      setTimeout(() => {
+        getDataTours();
+        if (onClose) {
+          onClose(); 
+        }
+      }, 300);
+    }}
+  />
+)}
+
+  </>
   );
   
 };
