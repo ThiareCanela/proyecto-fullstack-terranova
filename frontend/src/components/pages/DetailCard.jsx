@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTourById } from "../../hooks/useTour";
+import { useAvailability } from "../../hooks/useBooking";
+import { ImageGallery } from "../molecules/ImageGallery";
 /* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
@@ -61,14 +63,41 @@ const Modal = ({ isOpen, onClose, message }) => {
 export default function DetailCard() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [startDate, endDate] = dateRange;
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [guests, setGuests] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { oneTour } = useTourById(id);
+  const { dateAvailability, errorMessage } = useAvailability(id);
   const datePickerRef = useRef(null);
+
+  const is404Error = errorMessage?.includes("404");
+  const today = new Date();
+
+  const blockedDates =
+    dateAvailability
+      ?.filter((date) => !date.disponible)
+      ?.map((date) => new Date(date.fecha)) || [];
+
+  const handleDateChange = (date) => {
+    if (!date) return;
+
+    setStartDate(date);
+
+    const duration = parseInt(oneTour?.duracion, 10);
+
+    if (!isNaN(duration) && duration > 0) {
+      const calculatedEndDate = new Date(date);
+      calculatedEndDate.setDate(calculatedEndDate.getDate() + duration - 1);
+      setEndDate(calculatedEndDate);
+    } else {
+      setEndDate(null);
+    }
+
+    setShowDatePicker(false);
+  };
 
   const handleReserve = () => {
     if (!startDate || !endDate) {
@@ -126,25 +155,7 @@ export default function DetailCard() {
       </header>
 
       <main className="flex flex-col w-full p-4 md:py-8 md:px-16 gap-6">
-        <div className="grid grid-cols-[66%_33%] gap-4 w-full max-w-full">
-          <img
-            className="w-full object-cover h-full md:h-76 rounded-lg"
-            src={oneTour.imagenes[0].urlImagen}
-            alt={oneTour.titulo}
-          />
-          <div className="grid grid-rows-2 gap-4 overflow-hidden">
-            <img
-              className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[1].urlImagen}
-              alt={oneTour.titulo}
-            />
-            <img
-              className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[2].urlImagen}
-              alt={oneTour.titulo}
-            />
-          </div>
-        </div>
+        <ImageGallery images={oneTour.imagenes} />
 
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
@@ -177,9 +188,9 @@ export default function DetailCard() {
                   type="text"
                   value={endDate ? endDate.toLocaleDateString() : ""}
                   readOnly
-                  className="border p-2 rounded-lg text-sm w-full"
-                  placeholder="Fecha de fin"
-                  onClick={() => setShowDatePicker(true)}
+                  className="border p-2 rounded-lg text-sm w-full bg-blue-100"
+                  placeholder="Fecha fin"
+                  disabled
                 />
               </div>
               {showDatePicker && (
@@ -189,14 +200,13 @@ export default function DetailCard() {
                 >
                   <DatePicker
                     selected={startDate}
-                    onChange={(update) => {
-                      setDateRange(update);
-                      setShowDatePicker(false);
-                    }}
+                    onChange={handleDateChange}
                     startDate={startDate}
                     endDate={endDate}
-                    selectsRange
+                    selectsStart
                     inline
+                    minDate={today}
+                    excludeDates={is404Error ? [] : blockedDates}
                   />
                 </div>
               )}

@@ -6,18 +6,7 @@ export const DescriptionDetail = ({ description, subtitle = "" }) => {
         Descripción
       </h3>
       <h4 className="text-gray-400 text-sm w-full text-justify">{subtitle}</h4>
-      <>
-        {description &&
-          typeof description === "string" &&
-          JSON.parse(description).detalles.map((des, index) => (
-            <p
-              key={`${index}-detail`}
-              className="text-default text-sm w-full text-justify"
-            >
-              {des}
-            </p>
-          ))}
-      </>
+      <p className="text-default text-sm w-full text-justify">{description}</p>
     </div>
   );
 };

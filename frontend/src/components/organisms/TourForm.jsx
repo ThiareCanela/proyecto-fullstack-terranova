@@ -113,8 +113,6 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
             onClose(); // Cierra el formulario después de mostrar el modal
           }
         }, 2000);
-  
-        getDataTours(); // Actualiza la lista de tours después de éxito
       } else {
         setError("Error al procesar el tour. Intenta nuevamente.");
       }
@@ -340,17 +338,20 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       </div>
   
       {isOpen && (
-      <ModalConfirm
-        isOpen={isOpen}
-        message={action === "Nuevo" ? "El tour se agregó exitosamente" : "El tour se actualizó exitosamente"}
-        onClose={() => {
-        setIsOpen(false);
+  <ModalConfirm
+    isOpen={isOpen}
+    message={action === "Nuevo" ? "El tour se agregó exitosamente" : "El tour se actualizó exitosamente"}
+    onClose={() => {
+      setIsOpen(false);
+      setTimeout(() => {
+        getDataTours();
         if (onClose) {
-          setTimeout(onClose, 300); // Cierra el formulario después de ocultar el modal
-          }
-        }}
-      />
-    )}
+          onClose(); 
+        }
+      }, 300);
+    }}
+  />
+)}
 
   </>
   );

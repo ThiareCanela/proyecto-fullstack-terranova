@@ -62,7 +62,7 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
 
   formData.append("tour", JSON.stringify(tour));
 
-  imagenes.forEach((imagen, index) => {
+  imagenes.forEach((imagen) => {
     formData.append("imagenes", imagen);
   });
 
@@ -70,16 +70,23 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
   console.log("📤 Enviando datos al backend...");
   console.log("📝 Tour data:", JSON.stringify(tour, null, 2));
   console.log("📸 Cantidad de imágenes:", imagenes.length);
-  imagenes.forEach((img, index) => console.log(`Imagen ${index + 1}:`, img.name));
+  imagenes.forEach((img, index) =>
+    console.log(`Imagen ${index + 1}:`, img.name)
+  );
 
   try {
-    const response = await fetch("http://localhost:8080/tour/agregar-con-imagenes", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      "http://localhost:8080/tour/agregar-con-imagenes",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`Error al agregar el tour con imágenes: ${response.statusText}`);
+      throw new Error(
+        `Error al agregar el tour con imágenes: ${response.statusText}`
+      );
     }
 
     return response.json();
@@ -88,9 +95,6 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
     throw error;
   }
 };
-
-
-
 
 export const deleteTourApi = async (tourId) => {
   try {
