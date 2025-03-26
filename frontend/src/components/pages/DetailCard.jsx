@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTourById } from "../../hooks/useTour";
 import { useAvailability } from "../../hooks/useBooking";
+import { ImageGallery } from "../molecules/ImageGallery";
 /* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
@@ -154,25 +155,7 @@ export default function DetailCard() {
       </header>
 
       <main className="flex flex-col w-full p-4 md:py-8 md:px-16 gap-6">
-        <div className="grid grid-cols-[66%_33%] gap-4 w-full max-w-full">
-          <img
-            className="w-full object-cover h-full md:h-76 rounded-lg"
-            src={oneTour.imagenes[0].urlImagen}
-            alt={oneTour.titulo}
-          />
-          <div className="grid grid-rows-2 gap-4 overflow-hidden">
-            <img
-              className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[1]?.urlImagen}
-              alt={oneTour.titulo}
-            />
-            <img
-              className="w-full object-cover h-56 md:h-36 rounded-lg"
-              src={oneTour.imagenes[2]?.urlImagen}
-              alt={oneTour.titulo}
-            />
-          </div>
-        </div>
+        <ImageGallery images={oneTour.imagenes} />
 
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
