@@ -71,10 +71,43 @@ export default function DetailCard() {
   const { oneTour } = useTourById(id);
   const { dateAvailability, errorMessage } = useAvailability(id);
   const datePickerRef = useRef(null);
-  const availableDates =
-    dateAvailability?.map((date) => new Date(date.fecha)) || [];
 
-  console.log(availableDates, "availabdates");
+  const is404Error = errorMessage?.includes("404");
+  const today = new Date();
+
+  // Fechas bloqueadas (no disponibles)
+  const blockedDates =
+    dateAvailability
+      ?.filter((date) => !date.disponible)
+      ?.map((date) => new Date(date.fecha)) || [];
+  // const availableDates =
+  //   dateAvailability?.map((date) => new Date(date.fecha)) || [];
+
+  console.log(blockedDates, "availabdates");
+
+  // Manejador de selección de fecha
+  const handleDateChange = (dates) => {
+    const [selectedStart] = dates;
+    if (!selectedStart) {
+      setDateRange([null, null]);
+      return;
+    }
+
+    // Encontrar el tour correspondiente a la fecha seleccionada
+    const selectedTour = dateAvailability.find(
+      (entry) =>
+        new Date(entry.fecha).toDateString() === selectedStart.toDateString()
+    );
+    // Si se encuentra el tour, calcular fecha fin
+    if (selectedTour) {
+      const duration = selectedTour.tour.duracion;
+      const calculatedEndDate = new Date(selectedStart);
+      calculatedEndDate.setDate(calculatedEndDate.getDate() + duration);
+      setDateRange([selectedStart, calculatedEndDate]);
+    } else {
+      setDateRange([selectedStart, null]);
+    }
+  };
   const handleReserve = () => {
     if (!startDate || !endDate) {
       setModalMessage("Error en la reserva: Selecciona ambas fechas.");
@@ -156,99 +189,102 @@ export default function DetailCard() {
             <DescriptionDetail description={oneTour.descripcion} />
           </div>
 
-          {!errorMessage && (
-            <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
-              <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
-                Desde{" "}
-                <span className="text-[var(--color-emphasis)]">
-                  ${oneTour.precio}
-                </span>{" "}
-                por persona
-              </h2>
+          <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
+            <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
+              Desde{" "}
+              <span className="text-[var(--color-emphasis)]">
+                ${oneTour.precio}
+              </span>{" "}
+              por persona
+            </h2>
 
-              <div className="mb-4 relative">
-                <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-                  Selecciona fechas
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={startDate ? startDate.toLocaleDateString() : ""}
-                    readOnly
-                    className="border p-2 rounded-lg text-sm w-full"
-                    placeholder="Fecha de inicio"
-                    onClick={() => setShowDatePicker(true)}
-                  />
-                  <input
-                    type="text"
-                    value={endDate ? endDate.toLocaleDateString() : ""}
-                    readOnly
-                    className="border p-2 rounded-lg text-sm w-full"
-                    placeholder="Fecha de fin"
-                    onClick={() => setShowDatePicker(true)}
+            <div className="mb-4 relative">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Selecciona fechas
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={startDate ? startDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de inicio"
+                  onClick={() => setShowDatePicker(true)}
+                />
+                <input
+                  type="text"
+                  value={endDate ? endDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de fin"
+                  // onClick={() => setShowDatePicker(true)}
+                />
+              </div>
+              {showDatePicker && (
+                <div
+                  ref={datePickerRef}
+                  className="absolute z-50 bg-white shadow-lg rounded-lg mt-2"
+                >
+                  <DatePicker
+                    selected={startDate}
+                    // onChange={(update) => {
+                    //   setDateRange(update);
+                    //   setShowDatePicker(false);
+                    // }}
+                    onChange={() => {
+                      handleDateChange();
+                      setShowDatePicker(false);
+                    }}
+                    startDate={startDate}
+                    endDate={endDate}
+                    selectsRange
+                    inline
+                    minDate={today}
+                    excludeDates={is404Error ? [] : blockedDates}
                   />
                 </div>
-                {showDatePicker && (
-                  <div
-                    ref={datePickerRef}
-                    className="absolute z-50 bg-white shadow-lg rounded-lg mt-2"
-                  >
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(update) => {
-                        setDateRange(update);
-                        setShowDatePicker(false);
-                      }}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      inline
-                      minDate={new Date()}
-                      includeDates={availableDates}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-                  Número de personas
-                </label>
-                <select
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  className="border p-2 rounded-lg text-sm w-full"
-                >
-                  {[...Array(5).keys()].map((i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                onClick={handleReserve}
-                className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
-              >
-                Reservar
-              </button>
-
-              <div className="mt-4 flex justify-between items-center">
-                <label className="text-sm font-semibold text-[var(--color-default)]">
-                  Precio total
-                </label>
-                <p className="text-[var(--color-emphasis)] font-bold text-lg">
-                  ${guests * 90}
-                </p>
-              </div>
+              )}
             </div>
-          )}
-          {errorMessage && (
+
+            <div className="mb-4">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Número de personas
+              </label>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                className="border p-2 rounded-lg text-sm w-full"
+              >
+                {[...Array(5).keys()].map((i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={handleReserve}
+              className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
+            >
+              Reservar
+            </button>
+
+            <div className="mt-4 flex justify-between items-center">
+              <label className="text-sm font-semibold text-[var(--color-default)]">
+                Precio total
+              </label>
+              <p className="text-[var(--color-emphasis)] font-bold text-lg">
+                ${guests * 90}
+              </p>
+            </div>
+          </div>
+
+          {/* {errorMessage && (
             <div className="md:w-[33%] bg-white shadow-lg text-center whitespace-pre-line text-red-700 font-bold rounded-2xl p-6 border border-b-gray-500  w-full md:ml-auto">
               {errorMessage}
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="flex justify-center items-center w-full min-h-[20vh]">
