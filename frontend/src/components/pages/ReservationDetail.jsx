@@ -1,0 +1,186 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, MapPin, User, Calendar, Clock } from "lucide-react";
+import { useState } from "react";
+import { CARACTERISTICAS } from "../../constants";
+import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
+
+export default function ReservationDetail() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const startDate = location.state?.startDate || "";
+  const endDate = location.state?.endDate || "";
+  const guests = location.state?.guests || 1;
+  const pricePerDay = 50; // Precio por día (ajústalo según sea necesario)
+
+  const calculateDays = (start, end) => {
+    if (!start || !end) return 0;
+    const startD = new Date(start);
+    const endD = new Date(end);
+    return Math.max(1, Math.ceil((endD - startD) / (1000 * 60 * 60 * 24)));
+  };
+  const totalDays = calculateDays(startDate, endDate);
+  const totalPrice = totalDays * pricePerDay;
+
+  const [contact, setContact] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+
+  const handleChange = (e) => {
+    setContact({ ...contact, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="flex flex-col bg-[var(--color-primary)] min-h-screen p-25">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-[var(--color-default)]">
+          Detalle de la reserva
+        </h1>
+        <button
+          className="flex items-center text-[var(--color-emphasis)] gap-2 font-medium"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft /> Volver atrás
+        </button>
+      </header>
+
+      {/* Contenido Principal */}
+      <main className="flex flex-col md:flex-row gap-20 flex-grow">
+        {/* Tarjeta de Reserva (Izquierda) */}
+        <section className="md:w-5/12 bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)]">
+          {/* Imágenes */}
+          <div className="w-full mb-4">
+            <img
+              className="w-full object-cover h-64 md:h-80 rounded-lg"
+              src="https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/b/r/brasil35.jpg"
+              alt="Retiro en el Amazonas"
+            />
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <img
+                className="w-full object-cover h-32 md:h-40 rounded-lg"
+                src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/bzngtenckauetvefmdai"
+                alt="Imagen adicional"
+              />
+              <img
+                className="w-full object-cover h-32 md:h-40 rounded-lg"
+                src="https://res.cloudinary.com/worldpackers/image/upload/c_limit,f_auto,q_auto,w_1140/vs0bb8a9jx5w7bteecsj"
+                alt="Imagen adicional"
+              />
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-[var(--color-default)]">
+              Retiro en el Amazonas
+            </h2>
+            <div className="flex items-center text-gray-600 gap-2">
+              <MapPin className="w-5 h-5 text-[var(--color-emphasis)]" />
+              <span>Brasil</span>
+            </div>
+          </div>
+
+          <div className="text-gray-700 space-y-4">
+            <div className="flex items-center gap-2">
+              <User className="w-5 h-5 text-[var(--color-emphasis)]" />
+              <span><strong>{guests}</strong> personas</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-[var(--color-emphasis)]" />
+              <span>
+                {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionada"} -{" "}
+                {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionada"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-[var(--color-emphasis)]" />
+              <span>{totalDays} días</span>
+            </div>
+          </div>
+
+          {/* Sección de Características */}
+          <div className="mt-4">
+            <CharacteristicsSection characteristics={CARACTERISTICAS} />
+          </div>
+
+          {/* Línea divisoria */}
+          <hr className="my-4 border-t border-gray-300" />
+
+          {/* Precio Total */}
+          <div className="flex justify-between items-center text-lg font-semibold text-[var(--color-default)]">
+            <span>Precio total:</span>
+            <span>${totalPrice.toFixed(2)}</span>
+          </div>
+        </section>
+
+        {/* Formulario de Contacto (Derecha) */}
+        <section className="md:w-7/12 bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] h-full">
+          <h2 className="text-lg font-bold mb-4 text-[var(--color-default)]">
+            Datos del contacto
+          </h2>
+
+          <form className="flex flex-col h-full space-y-4 flex-grow">
+            {/* Nombre y Apellido en la misma fila */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[var(--color-default)]">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={contact.firstName}
+                  onChange={handleChange}
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Ej. Juan"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--color-default)]">
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={contact.lastName}
+                  onChange={handleChange}
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Ej. Pérez"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Correo y botón en una fila aparte */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--color-default)]">
+                Correo Electrónico
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={contact.email}
+                onChange={handleChange}
+                className="border p-2 rounded-lg text-sm w-full"
+                placeholder="Ej. juan.perez@email.com"
+                required
+              />
+            </div>
+
+            <div className="mt-2">
+              <button
+                type="submit"
+                className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
+              >
+                Reservar
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  );
+}

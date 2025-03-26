@@ -1,4 +1,4 @@
-import { ArrowLeft, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { DescriptionDetail } from "../molecules/DescriptionDetail";
 import { CARACTERISTICAS, DESCRIPTIONS } from "../../constants";
 import { useNavigate } from "react-router-dom";
@@ -7,79 +7,28 @@ import { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Modal = ({ isOpen, onClose, message }) => {
-  let icon, title, description;
-
-  if (message.includes("Reserva exitosa")) {
-    icon = <CheckCircle className="w-12 h-12 text-green-500" />;
-    title = "Reserva exitosa";
-    description = "Tu reserva se ha realizado con éxito.";
-  } else if (message.includes("Fecha no disponible")) {
-    icon = <AlertCircle className="w-12 h-12 text-yellow-500" />;
-    title = "Fecha no Disponible";
-    description = "La fecha de inicio debe ser anterior a la de fin.";
-  } else if (message.includes("Error en la reserva")) {
-    icon = <XCircle className="w-12 h-12 text-red-500" />;
-    title = "Error en la reserva";
-    description = "Hubo un problema con el servidor al procesar la fecha. Intenta nuevamente.";
-  } else {
-    icon = null;
-    title = "Error";
-    description = message;
-  }
-
-  return (
-    <div
-      className={`fixed inset-0 flex items-center justify-center bg-black/50 z-50 transition-opacity duration-300 ${
-        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-      }`}
-    >
-      <div
-        className={`bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4 relative transition-transform duration-300 ${
-          isOpen ? "scale-100" : "scale-90"
-        }`}
-      >
-        <div className="flex flex-col items-center">
-          {icon}
-          <h2 className="text-lg font-bold text-gray-800 mt-3">{title}</h2>
-          <p className="text-gray-600 mt-2 text-center">{description}</p>
-        </div>
-        <div className="mt-4 flex justify-center">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
-            onClick={onClose}
-          >
-            OK
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function DetailCard() {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [guests, setGuests] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const datePickerRef = useRef(null);
 
   const handleReserve = () => {
     if (!startDate || !endDate) {
-      setModalMessage("Error en la reserva: Selecciona ambas fechas.");
-      setShowModal(true);
+      alert("Error en la reserva: Selecciona ambas fechas.");
       return;
     }
     if (new Date(startDate) >= new Date(endDate)) {
-      setModalMessage("Fecha no disponible: La fecha de inicio debe ser anterior a la de fin.");
-      setShowModal(true);
+      alert("Fecha no disponible: La fecha de inicio debe ser anterior a la de fin.");
       return;
     }
-    setModalMessage("Reserva exitosa");
-    setShowModal(true);
+
+    // Navegar a la página de detalles de reserva con parámetros
+    navigate("/reservation-detail", {
+      state: { startDate, endDate, guests },
+    });
   };
 
   const handleClickOutside = (event) => {
@@ -143,90 +92,88 @@ export default function DetailCard() {
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
-  <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
-    Desde <span className="text-[var(--color-emphasis)]">$90</span> por persona
-  </h2>
+            <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
+              Desde <span className="text-[var(--color-emphasis)]">$90</span> por persona
+            </h2>
 
-  <div className="mb-4 relative">
-    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-      Selecciona fechas
-    </label>
-    <div className="flex gap-2">
-      <input
-        type="text"
-        value={startDate ? startDate.toLocaleDateString() : ""}
-        readOnly
-        className="border p-2 rounded-lg text-sm w-full"
-        placeholder="Fecha de inicio"
-        onClick={() => setShowDatePicker(true)}
-      />
-      <input
-        type="text"
-        value={endDate ? endDate.toLocaleDateString() : ""}
-        readOnly
-        className="border p-2 rounded-lg text-sm w-full"
-        placeholder="Fecha de fin"
-        onClick={() => setShowDatePicker(true)}
-      />
-    </div>
-    {showDatePicker && (
-      <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2">
-        <DatePicker
-          selected={startDate}
-          onChange={(update) => {
-            setDateRange(update);
-            setShowDatePicker(false);
-          }}
-          startDate={startDate}
-          endDate={endDate}
-          selectsRange
-          inline
-        />
-      </div>
-    )}
-  </div>
+            <div className="mb-4 relative">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Selecciona fechas
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={startDate ? startDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de inicio"
+                  onClick={() => setShowDatePicker(true)}
+                />
+                <input
+                  type="text"
+                  value={endDate ? endDate.toLocaleDateString() : ""}
+                  readOnly
+                  className="border p-2 rounded-lg text-sm w-full"
+                  placeholder="Fecha de fin"
+                  onClick={() => setShowDatePicker(true)}
+                />
+              </div>
+              {showDatePicker && (
+                <div ref={datePickerRef} className="absolute z-50 bg-white shadow-lg rounded-lg mt-2">
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(update) => {
+                      setDateRange(update);
+                      setShowDatePicker(false);
+                    }}
+                    startDate={startDate}
+                    endDate={endDate}
+                    selectsRange
+                    inline
+                  />
+                </div>
+              )}
+            </div>
 
-  <div className="mb-4">
-    <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
-      Número de personas
-    </label>
-    <select
-      value={guests}
-      onChange={(e) => setGuests(e.target.value)}
-      className="border p-2 rounded-lg text-sm w-full"
-    >
-      {[...Array(5).keys()].map(i => (
-        <option key={i + 1} value={i + 1}>
-          {i + 1}
-        </option>
-      ))}
-    </select>
-  </div>
+            <div className="mb-4">
+              <label className="text-sm font-semibold text-[var(--color-default)] block mb-1">
+                Número de personas
+              </label>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                className="border p-2 rounded-lg text-sm w-full"
+              >
+                {[...Array(5).keys()].map(i => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-  <button
-    onClick={handleReserve}
-    className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
-  >
-    Reservar
-  </button>
+            <button
+              onClick={handleReserve}
+              className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
+            >
+              Continuar
+            </button>
 
-  <div className="mt-4 flex justify-between items-center">
-    <label className="text-sm font-semibold text-[var(--color-default)]">
-      Precio total
-    </label>
-    <p className="text-[var(--color-emphasis)] font-bold text-lg">
-      ${guests * 90}
-    </p>
-  </div>
-</div>
+            <div className="mt-4 flex justify-between items-center">
+              <label className="text-sm font-semibold text-[var(--color-default)]">
+                Precio total
+              </label>
+              <p className="text-[var(--color-emphasis)] font-bold text-lg">
+                ${guests * 90}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="flex justify-center items-center w-full min-h-[20vh]">
+        <div className="w-full flex justify-center items-center min-h-[20vh]">
           <CharacteristicsSection characteristics={CARACTERISTICAS} />
         </div>
       </main>
-
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} message={modalMessage} />
     </div>
   );
 }
