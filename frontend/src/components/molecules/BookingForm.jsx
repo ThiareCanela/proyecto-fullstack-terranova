@@ -158,6 +158,7 @@ export const BookingForm = () => {
                       fechaInicio: start,
                       fechaFin: end,
                     });
+                    setShowDatePicker(false);
                   }}
                   startDate={formData.fechaInicio}
                   endDate={formData.fechaFin}
