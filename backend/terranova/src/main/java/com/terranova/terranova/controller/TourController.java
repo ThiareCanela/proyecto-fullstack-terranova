@@ -207,9 +207,10 @@ public class TourController {
     // Endpoint para buscar tours por pais y rango de fechas disponibles
     @GetMapping("/buscar/pais-fechas")
     public ResponseEntity<List<Tour>> buscarPorPaisYFechas(
-            @RequestParam List<String> pais,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+            @RequestParam(required = false) List<String> pais,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
         List<Tour> tours = tourService.buscarToursPorPaisYFechas(pais, fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
     }
