@@ -34,6 +34,6 @@ public class DisponibilidadTourService {
         return repository.findByDisponibleFalse(); }
 
     public List<DisponibilidadTour> obtenerDisponibilidades() {
-        return repository.findByDisponibleTrue(); }
+        return repository.findDisponibilidadesDiferentesDeFalse(); }
 
 }

@@ -14,7 +14,8 @@ public interface DisponibilidadTourRepository  extends JpaRepository<Disponibili
     @Query("SELECT d FROM DisponibilidadTour d WHERE d.tour.id = :tourId")
     List<DisponibilidadTour> findByTourId(@Param("tourId") Long tourId);
 
-    List<DisponibilidadTour> findByDisponibleTrue();
+    @Query("SELECT d FROM DisponibilidadTour d WHERE d.disponible != false")
+    List<DisponibilidadTour> findDisponibilidadesDiferentesDeFalse();
     List<DisponibilidadTour> findByDisponibleFalse();
 
     // Verifica si existe disponibilidad para un tour en una fecha específica

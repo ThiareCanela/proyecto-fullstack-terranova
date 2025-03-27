@@ -22,11 +22,11 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     List<Tour> findByTituloContainingOrDescripcionContaining(String titulo, String descripcion);
 
     // Buscar por rango de fechas usando la disponibilidad de los tours
-    @Query("SELECT DISTINCT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
+    @Query("SELECT DISTINCT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible != false")
     List<Tour> findByDisponibilidadEntreFechas(@Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
     // Buscar por palabra clave y rango de fechas
-    @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE (t.titulo LIKE %:keyword% OR t.descripcion LIKE %:keyword%) AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
+    @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id WHERE (t.titulo LIKE %:keyword% OR t.descripcion LIKE %:keyword%) AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible != false")
     List<Tour> findByKeywordAndDisponibilidadEntreFechas(@Param("keyword") String keyword, @Param("fechaInicio") LocalDate fechaInicio, @Param("fechaFin") LocalDate fechaFin);
 
     Optional<Tour> findByTitulo(String titulo);
@@ -42,14 +42,14 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     @Query("SELECT DISTINCT t FROM Tour t " +
             "JOIN DisponibilidadTour d ON t.id = d.tour.id " +
             "WHERE t.pais IN :pais " +
-            "AND d.disponible = true")
+            "AND d.disponible != false")
     List<Tour> findToursByPais(@Param("pais") List<String> pais);
 
 
     // Búsqueda de tours por pais y disponibilidad en un rango de fechas
     @Query("SELECT t FROM Tour t JOIN DisponibilidadTour d ON t.id = d.tour.id " +
             "WHERE t.pais IN :pais " +
-            "AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible = true")
+            "AND d.fecha BETWEEN :fechaInicio AND :fechaFin AND d.disponible != false") //que sea diferente de false
     List<Tour> findByPaisAndDisponibilidad(@Param("pais") List<String> pais,
                                                 @Param("fechaInicio") LocalDate fechaInicio,
                                                 @Param("fechaFin") LocalDate fechaFin);
