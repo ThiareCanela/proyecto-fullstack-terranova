@@ -54,7 +54,7 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
 
     setError(""); // Limpiar errores previos si la selección es válida
     setFotos(files); // Almacena correctamente las imágenes en el estado
-    console.log("✅ Imágenes almacenadas en el estado:", files);
+    console.log("Imágenes almacenadas en el estado:", files);
   };
 
   const handleSubmit = async (e) => {
@@ -65,13 +65,14 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
     if (
       titulo.trim() === "" ||
       descripcion.trim() === "" ||
+      !categoria ||
       !pais ||
       !precio ||
       !tipoDuracion ||
       !duracion ||
       caracteristicas.length === 0
     ) {
-      setError("Todos los campos son obligatorios excepto la categoría.");
+      setError("Todos los campos son obligatorios.");
       return;
     }
 
@@ -116,15 +117,23 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
         setTimeout(() => {
           setIsOpen(false);
           if (onClose) {
-            onClose(); // Cierra el formulario después de mostrar el modal
+            onClose();
           }
         }, 2000);
-      } else {
-        setError("Error al procesar el tour. Intenta nuevamente.");
       }
     } catch (error) {
-      console.error("Error en handleSubmit:", error);
-      setError(`Ocurrió un error inesperado: ${error.message || error}`);
+      console.error("❌ Error en handleSubmit:", error);
+  
+      let errorMessage = "Ocurrió un error inesperado. Intenta nuevamente.";
+  
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+  
+      console.log("➡ Error seteado en el estado:", errorMessage); // 🔍 Verifica si el estado se actualiza
+      setError(errorMessage);
     }
   };
 
@@ -138,6 +147,7 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       );
     }
   }, []);
+
 
   return (
     <>
