@@ -105,15 +105,18 @@ export default function DetailCard() {
       setShowModal(true);
       return;
     }
-    if (new Date(startDate) >= new Date(endDate)) {
+    if (new Date(startDate) > new Date(endDate)) {
       setModalMessage(
         "Fecha no disponible: La fecha de inicio debe ser anterior a la de fin."
       );
       setShowModal(true);
       return;
     }
-    setModalMessage("Reserva exitosa");
-    setShowModal(true);
+    navigate("/detalle-reserva", {
+      state: { startDate, endDate, guests },
+    });
+    // setModalMessage("Reserva exitosa");
+    // setShowModal(true);
   };
 
   const handleClickOutside = (event) => {

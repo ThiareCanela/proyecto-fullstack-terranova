@@ -8,6 +8,7 @@ import Profile from "./components/pages/Profile";
 import AdminPanel from "./components/pages/AdminPanel";
 import { useAuth } from "./context/AuthContext";
 import SearchResults from "./components/pages/SearchResults";
+import ReservationDetail from "./components/pages/ReservationDetail";
 
 // eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/detalle/:id" element={<DetailCard />} />
         <Route path="/resultados" element={<SearchResults />} />{" "}
+        <Route path="/detalle-reserva" element={<ReservationDetail />} />
         <Route
           path="/perfil"
           element={
