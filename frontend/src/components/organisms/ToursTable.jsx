@@ -17,11 +17,17 @@ export const ToursTable = () => {
   const [selectedId, setSelectedId] = useState(null);
   const { oneTour } = useTourById(selectedId);
 
-  const handleOpenModalEdit = (id) => {
+  const handleOpenModalEdit = async (id) => {
     setSelectedId(id);
-    console.log("Tour seleccionado:", id);
-    setShowModalEdit(true);
+  
+    setTimeout(() => {
+      if (oneTour) { // Solo abrir el modal si `oneTour` tiene datos
+        setShowModalEdit(true);
+      }
+    }, 300);
   };
+  
+
   console.log("oneTour:", oneTour);
   const handleOpenModalDelete = (id) => {
     setSelectedId(id);
@@ -74,10 +80,11 @@ export const ToursTable = () => {
                       {tour.titulo}
                     </td>
                     <td className="py-2">
-                      <span className=" uppercase text-[12px]  ">
-                        {tour.categoriaTours.nombre}
+                      <span className="uppercase text-[12px]">
+                        {tour.categoriaTours?.nombre || "Sin categoría"}
                       </span>
                     </td>
+
                     <td className="py-2 flex  gap-3 w-full">
                       <EditIcon
                         width={20}
@@ -116,11 +123,11 @@ export const ToursTable = () => {
         />
       )}
 
-      {showModalEdit && (
+      {showModalEdit && oneTour && (
         <ModalTourUpdate
           showModal={handleCloseEditModal}
-          tour={oneTour}
-        />
+          tour={oneTour} // Asegurar que el tour completo se pase al modal
+          />
       )}
 
       {showModalDelete && (
