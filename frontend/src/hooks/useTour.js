@@ -52,18 +52,28 @@ export const useTours = () => {
   const createTourWithImages = async (tourData, images) => {
     setLoading(true);
     setError(null);
-
+  
     try {
+      console.log("Enviando datos a postTourWithImagesApi:", tourData, images);
       const createdTour = await postTourWithImagesApi(tourData, images);
+      console.log("Respuesta exitosa del backend:", createdTour);
+  
       setNewTour(createdTour);
       return createdTour;
     } catch (err) {
-      setError(err.message);
-      return null;
+      console.error("Error capturado en createTourWithImages:", err);
+  
+      const errorMessage =
+        err?.error || err?.message || "Ocurrió un error inesperado.";
+  
+      setError(errorMessage); // Seteamos el error en el estado
+      throw new Error(errorMessage); // Lanzamos el error para que lo capture `handleSubmit`
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const deleteTour = async (tourId) => {
     setLoading(true);
