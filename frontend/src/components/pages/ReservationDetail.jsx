@@ -1,8 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, User, Calendar, Clock } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  User,
+  Calendar,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
 import { useState } from "react";
 import { CARACTERISTICAS } from "../../constants";
 import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
+import Modal from "../atoms/Modal"; // Importamos el modal
 
 export default function ReservationDetail() {
   const navigate = useNavigate();
@@ -11,7 +20,7 @@ export default function ReservationDetail() {
   const startDate = location.state?.startDate || "";
   const endDate = location.state?.endDate || "";
   const guests = location.state?.guests || 1;
-  const pricePerDay = 50; // Precio por día (ajústalo según sea necesario)
+  const pricePerDay = 50; // Precio por día
 
   const calculateDays = (start, end) => {
     if (!start || !end) return 0;
@@ -28,8 +37,20 @@ export default function ReservationDetail() {
     email: "",
   });
 
+  const [modal, setModal] = useState({ isOpen: false, success: false });
+
   const handleChange = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (contact.firstName && contact.lastName && contact.email.includes("@")) {
+      setModal({ isOpen: true, success: true });
+    } else {
+      setModal({ isOpen: true, success: false });
+    }
   };
 
   return (
@@ -85,13 +106,20 @@ export default function ReservationDetail() {
           <div className="text-gray-700 space-y-4">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5 text-[var(--color-emphasis)]" />
-              <span><strong>{guests}</strong> personas</span>
+              <span>
+                <strong>{guests}</strong> personas
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[var(--color-emphasis)]" />
               <span>
-                {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionada"} -{" "}
-                {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionada"}
+                {startDate
+                  ? new Date(startDate).toLocaleDateString()
+                  : "No seleccionada"}{" "}
+                -{" "}
+                {endDate
+                  ? new Date(endDate).toLocaleDateString()
+                  : "No seleccionada"}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -100,15 +128,12 @@ export default function ReservationDetail() {
             </div>
           </div>
 
-          {/* Sección de Características */}
           <div className="mt-4">
             <CharacteristicsSection characteristics={CARACTERISTICAS} />
           </div>
 
-          {/* Línea divisoria */}
           <hr className="my-4 border-t border-gray-300" />
 
-          {/* Precio Total */}
           <div className="flex justify-between items-center text-lg font-semibold text-[var(--color-default)]">
             <span>Precio total:</span>
             <span>${totalPrice.toFixed(2)}</span>
@@ -121,66 +146,95 @@ export default function ReservationDetail() {
             Datos del contacto
           </h2>
 
-          <form className="flex flex-col h-full space-y-4 flex-grow">
-            {/* Nombre y Apellido en la misma fila */}
+          <form
+            className="flex flex-col h-full space-y-4 flex-grow"
+            onSubmit={handleSubmit}
+          >
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-default)]">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={contact.firstName}
-                  onChange={handleChange}
-                  className="border p-2 rounded-lg text-sm w-full"
-                  placeholder="Ej. Juan"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-default)]">
-                  Apellido
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={contact.lastName}
-                  onChange={handleChange}
-                  className="border p-2 rounded-lg text-sm w-full"
-                  placeholder="Ej. Pérez"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Correo y botón en una fila aparte */}
-            <div>
-              <label className="block text-sm font-medium text-[var(--color-default)]">
-                Correo Electrónico
-              </label>
               <input
-                type="email"
-                name="email"
-                value={contact.email}
+                type="text"
+                name="firstName"
+                value={contact.firstName}
                 onChange={handleChange}
+                placeholder="Nombre"
                 className="border p-2 rounded-lg text-sm w-full"
-                placeholder="Ej. juan.perez@email.com"
+                required
+              />
+              <input
+                type="text"
+                name="lastName"
+                value={contact.lastName}
+                onChange={handleChange}
+                placeholder="Apellido"
+                className="border p-2 rounded-lg text-sm w-full"
                 required
               />
             </div>
-
-            <div className="mt-2">
-              <button
-                type="submit"
-                className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full transition-all hover:bg-[var(--color-secondary)] hover:scale-105"
-              >
-                Reservar
-              </button>
-            </div>
+            <input
+              type="email"
+              name="email"
+              value={contact.email}
+              onChange={handleChange}
+              placeholder="Correo Electrónico"
+              className="border p-2 rounded-lg text-sm w-full"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-[var(--color-emphasis)] text-white font-medium text-sm px-6 py-3 rounded-xl w-full hover:scale-105"
+            >
+              Reservar
+            </button>
           </form>
         </section>
       </main>
+
+      {/* Modal */}
+      <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false })}>
+        {modal.success ? (
+          <>
+            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+            <h2 className="text-center text-lg font-bold text-[var(--color-default)] mb-2">
+              Reserva exitosa
+            </h2>
+            <div className="text-left text-gray-700 space-y-2">
+              <p className="flex items-center gap-2 text-sm">
+                <MapPin className="w-4 h-4 text-[var(--color-emphasis)]" />
+                <span>Brasil</span>
+              </p>
+              <p className="text-lg font-bold text-[var(--color-default)]">
+                Retiro en el Amazonas
+              </p>
+              <p className="flex items-center gap-2">
+                <User className="w-5 h-5 text-[var(--color-emphasis)]" />
+                {guests} personas
+              </p>
+              <p className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[var(--color-emphasis)]" />
+                {startDate
+                  ? new Date(startDate).toLocaleDateString()
+                  : "No seleccionada"}{" "}
+                -{" "}
+                {endDate
+                  ? new Date(endDate).toLocaleDateString()
+                  : "No seleccionada"}
+              </p>
+            </div>
+            <p className="text-center font-medium text-[var(--color-default)] mt-4">
+              Tu reserva se realizó con éxito
+            </p>
+          </>
+        ) : (
+          <>
+            <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
+            <p className="text-center font-bold">Error en la reserva</p>
+            <p className="text-center font-medium text-[var(--color-default)] mt-4">
+              Hubo un problema al procesar la reserva. Intenta nuevamente más
+              tarde.
+            </p>
+          </>
+        )}
+      </Modal>
     </div>
   );
 }
