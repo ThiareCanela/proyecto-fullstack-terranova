@@ -76,27 +76,36 @@ export const useTours = () => {
   
 
   const deleteTour = async (tourId) => {
+    if (!tourId) {
+      console.error("❌ Error: ID del tour no válido.");
+      return { success: false, message: "ID del tour no válido." };
+    }
+  
     setLoading(true);
     setError(null);
-
+  
     try {
+      console.log(`🔍 Llamando a deleteTourApi con ID: ${tourId}`);
       const result = await deleteTourApi(tourId);
-
+  
       if (result.success) {
-        console.log("Tour eliminado correctamente");
-        await getDataTours(); // Esperar a que los datos se actualicen después de eliminar
+        console.log("✅ Tour eliminado correctamente.");
+        await getDataTours(); // 🔄 Refrescar lista de tours
       } else {
-        console.error("Error al eliminar el tour:", result.message);
+        console.error("⚠️ Error al eliminar el tour:", result.message);
       }
-
+  
       return result;
     } catch (err) {
+      console.error("❌ Error al eliminar el tour:", err.message);
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const updateCategoryTour = async (tourId, categoriaId) => {
     setLoading(true);
