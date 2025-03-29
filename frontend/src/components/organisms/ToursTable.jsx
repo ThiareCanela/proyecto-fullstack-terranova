@@ -158,12 +158,29 @@ export const ToursTable = () => {
       {showModalEdit && oneTour && (
         <ModalTourUpdate showModal={handleCloseEditModal} tour={oneTour} />
       )}
+<<<<<<< HEAD
       {showModalDelete && (
         <ModalConfirmDelete
           showModal={() => setShowModalDelete(false)}
           onConfirm={handleDeleteConfirmed}
         />
       )}
+=======
+
+{showModalDelete && (
+  <ModalConfirmDelete 
+    showModal={handleCloseDeleteModal} 
+    onConfirm={handleDeleteConfirmed} 
+    tourName={tourToDeleteName}
+  />
+)}
+
+
+      {/* Verifica que el modal se renderiza */}
+      {showModal && (
+      <ModalTour showModal={handleCloseCreateModal} />
+        )}
+>>>>>>> bf66e9e (modificaciones adicionales para modificar tour y eliminar tour)
     </>
   );
 };
