@@ -92,7 +92,7 @@ public class TourController {
             // Crear objeto `Tour` desde `TourDTO`
             Tour tour = new Tour();
             tour.setTitulo(tourDTO.getTitulo());
-            tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion()));
+            tour.setTipoDuracion(tourDTO.getTipoDuracion() != null ? tourDTO.getTipoDuracion() : TipoDuracion.DIAS);
             tour.setDuracion(tourDTO.getDuracion());
             tour.setDescripcion(tourDTO.getDescripcion());  //AHORA SOLO ES TEXTO
             tour.setPrecio(tourDTO.getPrecio());

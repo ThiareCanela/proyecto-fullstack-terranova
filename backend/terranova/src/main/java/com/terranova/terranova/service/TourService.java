@@ -95,13 +95,11 @@ public class TourService {
             return tourRepository.findAll();
         }
     }
-    public boolean actualizarTour(Tour tour) {
-        if (tourRepository.existsById(tour.getId())) {
-            tour.setId(tour.getId());
-            tourRepository.save(tour);
-            return true;
+    public Tour actualizarTour(Tour tour) {
+        if (!tourRepository.existsById(tour.getId())) {
+            throw new IllegalArgumentException("No se encontró un tour con el ID: " + tour.getId());
         }
-        return false;
+        return tourRepository.save(tour);
     }
     public boolean existePorTitulo(String titulo) {
         return tourRepository.existsByTituloIgnoreCase(titulo.trim());
