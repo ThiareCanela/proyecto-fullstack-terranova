@@ -30,15 +30,7 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
   const [error, setError] = useState(null);
   const { categoryData } = useCategory();
   const { characTour } = useCharacterTour();
-  const { updateCategoryTour, getDataTours, createTour, createTourWithImages } =
-    useTours();
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setCaracteristicas((prev) =>
-      checked ? [...prev, name] : prev.filter((item) => item !== name)
-    );
-  };
+  const { updateCategoryTour, getDataTours, createTourWithImages } = useTours();
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
