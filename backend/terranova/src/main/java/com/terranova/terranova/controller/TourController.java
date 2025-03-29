@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -222,5 +223,36 @@ public class TourController {
 
         List<Tour> tours = tourService.filtrarToursPorFechas(fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
+    }
+
+
+
+
+    @GetMapping("/disponibles")
+    public ResponseEntity<?> findToursDisponibles(
+            @RequestParam String paisStr,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        try {
+            // Llamar al servicio para obtener los tours disponibles
+            List<Tour> toursDisponibles = tourService.findToursDisponibles(paisStr, fechaInicio, fechaFin);
+
+            // Verificar si hay resultados
+            if (toursDisponibles.isEmpty()) {
+                return ResponseEntity.ok("No hay tours disponibles para el país y el período especificado.");
+            }
+
+            // Devolver los tours disponibles como respuesta
+            return ResponseEntity.ok(toursDisponibles);
+
+        } catch (IllegalArgumentException e) {
+            // Capturar errores de validación y devolver un mensaje claro
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Capturar errores inesperados y devolver un mensaje genérico
+            e.printStackTrace(); // Registrar el error completo en los logs
+            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
+        }
     }
 }
