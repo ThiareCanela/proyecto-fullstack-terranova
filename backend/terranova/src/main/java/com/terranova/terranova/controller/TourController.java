@@ -225,18 +225,15 @@ public class TourController {
         return ResponseEntity.ok(tours);
     }
 
-
-
-
     @GetMapping("/disponibles")
     public ResponseEntity<?> findToursDisponibles(
-            @RequestParam String paisStr,
+            @RequestParam String pais,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
 
         try {
             // Llamar al servicio para obtener los tours disponibles
-            List<Tour> toursDisponibles = tourService.findToursDisponibles(paisStr, fechaInicio, fechaFin);
+            List<Tour> toursDisponibles = tourService.findToursDisponibles(pais, fechaInicio, fechaFin);
 
             // Verificar si hay resultados
             if (toursDisponibles.isEmpty()) {
