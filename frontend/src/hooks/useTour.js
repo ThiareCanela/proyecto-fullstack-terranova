@@ -52,41 +52,60 @@ export const useTours = () => {
   const createTourWithImages = async (tourData, images) => {
     setLoading(true);
     setError(null);
-
+  
     try {
+      console.log("Enviando datos a postTourWithImagesApi:", tourData, images);
       const createdTour = await postTourWithImagesApi(tourData, images);
+      console.log("Respuesta exitosa del backend:", createdTour);
+  
       setNewTour(createdTour);
       return createdTour;
     } catch (err) {
-      setError(err.message);
-      return null;
+      console.error("Error capturado en createTourWithImages:", err);
+  
+      const errorMessage =
+        err?.error || err?.message || "Ocurrió un error inesperado.";
+  
+      setError(errorMessage); // Seteamos el error en el estado
+      throw new Error(errorMessage); // Lanzamos el error para que lo capture `handleSubmit`
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const deleteTour = async (tourId) => {
+    if (!tourId) {
+      console.error("❌ Error: ID del tour no válido.");
+      return { success: false, message: "ID del tour no válido." };
+    }
+  
     setLoading(true);
     setError(null);
-
+  
     try {
+      console.log(`🔍 Llamando a deleteTourApi con ID: ${tourId}`);
       const result = await deleteTourApi(tourId);
-
+  
       if (result.success) {
-        console.log("Tour eliminado correctamente");
-        await getDataTours(); // Esperar a que los datos se actualicen después de eliminar
+        console.log("✅ Tour eliminado correctamente.");
+        await getDataTours(); // 🔄 Refrescar lista de tours
       } else {
-        console.error("Error al eliminar el tour:", result.message);
+        console.error("⚠️ Error al eliminar el tour:", result.message);
       }
-
+  
       return result;
     } catch (err) {
+      console.error("❌ Error al eliminar el tour:", err.message);
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const updateCategoryTour = async (tourId, categoriaId) => {
     setLoading(true);

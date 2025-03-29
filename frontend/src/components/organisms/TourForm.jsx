@@ -16,7 +16,7 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
     tour?.categoriaTours?.nombre || ""
   );
   const [pais, setPais] = useState(tour?.pais || "");
-  const [precio, setPrecio] = useState(tour?.precio || ""); // Cambio aquí de costo a precio
+  const [precio, setPrecio] = useState(tour?.precio || "");
   const [caracteristicas, setCaracteristicas] = useState(
     tour?.caracteristicas || []
   );
@@ -30,7 +30,7 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
   const [error, setError] = useState(null);
   const { categoryData } = useCategory();
   const { characTour } = useCharacterTour();
-  const { updateCategoryTour, getDataTours, createTourWithImages } = useTours();
+  const { getDataTours, createTourWithImages } = useTours();
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -44,16 +44,15 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       return;
     }
 
-    setError(""); // Limpiar errores previos si la selección es válida
-    setFotos(files); // Almacena correctamente las imágenes en el estado
-    console.log("✅ Imágenes almacenadas en el estado:", files);
+    setError("");
+    setFotos(files);
+    console.log("Imágenes almacenadas en el estado:", files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (error) setError("");
 
-    // Validación de campos obligatorios (excepto categoría)
     if (
       titulo.trim() === "" ||
       descripcion.trim() === "" ||
@@ -61,13 +60,14 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       !precio ||
       !tipoDuracion ||
       !duracion ||
-      caracteristicas.length === 0
+      !caracteristicas ||
+      caracteristicas.length === 0 ||
+      !categoria
     ) {
-      setError("Todos los campos son obligatorios excepto la categoría.");
+      setError("Todos los campos son obligatorios");
       return;
     }
 
-    // Validación de imágenes
     if (fotos.length < 1) {
       setError("Debes subir al menos una imagen.");
       return;
@@ -97,33 +97,38 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
 
       if (action === "Nuevo") {
         result = await createTourWithImages(tourData, fotos);
-      } else if (action === "Editar") {
-        result = await updateCategoryTour(tour.id, tour.categoriaTours.id);
       }
 
       if (result) {
-        console.log("✅ Tour creado/actualizado con éxito. Mostrando modal...");
+        console.log("Tour creado/actualizado con éxito. Mostrando modal...");
         setIsOpen(true);
 
         setTimeout(() => {
           setIsOpen(false);
           if (onClose) {
-            onClose(); // Cierra el formulario después de mostrar el modal
+            onClose();
           }
         }, 2000);
-      } else {
-        setError("Error al procesar el tour. Intenta nuevamente.");
       }
     } catch (error) {
       console.error("Error en handleSubmit:", error);
-      setError(`Ocurrió un error inesperado: ${error.message || error}`);
+
+      let errorMessage = "Ocurrió un error inesperado. Intenta nuevamente.";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+
+      console.log("➡ Error seteado en el estado:", errorMessage);
+      setError(errorMessage);
     }
   };
 
-  // Efecto para verificar las categorías y características al cargar el componente
   useEffect(() => {
     if (tour) {
-      setCategoria(tour?.categoriaTours?.id || ""); // Asegúrate de usar el ID correcto
+      setCategoria(tour?.categoriaTours?.id || "");
       setPais(tour?.pais || "");
       setCaracteristicas(
         tour?.caracteristicas?.map((c) => c.descripcion) || []
@@ -263,10 +268,11 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
                   onChange={(e) => setTipoDuracion(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
-                  {/* <option value="HORAS">Horas</option> */}
-                  <option value="DIAS" defaultValue={"Días"}>
-                    Días
+                  <option value="" disabled>
+                    Selecciona el tipo de duración
                   </option>
+                  <option value="HORAS">Horas</option>
+                  <option value="DIAS">Días</option>
                 </select>
               </label>
 
@@ -307,11 +313,8 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
                 <span className="text-gray-700">País</span>
                 <select
                   value={pais}
-                  disabled={action === "Editar"}
                   onChange={(e) => setPais(e.target.value)}
-                  className={`border mt-1 block w-full border-gray-300 p-2 rounded-md ${
-                    action === "Editar" ? "bg-blue-100" : "bg-transparent"
-                  }`}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                   <option value="" disabled>
                     Selecciona un país
