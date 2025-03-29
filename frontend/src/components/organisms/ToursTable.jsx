@@ -1,49 +1,93 @@
 import { EditIcon, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModalTour } from "../molecules/ModalTour";
-
-
 import { ModalTourUpdate } from "../molecules/ModalTourUpdate";
 import { useTourById, useTours } from "../../hooks/useTour";
 import { ModalConfirmDelete } from "../atoms/ModalConfirmDelete";
 
 /* eslint-disable react/prop-types */
 export const ToursTable = () => {
-  
-  const { tours, getDataTours, deleteTour } = useTours(); // Obtener todo en una sola declaración
+  const { tours, getDataTours, deleteTour } = useTours();
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const { oneTour } = useTourById(selectedId);
+  const { oneTour, loading } = useTourById(selectedId); // Asegurar que hay estado de carga
+  const [tourToDeleteName, setTourToDeleteName] = useState("");
 
-  const handleOpenModalEdit = async (id) => {
-    setSelectedId(id);
+  useEffect(() => {
+    if (oneTour && !loading && !showModalDelete && selectedId) {
+      setShowModalEdit(true);
+    }
+  }, [oneTour, loading, showModalDelete, selectedId]);
   
-    setTimeout(() => {
-      if (oneTour) { // Solo abrir el modal si `oneTour` tiene datos
-        setShowModalEdit(true);
-      }
-    }, 300);
+  
+  const handleOpenModalEdit = (id) => {
+    if (selectedId === id) {
+      setSelectedId(null);
+      setTimeout(() => {
+        setSelectedId(id);
+      }, 100);
+    } else {
+      setSelectedId(id);
+    }
+
+  };
+
+  const handleCloseCreateModal = async () => {
+    setShowModal(false);
+    await getDataTours(); // 🔄 Recargar lista después de crear un nuevo tour
   };
   
 
-  console.log("oneTour:", oneTour);
-  const handleOpenModalDelete = (id) => {
-    setSelectedId(id);
-    setShowModalDelete(true);
-    
+  const handleOpenModalDelete = (id, name) => {
+    if (!id) {
+      console.error("Error: El ID del tour es inválido.");
+      return;
+    }
+  
+    console.log(`🗑️ Configurando eliminación para el tour ID: ${id}, Nombre: "${name}"`);
+    setSelectedId(id); // ✅ Asignamos correctamente el ID
+    setTourToDeleteName(name); // ✅ Guardamos el nombre
+    setShowModalDelete(true); // ✅ Mostramos el modal de confirmación
   };
-
+  
+  
+  
   const handleDeleteConfirmed = async () => {
-    await deleteTour(selectedId);
-    setShowModalDelete(false);
-    await getDataTours(); // sin setTimeout, se ejecuta una sola vez
+    if (!selectedId) {
+      console.error("Error: No hay un tour seleccionado para eliminar.");
+      return;
+    }
+  
+    try {
+      console.log(`🗑️ Eliminando tour con ID: ${selectedId}`);
+      await deleteTour(selectedId);
+      setShowModalDelete(false);
+      setSelectedId(null);
+      await getDataTours(); //Recargar datos después de eliminar
+    } catch (error) {
+      console.error("Error eliminando el tour:", error);
+    }
   };
-
+  
+  
   const handleCloseEditModal = async () => {
     setShowModalEdit(false);
-    await getDataTours(); //  Se ejecuta solo una vez después de cerrar
+    setSelectedId(null);
+    await getDataTours(); // 🔄 Recargar lista después de editar
+  };
+  
+  const handleCloseDeleteModal = () => {
+    setShowModalDelete(false);
+    setSelectedId(null); // 🔄 Evitar que el modal de edición se abra después
+  };
+  
+    
+  
+
+  const handleOpenCreateTourModal = () => {
+    setShowModal(true);
   };
 
   return (
@@ -54,7 +98,7 @@ export const ToursTable = () => {
         </h3>
         <div className="flex justify-between mb-4">
           <button
-            onClick={() => setShowModal(true)}
+            onClick={handleOpenCreateTourModal}
             className="flex font-bold cursor-pointer items-center bg-[var(--color-secondary)] px-4 py-2 rounded-2xl text-white shadow-lg hover:bg-white hover:text-black hover:border-black hover:border-2"
           >
             <Plus className="w-4 h-4 mr-2 font-bold" /> Crear
@@ -67,7 +111,7 @@ export const ToursTable = () => {
               <tr className="border-b bg-[var(--color-emphasis)] text-[var(--color-primary)]">
                 <th className="py-2">ID</th>
                 <th className="py-2">Tours</th>
-                <th className="py-2">Categoria</th>
+                <th className="py-2">Categoría</th>
                 <th className="py-2">Acción</th>
               </tr>
             </thead>
@@ -76,16 +120,13 @@ export const ToursTable = () => {
                 tours.map((tour, index) => (
                   <tr key={`tour-${index}`} className="border-b">
                     <td className="py-2">{tour.id}</td>
-                    <td className="py-2 flex items-center gap-2">
-                      {tour.titulo}
-                    </td>
+                    <td className="py-2 flex items-center gap-2">{tour.titulo}</td>
                     <td className="py-2">
                       <span className="uppercase text-[12px]">
                         {tour.categoriaTours?.nombre || "Sin categoría"}
                       </span>
                     </td>
-
-                    <td className="py-2 flex  gap-3 w-full">
+                    <td className="py-2 flex gap-3 w-full">
                       <EditIcon
                         width={20}
                         height={20}
@@ -96,14 +137,15 @@ export const ToursTable = () => {
                         width={20}
                         height={20}
                         className="hover:text-gray-500 cursor-pointer"
-                        onClick={() => handleOpenModalDelete(tour.id)}
+                        onClick={() => handleOpenModalDelete(tour.id, tour.titulo)}
                       />
+
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" className="text-center py-4">
+                  <td colSpan="4" className="text-center py-4">
                     No Tours found
                   </td>
                 </tr>
@@ -112,30 +154,24 @@ export const ToursTable = () => {
           </table>
         </div>
       </div>
-      {showModal && (
-        <ModalTour
-          showModal={() => {
-            setShowModal(false);
-            setTimeout(() => {
-              getDataTours(); // Recargar lista después de crear
-            }, 300);
-          }}
-        />
-      )}
 
       {showModalEdit && oneTour && (
-        <ModalTourUpdate
-          showModal={handleCloseEditModal}
-          tour={oneTour} // Asegurar que el tour completo se pase al modal
-          />
+        <ModalTourUpdate showModal={handleCloseEditModal} tour={oneTour} />
       )}
 
-      {showModalDelete && (
-        <ModalConfirmDelete
-          showModal={() => setShowModalDelete(false)}
-          onConfirm={handleDeleteConfirmed}
-        />
-      )}
+{showModalDelete && (
+  <ModalConfirmDelete 
+    showModal={handleCloseDeleteModal} 
+    onConfirm={handleDeleteConfirmed} 
+    tourName={tourToDeleteName}
+  />
+)}
+
+
+      {/* Verifica que el modal se renderiza */}
+      {showModal && (
+      <ModalTour showModal={handleCloseCreateModal} />
+        )}
     </>
   );
 };
