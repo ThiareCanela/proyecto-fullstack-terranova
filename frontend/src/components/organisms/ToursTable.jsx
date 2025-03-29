@@ -158,14 +158,6 @@ export const ToursTable = () => {
       {showModalEdit && oneTour && (
         <ModalTourUpdate showModal={handleCloseEditModal} tour={oneTour} />
       )}
-<<<<<<< HEAD
-      {showModalDelete && (
-        <ModalConfirmDelete
-          showModal={() => setShowModalDelete(false)}
-          onConfirm={handleDeleteConfirmed}
-        />
-      )}
-=======
 
 {showModalDelete && (
   <ModalConfirmDelete 
@@ -180,7 +172,6 @@ export const ToursTable = () => {
       {showModal && (
       <ModalTour showModal={handleCloseCreateModal} />
         )}
->>>>>>> bf66e9e (modificaciones adicionales para modificar tour y eliminar tour)
     </>
   );
 };
