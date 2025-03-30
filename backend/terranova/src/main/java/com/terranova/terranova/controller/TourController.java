@@ -223,4 +223,68 @@ public class TourController {
         List<Tour> tours = tourService.filtrarToursPorFechas(fechaInicio, fechaFin);
         return ResponseEntity.ok(tours);
     }
+
+
+    @PutMapping(value = "/editar-completo/{tourId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> editarTourCompleto(
+            @PathVariable Long tourId,
+            @RequestPart("tour") String tourJson,
+            @RequestPart("imagenes") MultipartFile[] imagenes) throws JsonProcessingException {
+
+        // Convertimos el JSON a un objeto DTO
+        TourDTO tourDTO = new ObjectMapper().readValue(tourJson, TourDTO.class);
+
+        // Validar si el tour existe
+        Optional<Tour> tourOpt = tourService.consultarTour(tourId);
+        if (tourOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: Tour no encontrado.");
+        }
+
+        // Validar si la categoría existe
+        Optional<CategoriaTours> categoriaOpt = categoriaToursService.buscarCategoriaToursPorId(tourDTO.getCategoriaToursId());
+        if (categoriaOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: Categoría no encontrada.");
+        }
+
+        // Validar si las características existen
+        List<CaracteristicaTour> caracteristicas = caracteristicaTourService.obtenerPorIds(tourDTO.getCaracteristicasIds());
+        if (caracteristicas.isEmpty() || caracteristicas.size() != tourDTO.getCaracteristicasIds().size()) {
+            return ResponseEntity.badRequest().body("Error: Una o más características no existen.");
+        }
+
+        // Validación de imágenes: máx. 3 imágenes permitidas
+        if (imagenes.length > 3) {
+            return ResponseEntity.badRequest().body("Error: Solo se permiten hasta 3 imágenes por tour.");
+        }
+
+        try {
+            // Actualizar objeto `Tour` desde `TourDTO`
+            Tour tour = tourOpt.get();
+            tour.setTitulo(tourDTO.getTitulo());
+            tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion()));
+            tour.setDuracion(tourDTO.getDuracion());
+            tour.setDescripcion(tourDTO.getDescripcion());
+            tour.setPrecio(tourDTO.getPrecio());
+            tour.setPais(tourDTO.getPais());
+            tour.setCategoriaTours(categoriaOpt.get());
+            tour.setCaracteristicas(caracteristicas);
+
+            // Guardar el tour y las imágenes
+            Tour tourActualizado = tourService.guardarTourEImagenes(tour, imagenes);
+
+            // Asegurar que las imágenes están cargadas antes de devolver el objeto
+            Optional<Tour> tourGuardado = tourService.buscarPorId(tourActualizado.getId());
+            if (tourGuardado.isEmpty()) {
+                return ResponseEntity.status(500).body("Error al obtener el tour actualizado.");
+            }
+
+            Tour tourFinal = tourGuardado.get();
+            return ResponseEntity.ok(tourFinal);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Error en los datos del tour: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al actualizar el tour: " + e.getMessage());
+        }
+    }
 }

@@ -29,3 +29,4 @@ public class CaracteristicaTour {
     @JsonBackReference
     private List<Tour> tours;
 }
+
