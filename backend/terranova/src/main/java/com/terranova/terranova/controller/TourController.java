@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +92,7 @@ public class TourController {
             // Crear objeto `Tour` desde `TourDTO`
             Tour tour = new Tour();
             tour.setTitulo(tourDTO.getTitulo());
-            tour.setTipoDuracion(TipoDuracion.valueOf(tourDTO.getTipoDuracion()));
+            tour.setTipoDuracion(tourDTO.getTipoDuracion() != null ? tourDTO.getTipoDuracion() : TipoDuracion.DIAS);
             tour.setDuracion(tourDTO.getDuracion());
             tour.setDescripcion(tourDTO.getDescripcion());  //AHORA SOLO ES TEXTO
             tour.setPrecio(tourDTO.getPrecio());
@@ -224,6 +225,7 @@ public class TourController {
         return ResponseEntity.ok(tours);
     }
 
+<<<<<<< HEAD
 
     @PutMapping(value = "/editar-completo/{tourId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> editarTourCompleto(
@@ -285,6 +287,33 @@ public class TourController {
             return ResponseEntity.badRequest().body("Error en los datos del tour: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al actualizar el tour: " + e.getMessage());
+=======
+    @GetMapping("/disponibles")
+    public ResponseEntity<?> findToursDisponibles(
+            @RequestParam String pais,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+
+        try {
+            // Llamar al servicio para obtener los tours disponibles
+            List<Tour> toursDisponibles = tourService.findToursDisponibles(pais, fechaInicio, fechaFin);
+
+            // Verificar si hay resultados
+            if (toursDisponibles.isEmpty()) {
+                return ResponseEntity.ok("No hay tours disponibles para el país y el período especificado.");
+            }
+
+            // Devolver los tours disponibles como respuesta
+            return ResponseEntity.ok(toursDisponibles);
+
+        } catch (IllegalArgumentException e) {
+            // Capturar errores de validación y devolver un mensaje claro
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Capturar errores inesperados y devolver un mensaje genérico
+            e.printStackTrace(); // Registrar el error completo en los logs
+            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
+>>>>>>> 6a00f09cf0ab71cb10c341f9f77021faf5666380
         }
     }
 }

@@ -53,4 +53,26 @@ public interface ITourRepository extends JpaRepository <Tour, Long> {
     List<Tour> findByPaisAndDisponibilidad(@Param("pais") List<String> pais,
                                                 @Param("fechaInicio") LocalDate fechaInicio,
                                                 @Param("fechaFin") LocalDate fechaFin);
+
+
+
+
+
+    @Query("""
+    SELECT t
+    FROM Tour t
+    WHERE t.pais = :pais
+      AND NOT EXISTS (
+        SELECT 1
+        FROM DisponibilidadTour dt
+        WHERE dt.tour.id = t.id
+          AND dt.fecha BETWEEN :fechaInicio AND :fechaFin
+          AND dt.disponible = false
+      )
+    """)
+    List<Tour> findToursDisponiblesPorPaisYFechas(
+            @Param("pais") String pais,
+            @Param("fechaInicio") LocalDate fechaInicio,
+            @Param("fechaFin") LocalDate fechaFin
+    );
 }

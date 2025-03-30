@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,13 +95,11 @@ public class TourService {
             return tourRepository.findAll();
         }
     }
-    public boolean actualizarTour(Tour tour) {
-        if (tourRepository.existsById(tour.getId())) {
-            tour.setId(tour.getId());
-            tourRepository.save(tour);
-            return true;
+    public Tour actualizarTour(Tour tour) {
+        if (!tourRepository.existsById(tour.getId())) {
+            throw new IllegalArgumentException("No se encontró un tour con el ID: " + tour.getId());
         }
-        return false;
+        return tourRepository.save(tour);
     }
     public boolean existePorTitulo(String titulo) {
         return tourRepository.existsByTituloIgnoreCase(titulo.trim());
@@ -123,4 +122,33 @@ public class TourService {
     public List<Tour> filtrarToursPorFechas(LocalDate fechaInicio, LocalDate fechaFin) {
         return tourRepository.findByDisponibilidadEntreFechas(fechaInicio, fechaFin);
     }
+
+
+    // Lista de países permitidos (en minúsculas para facilitar la comparación)
+    private static final List<String> PAISES_PERMITIDOS = Arrays.asList(
+            "méxico", "colombia", "argentina", "brasil", "jamaica",
+            "uruguay", "costa rica", "chile", "perú"
+    );
+
+    public List<Tour> findToursDisponibles(String paisStr, LocalDate fechaInicio, LocalDate fechaFin) {
+        // Validar que las fechas sean coherentes
+        if (fechaInicio.isAfter(fechaFin)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }
+
+        // Normalizar el país a minúsculas para evitar problemas de formato
+        String paisNormalizado = paisStr.trim().toLowerCase();
+
+        // Validar que el país sea uno de los valores permitidos
+        if (!PAISES_PERMITIDOS.contains(paisNormalizado)) {
+            throw new IllegalArgumentException("El país proporcionado no es válido. Los valores permitidos son: " +
+                    String.join(", ", PAISES_PERMITIDOS).toUpperCase());
+        }
+
+        // Llamar al repositorio para obtener los tours disponibles
+        return tourRepository.findToursDisponiblesPorPaisYFechas(
+                paisNormalizado.toUpperCase(), fechaInicio, fechaFin
+        );
+    }
+
 }

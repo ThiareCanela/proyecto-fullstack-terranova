@@ -101,20 +101,21 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
 
 export const deleteTourApi = async (tourId) => {
   try {
-    const response = await fetch(`http://localhost:8080/tour/${tourId}`, {
-      method: "DELETE",
-    });
+    console.log(`Enviando solicitud DELETE para el tour ID: ${tourId}`);
+    const response = await fetch(`http://localhost:8080/tour/${tourId}`, { method: "DELETE" });
 
     if (!response.ok) {
-      throw new Error(`Error al eliminar el tour: ${response.statusText}`);
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error desconocido al eliminar el tour");
     }
 
-    return { success: true, message: "Tour eliminado correctamente" };
+    return { success: true };
   } catch (error) {
-    console.error("Error eliminando el tour:", error);
+    console.error("Error en deleteTourApi:", error);
     return { success: false, message: error.message };
   }
 };
+
 
 export const updateTourCategoryApi = async (tourId, categoriaId) => {
   try {

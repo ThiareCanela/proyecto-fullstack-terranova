@@ -26,8 +26,8 @@ public class Tour {
     private String titulo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_duracion", nullable = false)
-    private TipoDuracion tipoDuracion;
+    @Column(name = "tipo_duracion", nullable = true)
+    private TipoDuracion tipoDuracion = TipoDuracion.DIAS;
 
     @Column(nullable = false)
     private int duracion;
