@@ -8,20 +8,26 @@ import logo from "../../assets/logo.png";
 const Login = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, messageError, setMessageError } = useAuth();
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = login(email, password);
-    if (success) {
-      onClose();
-      setEmail("");
-      setPassword("");
+    console.log("🔹 Intentando hacer login con:", email, password); // Debug
+
+    const result = await login(email, password);
+    console.log("🔹 Resultado del login:", result);
+
+    if (result.success) {
+        localStorage.setItem("token", result.token);  // Asegura que el token se guarda
+        onClose();
+        setEmail("");
+        setPassword("");
     } else {
-      setMessageError("Los datos ingresados no son correctos.");
+        console.error("❌ Error en login:", result.message);
     }
-    setMessageError("");
-  };
+};
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} backgroundOpacity="10%">
@@ -36,6 +42,7 @@ const Login = ({ isOpen, onClose }) => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="username"
           required
         />
         <InputField
@@ -44,13 +51,16 @@ const Login = ({ isOpen, onClose }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
           required
         />
-        {messageError && (
+
+        {errorMessage && (
           <p className="text-red-600 text-sm text-center w-full my-5">
-            {messageError}
+            {errorMessage}
           </p>
         )}
+        
         <a href="#" className="text-[var(--color-emphasis)] text-right">
           ¿Olvidaste tu contraseña?
         </a>
