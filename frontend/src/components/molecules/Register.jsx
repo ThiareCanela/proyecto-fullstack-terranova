@@ -24,8 +24,11 @@ const Register = ({ isOpen, onClose }) => {
     e.preventDefault();
     setErrorMessage(""); 
 
-    console.log("🔹 Intentando registrar:", formData);
+    console.log("🔹 Intentando registrar (formData antes de enviar):", formData);
+
     const result = await register(formData);
+
+    console.log("🔹 Respuesta del backend en handleSubmit:", result);
 
     if (result.success) {
       console.log("✅ Registro exitoso");
@@ -35,7 +38,10 @@ const Register = ({ isOpen, onClose }) => {
       console.error("❌ Error en el registro:", result.message);
       setErrorMessage(result.message || "Error al registrar usuario.");
     }
-  };
+};
+
+
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} backgroundOpacity="10%">

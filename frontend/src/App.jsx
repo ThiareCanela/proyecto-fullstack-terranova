@@ -11,11 +11,11 @@ import SearchResults from "./components/pages/SearchResults";
 import ReservationDetail from "./components/pages/ReservationDetail";
 
 // eslint-disable-next-line react/prop-types
+// eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
   return user?.usuarioRole === "ROLE_ADMIN" ? children : <Navigate to="/" replace />;
 };
-
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
@@ -46,11 +46,11 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detalle/:id" element={<DetailCard />} />
-        <Route path="/resultados" element={<SearchResults />} />{" "}
+        <Route path="/resultados" element={<SearchResults />} />
         <Route
           path="/detalle-reserva"
           element={
-            <PrivateRoute user={user}>
+            <PrivateRoute>
               <ReservationDetail />
             </PrivateRoute>
           }
@@ -58,15 +58,15 @@ const App = () => {
         <Route
           path="/perfil"
           element={
-            <PrivateRoute user={user}>
-              <Profile user={user} />
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />
         <Route
           path="/panel-administrador"
           element={
-            <AdminRoute user={user}>
+            <AdminRoute>
               <AdminPanel />
             </AdminRoute>
           }
