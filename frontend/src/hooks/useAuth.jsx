@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { loginUser } from "../apis/login";
+import { registrarUsuario } from "../apis/register";
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -154,6 +155,26 @@ const cambiarRolUsuario = async (id) => {
 };
 
 
+const register = async (userData) => {
+  try {
+    console.log("🔹 Intentando registrar usuario:", userData);
+
+    const result = await registrarUsuario(userData); // Llama a la función centralizada
+
+    if (!result.success) {
+      throw new Error(result.message || "Error al registrar usuario.");
+    }
+
+    console.log("✅ Registro exitoso:", result.data);
+    return result;
+  } catch (error) {
+    console.error("❌ Error en el registro:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+
+
 
 
 
@@ -165,5 +186,6 @@ const cambiarRolUsuario = async (id) => {
     error,
     listarUsuarios,
     cambiarRolUsuario,
+    register,
   };
 };

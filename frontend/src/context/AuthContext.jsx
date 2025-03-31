@@ -138,9 +138,33 @@ export const AuthProvider = ({ children }) => {
     }
   };
   
+  const register = async (userData) => {
+    try {
+      const response = await fetch("http://localhost:8080/usuarios/registrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "Error al registrar usuario.");
+      }
+  
+      const result = await response.json();
+      console.log("✅ Usuario registrado:", result);
+  
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("❌ Error en register:", error.message);
+      return { success: false, message: error.message };
+    }
+  };
   
   return (
-    <AuthContext.Provider value={{ user, login, logout, error, listarUsuarios, cambiarRolUsuario, }}> 
+    <AuthContext.Provider value={{ user, login, logout, error, listarUsuarios, cambiarRolUsuario, register, }}> 
       {children}
     </AuthContext.Provider>
   );
