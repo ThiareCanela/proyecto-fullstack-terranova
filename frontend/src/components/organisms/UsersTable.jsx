@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 
 export const UsersTable = () => {
-  const { listarUsuarios, cambiarRolUsuario } = useAuth();
+  const { user, listarUsuarios, cambiarRolUsuario } = useAuth(); // 🔹 Obtener usuario autenticado
   
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [newRole, setNewRole] = useState(""); // 🔹 Estado para el nuevo rol
+  const [newRole, setNewRole] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   // 🔹 Cargar usuarios al montar el componente
@@ -29,11 +29,16 @@ export const UsersTable = () => {
       u.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  // 🔹 Seleccionar usuario y abrir modal
-  const handleRoleChange = (user, role) => {
-    console.log(`🔹 Usuario seleccionado para cambio de rol:`, user);
-    setSelectedUser(user);
-    setNewRole(role); // 🔹 Guardar el nuevo rol seleccionado
+  // 🔹 Seleccionar usuario y abrir modal (evita seleccionar al usuario actual)
+  const handleRoleChange = (userToModify, role) => {
+    if (userToModify.id === user.id) {
+      console.warn("⚠️ No puedes cambiar tu propio rol."); // 🔹 Mensaje en consola para debugging
+      return; // 🔹 Evita abrir el modal si el usuario intenta cambiar su propio rol
+    }
+
+    console.log(`🔹 Usuario seleccionado para cambio de rol:`, userToModify);
+    setSelectedUser(userToModify);
+    setNewRole(role);
     setShowModal(true);
   };
 
@@ -79,24 +84,25 @@ export const UsersTable = () => {
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <tr key={user.id} className="border-b">
+                filteredUsers.map((usuario, index) => (
+                  <tr key={usuario.id} className="border-b">
                     <td className="py-2">{index + 1}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
-                        src={user.profilePicture || "src/assets/profile.webp"}
+                        src={usuario.profilePicture || "src/assets/profile.webp"}
                         alt="Avatar"
                         className="w-8 h-8 rounded-full"
                       />
-                      {user.nombre} {user.apellido}
+                      {usuario.nombre} {usuario.apellido}
                     </td>
                     <td className="py-2">
                       <select
                         className={`border-none rounded-lg p-1 ${
-                          user.usuarioRole === "ROLE_ADMIN" ? "bg-blue-100" : "bg-transparent"
+                          usuario.usuarioRole === "ROLE_ADMIN" ? "bg-blue-100" : "bg-transparent"
                         }`}
-                        value={user.usuarioRole} 
-                        onChange={(e) => handleRoleChange(user, e.target.value)} // 🔹 Pasar el nuevo rol
+                        value={usuario.usuarioRole} 
+                        disabled={usuario.id === user.id} // 🔹 Bloquear el select si el usuario es el mismo
+                        onChange={(e) => handleRoleChange(usuario, e.target.value)}
                       >
                         <option value="ROLE_USER">User</option>
                         <option value="ROLE_ADMIN">Admin</option>
