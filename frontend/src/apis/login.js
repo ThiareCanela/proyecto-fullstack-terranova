@@ -18,15 +18,23 @@ export const loginUser = async (email, password) => {
       throw new Error(`Error HTTP ${response.status}: ${errorMessage}`);
     }
 
-    const data = await response.json();
-    console.log("🔹 Respuesta JSON final desde loginUser:", data);
+    const textResponse = await response.text();
+    console.log("🔹 Respuesta cruda del servidor:", textResponse);
 
-    return data; // 👈 Nos aseguramos de devolver siempre la respuesta
+    try {
+      const data = JSON.parse(textResponse);
+      console.log("🔹 Respuesta JSON final desde loginUser:", data);
+      return data; 
+    } catch (error) {
+      console.error("❌ Error al parsear JSON del login:", error.message);
+      throw new Error("No se pudo procesar la respuesta del login.");
+    }
   } catch (error) {
     console.error("❌ Error en loginUser:", error.message);
-    return { error: error.message }; // 👈 En vez de `null`, retornar un objeto con error
+    return { error: error.message }; 
   }
 };
+
 
 
 

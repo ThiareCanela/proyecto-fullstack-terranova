@@ -95,7 +95,8 @@ public class WebSecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost",
                 "http://localhost:5173", // Vite (modo desarrollo)
-                "http://localhost:3000" // React en Docker Compose
+                "http://localhost:3000", // React en Docker Compose
+                "http://52.87.166.227" //ip publica de EC2
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
         config.setAllowedHeaders(List.of("*")); // Permitir cualquier cabecera

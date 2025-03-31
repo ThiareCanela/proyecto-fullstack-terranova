@@ -59,11 +59,6 @@ export const TourEditForm = ({ tour, onClose }) => {
           </label>
 
           <label className="block">
-            <span className="text-gray-700">Tipo de Duración</span>
-            <input type="text" value={tour.tipoDuracion} disabled className="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-gray-100" />
-          </label>
-
-          <label className="block">
             <span className="text-gray-700">Duración</span>
             <input type="number" value={tour.duracion} disabled className="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-gray-100" />
           </label>
