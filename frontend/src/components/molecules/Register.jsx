@@ -1,127 +1,99 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import PropTypes from "prop-types";
 import Modal from "../atoms/Modal";
 import { InputField } from "../atoms/InputField";
-import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 
 const Register = ({ isOpen, onClose }) => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { register, messageError, setMessageError } = useAuth();
+  const { register } = useAuth(); // 👈 Asegurarnos de que register viene del contexto
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const newUser = {
-      name: name.trim(),
-      lastName: lastName.trim(),
-      email: email.trim().toLowerCase(),
-      password: password.trim(),
-      role: "user",
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    if (
-      !newUser.name ||
-      !newUser.lastName ||
-      !newUser.email ||
-      !newUser.password
-    ) {
-      setMessageError("Por favor completa todos los campos.");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(""); 
 
-    setMessageError("");
+    console.log("🔹 Intentando registrar:", formData);
+    const result = await register(formData);
 
-    const success = register(newUser);
-    if (success) {
+    if (result.success) {
+      console.log("✅ Registro exitoso");
       onClose();
-      resetForm();
+      setFormData({ nombre: "", apellido: "", email: "", password: "" });
+    } else {
+      console.error("❌ Error en el registro:", result.message);
+      setErrorMessage(result.message || "Error al registrar usuario.");
     }
   };
-
-  const resetForm = () => {
-    setName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-    setMessageError("");
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      resetForm();
-    }
-  }, [isOpen]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} backgroundOpacity="10%">
       <form className="flex flex-col space-y-6 p-6" onSubmit={handleSubmit}>
         <img src={logo} alt="Terranova Logo" className="h-20 w-auto mx-auto" />
         <h2 className="text-center text-2xl font-bold mt-4">
-          Regístrate en Terranova
+          Crea tu cuenta
         </h2>
+
         <InputField
           label="Nombre"
-          name="name"
-          placeholder="Tu nombre"
+          placeholder="Nombre"
           type="text"
-          value={name}
-          onChange={(e) => {
-            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
-            setName(onlyLetters);
-          }}
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+          required
         />
         <InputField
-          label="Apellidos"
-          name="lastName"
-          placeholder="Tus apellidos"
+          label="Apellido"
+          placeholder="Apellido"
           type="text"
-          pattern="^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$"
-          value={lastName}
-          onChange={(e) => {
-            const onlyLetters = e.target.value.replace(/[0-9]/g, "");
-            setLastName(onlyLetters);
-          }}
+          name="apellido"
+          value={formData.apellido}
+          onChange={handleChange}
+          required
         />
         <InputField
           label="Correo Electrónico"
-          name="email"
-          placeholder="Tu correo electrónico"
+          placeholder="Correo Electrónico"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="off"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
         />
         <InputField
           label="Contraseña"
-          name="password"
-          placeholder="Tu contraseña"
+          placeholder="Contraseña"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="new-password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
         />
 
-        {messageError && (
+        {errorMessage && (
           <p className="text-red-600 text-sm text-center w-full my-5">
-            {messageError}
+            {errorMessage}
           </p>
         )}
+
         <button
-          className="bg-[var(--color-emphasis)] text-white px-4 py-2 rounded transition-transform transform hover:scale-105 active:scale-95 cursor-pointer"
+          className="bg-[var(--color-secondary)] text-white px-4 py-2 rounded transition-transform transform hover:scale-105 active:scale-95 cursor-pointer"
           type="submit"
         >
           Registrarse
         </button>
-        <p className="text-center mt-4">
-          ¿Ya tienes una cuenta?{" "}
-          <a href="#" className="text-[var(--color-emphasis)]">
-            Inicia sesión aquí
-          </a>
-        </p>
       </form>
     </Modal>
   );
