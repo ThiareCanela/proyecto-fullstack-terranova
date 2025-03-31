@@ -13,21 +13,25 @@ const Login = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("🔹 Intentando hacer login con:", email, password); // Debug
-
+    console.log("🔹 Intentando hacer login con:", email, password);
+  
     const result = await login(email, password);
     console.log("🔹 Resultado del login:", result);
-
+  
     if (result.success) {
-        localStorage.setItem("token", result.token);  // Asegura que el token se guarda
-        onClose();
-        setEmail("");
-        setPassword("");
+      setTimeout(() => {
+        console.log("🔹 Usuario guardado en localStorage:", JSON.parse(localStorage.getItem("user")));
+      }, 500);
+  
+      onClose();
+      setEmail("");
+      setPassword("");
     } else {
-        console.error("❌ Error en login:", result.message);
+      console.error("❌ Error en login:", result.message);
+      setErrorMessage(result.message);
     }
-};
-
+  };
+  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} backgroundOpacity="10%">
@@ -60,7 +64,7 @@ const Login = ({ isOpen, onClose }) => {
             {errorMessage}
           </p>
         )}
-        
+
         <a href="#" className="text-[var(--color-emphasis)] text-right">
           ¿Olvidaste tu contraseña?
         </a>

@@ -9,7 +9,6 @@ import { useTours } from "../../hooks/useTour";
 export const TourForm = ({ action, tour = {}, onClose }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [titulo, setTitulo] = useState(tour?.titulo || "");
-  const [tipoDuracion, setTipoDuracion] = useState(tour?.tipoDuracion || "");
   const [duracion, setDuracion] = useState(tour?.duracion || 0);
   const [descripcion, setDescripcion] = useState(tour?.descripcion || "");
   const [categoria, setCategoria] = useState(
@@ -58,7 +57,6 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       descripcion.trim() === "" ||
       !pais ||
       !precio ||
-      !tipoDuracion ||
       !duracion ||
       !caracteristicas ||
       caracteristicas.length === 0 ||
@@ -88,7 +86,6 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
       pais,
       precio,
       caracteristicasIds,
-      tipoDuracion,
       duracion,
     };
 
@@ -260,37 +257,26 @@ export const TourForm = ({ action, tour = {}, onClose }) => {
                 </select>
               </label>
 
-              {/* Tipo de Duración */}
-              <label className="block">
-                <span className="text-gray-700">Tipo de Duración</span>
-                <select
-                  value={tipoDuracion}
-                  onChange={(e) => setTipoDuracion(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                >
-                  <option value="" disabled>
-                    Selecciona el tipo de duración
-                  </option>
-                  <option value="HORAS">Horas</option>
-                  <option value="DIAS">Días</option>
-                </select>
-              </label>
-
               {/* Duración */}
               <label className="block">
                 <span className="text-gray-700">Duración</span>
                 <input
                   type="number"
                   value={duracion}
-                  onChange={(e) => setDuracion(e.target.value)}
+                  onChange={(e) => {
+                  const value = Math.max(1, parseInt(e.target.value, 10) || 1); // Asegura que sea al menos 1
+                  setDuracion(value);
+                  }}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Duración en horas o días"
+                  placeholder="Duración en días"
+                  min="1" // Evita que el usuario ingrese valores menores a 1 manualmente
                 />
               </label>
 
+
               {/* Precio */}
               <label className="block">
-                <span className="text-gray-700">Precio</span>
+                <span className="text-gray-700">Precio en USD</span>
                 <input
                   type="number"
                   value={precio}

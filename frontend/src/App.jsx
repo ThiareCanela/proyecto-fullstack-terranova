@@ -13,8 +13,9 @@ import ReservationDetail from "./components/pages/ReservationDetail";
 // eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
-  return user?.role === "admin" ? children : <Navigate to="/" replace />;
+  return user?.usuarioRole === "ROLE_ADMIN" ? children : <Navigate to="/" replace />;
 };
+
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
