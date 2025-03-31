@@ -114,7 +114,7 @@ export const BookingForm = () => {
               className="w-full bg-white border border-gray-300 px-4 py-2 rounded-lg text-left shadow-sm focus:ring-2 focus:ring-blue-400 transition-all"
               onClick={() => setFilteredPlaces(PAIS)}
             >
-              {formData.pais || "Selecciona un destino"}
+              {formData.pais || "Elige un destino"}
             </button>
             {filteredPlaces.length > 0 && (
               <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-40 overflow-y-auto shadow-md">
@@ -142,7 +142,7 @@ export const BookingForm = () => {
             >
               {formData.fechaInicio && formData.fechaFin
                 ? `${formData.fechaInicio.toLocaleDateString()} - ${formData.fechaFin.toLocaleDateString()}`
-                : "dd/mm/aaaa"}
+                : "Indica las fechas"}
             </button>
             {showDatePicker && (
               <div

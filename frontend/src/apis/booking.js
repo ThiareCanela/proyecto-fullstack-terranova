@@ -8,7 +8,7 @@ export const searchTourApi = async (params) => {
 
     const query_params = new URLSearchParams(filters).toString();
     const response = await fetch(
-      `http://localhost:8080/tour/buscar/pais-fechas?${query_params}`
+      `http://localhost:8080/tour/disponibles?${query_params}`
     );
 
     if (!response.ok) {
@@ -20,21 +20,6 @@ export const searchTourApi = async (params) => {
   } catch (error) {
     console.error("Error fetching tours:", error);
     return { error: error.message };
-  }
-};
-
-export const searchCountryApi = async (pais) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/tour/buscar/pais?pais=${encodeURIComponent(pais)}`
-    );
-    if (!response.ok) {
-      throw new Error(`Error en la petición: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error obteniendo tours por país:", error);
-    return null;
   }
 };
 
@@ -50,5 +35,26 @@ export const getTourAvailability = async (idTour) => {
   } catch (error) {
     console.error("Error al obtener la disponibilidad:", error);
     return { error: error.message };
+  }
+};
+
+export const postCreateReservation = async (reservaData) => {
+  try {
+    const response = await fetch("http://localhost:8080/reservas/crear", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reservaData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error en la petición: " + response.statusText);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error al crear la reserva", error);
+    throw error;
   }
 };

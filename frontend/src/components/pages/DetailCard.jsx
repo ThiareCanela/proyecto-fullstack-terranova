@@ -100,11 +100,12 @@ export default function DetailCard() {
   };
 
   const handleReserve = () => {
-    if (!startDate || !endDate) {
+    if (!startDate) {
       setModalMessage("Error en la reserva: Selecciona ambas fechas.");
       setShowModal(true);
       return;
     }
+
     if (new Date(startDate) > new Date(endDate)) {
       setModalMessage(
         "Fecha no disponible: La fecha de inicio debe ser anterior a la de fin."
@@ -113,10 +114,14 @@ export default function DetailCard() {
       return;
     }
     navigate("/detalle-reserva", {
-      state: { startDate, endDate, guests },
+      state: {
+        startDate,
+        endDate,
+        guests,
+        tour: oneTour,
+        totalPrice: guests * oneTour.precio,
+      },
     });
-    // setModalMessage("Reserva exitosa");
-    // setShowModal(true);
   };
 
   const handleClickOutside = (event) => {
@@ -244,7 +249,7 @@ export default function DetailCard() {
                 Precio total
               </label>
               <p className="text-[var(--color-emphasis)] font-bold text-lg">
-                ${guests * 90}
+                ${guests * oneTour.precio}
               </p>
             </div>
           </div>

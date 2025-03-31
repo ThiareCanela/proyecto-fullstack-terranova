@@ -46,7 +46,14 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/detalle/:id" element={<DetailCard />} />
         <Route path="/resultados" element={<SearchResults />} />{" "}
-        <Route path="/detalle-reserva" element={<ReservationDetail />} />
+        <Route
+          path="/detalle-reserva"
+          element={
+            <PrivateRoute user={user}>
+              <ReservationDetail />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/perfil"
           element={

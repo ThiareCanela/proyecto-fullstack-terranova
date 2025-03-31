@@ -1,6 +1,5 @@
 import { BookingForm } from "../molecules/BookingForm";
 
-
 export const HeroHome = () => {
   return (
     <div className=" relative pt-[72px]">

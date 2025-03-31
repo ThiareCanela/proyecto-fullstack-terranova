@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -15,37 +16,36 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-        const params = new URLSearchParams({
-            nombre: userData.nombre,
-            apellido: userData.apellido,
-            email: userData.email,
-            password: userData.password,
-        });
+      const params = new URLSearchParams({
+        nombre: userData.nombre,
+        apellido: userData.apellido,
+        email: userData.email,
+        password: userData.password,
+      });
 
-        console.log("🔹 Intentando registrar:", params.toString());
+      console.log("🔹 Intentando registrar:", params.toString());
 
-        const response = await fetch("http://localhost:8080/usuarios/registrar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: params.toString(),
-        });
+      const response = await fetch("http://localhost:8080/usuarios/registrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      });
 
-        const data = await response.text();
-        console.log("✅ Respuesta del backend:", data);
+      const data = await response.text();
+      console.log("✅ Respuesta del backend:", data);
 
-        if (!response.ok) {
-            throw new Error(data);
-        }
+      if (!response.ok) {
+        throw new Error(data);
+      }
 
-        return { success: true, message: "Usuario registrado con éxito" };
+      return { success: true, message: "Usuario registrado con éxito" };
     } catch (error) {
-        console.error("❌ Error en el registro:", error.message);
-        return { success: false, message: error.message };
+      console.error("❌ Error en el registro:", error.message);
+      return { success: false, message: error.message };
     }
-};
-
+  };
 
   const login = async (email, password) => {
     try {
@@ -78,7 +78,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ messageError, setMessageError, user, login, logout, register }}>
+    <AuthContext.Provider
+      value={{ messageError, setMessageError, user, login, logout, register }}
+    >
       {children}
     </AuthContext.Provider>
   );
