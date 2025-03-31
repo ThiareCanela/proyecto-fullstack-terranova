@@ -32,6 +32,7 @@ export const useTours = () => {
       setLoading(false);
     }
   };
+  
 
   const createTour = async (tourData) => {
     setLoading(true);
@@ -110,7 +111,7 @@ export const useTours = () => {
   const updateCategoryTour = async (tourId, categoriaId) => {
     setLoading(true);
     setError(null);
-
+  
     try {
       const result = await updateTourCategoryApi(tourId, categoriaId);
 
@@ -129,6 +130,7 @@ export const useTours = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (tours.length === 0) {

@@ -1,116 +1,85 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
-/* eslint-disable react/prop-types */
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [messageError, setMessageError] = useState("");
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (storedUser) {
-      setUser(storedUser);
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setUser({ email: "usuario-autenticado" });
     }
   }, []);
 
-  const register = (newUser) => {
-    let users = JSON.parse(localStorage.getItem("users"));
+  const register = async (userData) => {
+    try {
+      const params = new URLSearchParams({
+        nombre: userData.nombre,
+        apellido: userData.apellido,
+        email: userData.email,
+        password: userData.password,
+      });
 
-    if (!Array.isArray(users)) {
-      users = [];
+      console.log("🔹 Intentando registrar:", params.toString());
+
+      const response = await fetch("http://localhost:8080/usuarios/registrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      });
+
+      const data = await response.text();
+      console.log("✅ Respuesta del backend:", data);
+
+      if (!response.ok) {
+        throw new Error(data);
+      }
+
+      return { success: true, message: "Usuario registrado con éxito" };
+    } catch (error) {
+      console.error("❌ Error en el registro:", error.message);
+      return { success: false, message: error.message };
     }
-
-    newUser.email = newUser.email.trim().toLowerCase();
-
-    const userExists = users.some((u) => u.email === newUser.email);
-
-    if (userExists) {
-      setMessageError("El correo ya está registrado.");
-      return false;
-    }
-
-    if (!newUser.name || !newUser.lastName || !newUser.password) {
-      setMessageError("Por favor completa todos los campos.");
-      return false;
-    }
-
-    const updatedUsers = [...users, newUser];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    localStorage.setItem("loggedUser", JSON.stringify(newUser));
-    setUser(newUser);
-    alert("Registro exitoso");
-
-    return true;
   };
 
-  const login = (enteredEmail, enteredPassword) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const normalizedEmail = enteredEmail.trim().toLowerCase();
+  const login = async (email, password) => {
+    try {
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const foundUser = users.find((user) => user.email === normalizedEmail);
+      if (!response.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
 
-    if (!foundUser) {
-      setMessageError("Usuario no encontrado");
-      return false;
+      const data = await response.json();
+      localStorage.setItem("token", data.token);
+      setUser({ email });
+
+      return { success: true };
+    } catch (error) {
+      console.error("❌ Error en login:", error.message);
+      return { success: false, message: error.message };
     }
-
-    if (foundUser.password !== enteredPassword) {
-      setMessageError("Contraseña incorrecta");
-      return false;
-    }
-
-    setUser({
-      id: crypto.randomUUID(),
-      name: foundUser.name,
-      lastName: foundUser.lastName,
-      email: foundUser.email,
-      role: foundUser.role,
-      profilePicture: foundUser.profilePicture,
-    });
-
-    localStorage.setItem("loggedUser", JSON.stringify(foundUser));
-
-    return true;
   };
+
   const logout = () => {
-    localStorage.removeItem("loggedUser");
+    localStorage.removeItem("token");
     setUser(null);
   };
 
-  useEffect(() => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const adminEmail = "terranova.admin@gmail.com";
-
-    const adminExists = users.some(
-      (user) => user.email.trim().toLowerCase() === adminEmail
-    );
-
-    if (!adminExists) {
-      const adminUser = {
-        id: 1,
-        name: "Admin",
-        lastName: "Terranova",
-        email: adminEmail,
-        password: "admin123",
-        role: "admin",
-        profilePicture: "src/assets/profile.webp",
-      };
-      localStorage.setItem("users", JSON.stringify([...users, adminUser]));
-    }
-  }, []);
-
   return (
     <AuthContext.Provider
-      value={{
-        messageError,
-        user,
-        setMessageError,
-
-        login,
-        register,
-        logout,
-      }}
+      value={{ messageError, setMessageError, user, login, logout, register }}
     >
       {children}
     </AuthContext.Provider>

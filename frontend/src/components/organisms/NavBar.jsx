@@ -17,6 +17,13 @@ const Navbar = () => {
   const openRegister = () => setActiveModal("register");
   const closeModal = () => setActiveModal(null);
 
+  const handleLogout = () => {
+    logout(); // Llama a logout desde useAuth
+    setProfileMenuOpen(false); // Cierra el menú de perfil
+    setMenuOpen(false); // Cierra el menú móvil si está abierto
+    navigate("/"); // Redirige a la página de inicio
+  };
+
   const getInitials = (name, lastName) => {
     if (!name || !lastName) return "";
     return `${name[0]}${lastName[0]}`.toUpperCase();
@@ -65,7 +72,6 @@ const Navbar = () => {
             <button
               className="flex items-center space-x-2 py-2"
               onClick={() => {
-                console.log("Perfil");
                 setProfileMenuOpen(false);
                 navigate("/perfil");
               }}
@@ -77,7 +83,6 @@ const Navbar = () => {
               <button
                 className="flex items-center space-x-2 py-2"
                 onClick={() => {
-                  console.log("Administrar");
                   setProfileMenuOpen(false);
                   navigate("/panel-administrador");
                 }}
@@ -88,7 +93,7 @@ const Navbar = () => {
             )}
             <button
               className="flex items-center space-x-2 text-red-500 py-2"
-              onClick={logout}
+              onClick={handleLogout}
             >
               <LogOut size={20} />
               <span>Cerrar sesión</span>
@@ -134,7 +139,7 @@ const Navbar = () => {
               )}
               <button
                 className="flex items-center space-x-2 text-red-500 py-2"
-                onClick={logout}
+                onClick={handleLogout}
               >
                 <LogOut size={20} />
                 <span>Cerrar sesión</span>

@@ -1,26 +1,22 @@
-import { API_TERRANOVA, API_URL_BASE } from "../constants/endpoints";
-
 export const registrarUsuario = async (usuario) => {
   try {
-    const respuesta = await fetch(
-      `${API_URL_BASE}/${API_TERRANOVA.REGISTER_USER}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(usuario),
-      }
-    );
+    const respuesta = await fetch(`${API_URL_BASE}/usuarios/registrar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(usuario),
+    });
 
     if (!respuesta.ok) {
-      throw new Error("Error al registrar usuario");
+      const errorMessage = await respuesta.text();
+      throw new Error(errorMessage || "Error al registrar usuario");
     }
 
-    const data = await respuesta.json();
-    console.log("Usuario registrado:", data);
-    return data;
+    return await respuesta.json();
   } catch (error) {
-    console.error(error);
+    console.error("Error al registrar usuario:", error);
+    return null;
   }
 };
+
