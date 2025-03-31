@@ -2,44 +2,57 @@ import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 
-
 export const UsersTable = () => {
-  const { listarUsuarios } = useAuth();
-
-  console.log("useAuth():", useAuth());
-  console.log("listarUsuarios:", listarUsuarios);
-
+  const { listarUsuarios, cambiarRolUsuario } = useAuth();
+  
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState(""); // 🔹 Estado para el nuevo rol
   const [showModal, setShowModal] = useState(false);
 
+  // 🔹 Cargar usuarios al montar el componente
   useEffect(() => {
     const fetchUsers = async () => {
       const usuarios = await listarUsuarios();
-      setUsers(usuarios); 
+      console.log("Usuarios cargados:", usuarios);
+      setUsers(usuarios);
     };
 
     fetchUsers();
   }, []);
 
+  // 🔹 Filtrar usuarios por búsqueda
   const filteredUsers = users.filter(
     (u) =>
-      u.nombre.toLowerCase().includes(search.toLowerCase()) || // 🔹 Cambié "name" por "nombre"
+      u.nombre.toLowerCase().includes(search.toLowerCase()) || 
       u.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleRoleChange = (user) => {
+  // 🔹 Seleccionar usuario y abrir modal
+  const handleRoleChange = (user, role) => {
+    console.log(`🔹 Usuario seleccionado para cambio de rol:`, user);
     setSelectedUser(user);
+    setNewRole(role); // 🔹 Guardar el nuevo rol seleccionado
     setShowModal(true);
   };
 
-  const confirmRoleChange = (newRole) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id === selectedUser.id ? { ...u, usuarioRole: newRole } : u
-      )
-    );
+  // 🔹 Confirmar cambio de rol
+  const confirmRoleChange = async () => {
+    if (!selectedUser) return;
+
+    console.log(`⚡ Confirmando cambio de rol para ID: ${selectedUser.id} a ${newRole}`);
+
+    const response = await cambiarRolUsuario(selectedUser.id);
+
+    if (response.success) {
+      // 🔹 Recargar lista de usuarios después del cambio de rol
+      const updatedUsers = await listarUsuarios();
+      console.log("Lista de usuarios después del cambio:", updatedUsers);
+      setUsers(updatedUsers);
+    }
+
+    setSelectedUser(null);
     setShowModal(false);
   };
 
@@ -80,18 +93,13 @@ export const UsersTable = () => {
                     <td className="py-2">
                       <select
                         className={`border-none rounded-lg p-1 ${
-                          user.usuarioRole === "admin"
-                            ? "bg-blue-100"
-                            : "bg-transparent"
+                          user.usuarioRole === "ROLE_ADMIN" ? "bg-blue-100" : "bg-transparent"
                         }`}
-                        disabled={user.usuarioRole === "admin"}
-                        defaultValue={user.usuarioRole.toLowerCase()}
-                        onChange={(e) =>
-                          handleRoleChange({ ...user, usuarioRole: e.target.value })
-                        }
+                        value={user.usuarioRole} 
+                        onChange={(e) => handleRoleChange(user, e.target.value)} // 🔹 Pasar el nuevo rol
                       >
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_ADMIN">Admin</option>
                       </select>
                     </td>
                   </tr>
@@ -107,7 +115,9 @@ export const UsersTable = () => {
           </table>
         </div>
       </div>
-      {showModal && (
+
+      {/* Modal de Confirmación */}
+      {showModal && selectedUser && (
         <div
           className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"
           onClick={() => setShowModal(false)}
@@ -125,14 +135,14 @@ export const UsersTable = () => {
             <CircleAlert className="h-20 w-20 text-[#e67e24]" />
             <h3 className="text-3xl font-semibold py-3">Confirmar</h3>
             <p className="text-lg mb-4">
-              {`¿Estás seguro de cambiar el rol de ${selectedUser?.nombre} a 
-              ${selectedUser?.usuarioRole}"?`}
+              {`¿Estás seguro de cambiar el rol de ${selectedUser.nombre} a 
+              ${newRole === "ROLE_ADMIN" ? "Administrador" : "Usuario"}?`}
             </p>
 
             <div className="flex gap-4">
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded"
-                onClick={() => confirmRoleChange(selectedUser?.usuarioRole)}
+                onClick={confirmRoleChange}
               >
                 Confirmar
               </button>

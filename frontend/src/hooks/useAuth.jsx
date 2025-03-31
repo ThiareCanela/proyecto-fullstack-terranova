@@ -122,6 +122,40 @@ export const useAuth = () => {
         return [];
     }
 };
+const cambiarRolUsuario = async (id) => {
+  try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+          console.error("❌ No hay token en localStorage, no se puede cambiar el rol.");
+          return { success: false, message: "No se encontró el token." };
+      }
+
+      console.log(`🔹 Enviando solicitud para cambiar el rol del usuario con ID: ${id}`); // LOG
+
+      const response = await fetch(`http://localhost:8080/usuarios/cambiarRol/${id}`, {
+          method: "PUT",
+          headers: {
+              "Authorization": `Bearer ${token}`
+          },
+      });
+
+      console.log("🔹 Respuesta de la API:", response); // LOG
+
+      if (!response.ok) {
+          throw new Error("No se pudo cambiar el rol del usuario.");
+      }
+
+      console.log("✅ Rol cambiado exitosamente");
+      return { success: true };
+  } catch (error) {
+      console.error("❌ Error en cambiarRolUsuario:", error.message);
+      return { success: false, message: error.message };
+  }
+};
+
+
+
+
 
 
   return {
@@ -130,5 +164,6 @@ export const useAuth = () => {
     user,
     error,
     listarUsuarios,
+    cambiarRolUsuario,
   };
 };
