@@ -1,23 +1,24 @@
-# Usar Node.js como base
-FROM node:18-alpine
-
-# Definir directorio de trabajo dentro del contenedor
+# Etapa 1: Construcción
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copiar archivos de configuración
+# Copiar archivos de configuración y bajar dependencias
 COPY package.json package-lock.json ./
+RUN npm install --frozen-lockfile
 
-# Instalar dependencias
-RUN npm install
-
-# Copiar todo el código fuente
+# Copiar el código fuente y construir el proyecto
 COPY . .
-
-# Construir la aplicación
 RUN npm run build
 
-# Exponer el puerto 3000
-EXPOSE 3000
+# Etapa 2: Servidor de producción con Nginx
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 
-# Servir la aplicación con Vite
-CMD ["npm", "run", "preview", "--", "--port", "3000", "--host"]
+# Copiar solo los archivos estáticos generados por Vite
+COPY --from=builder /app/dist .
+
+# Exponer el puerto 80
+EXPOSE 80
+
+# Iniciar Nginx
+CMD ["nginx", "-g", "daemon off;"]

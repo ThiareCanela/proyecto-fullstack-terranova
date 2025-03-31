@@ -93,6 +93,7 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
+                "http://localhost",
                 "http://localhost:5173", // Vite (modo desarrollo)
                 "http://localhost:3000" // React en Docker Compose
         ));
