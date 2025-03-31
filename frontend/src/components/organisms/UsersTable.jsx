@@ -1,20 +1,31 @@
 import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext"; 
+
 
 export const UsersTable = () => {
+  const { listarUsuarios } = useAuth();
+
+  console.log("useAuth():", useAuth());
+  console.log("listarUsuarios:", listarUsuarios);
+
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    setUsers(storedUsers);
+    const fetchUsers = async () => {
+      const usuarios = await listarUsuarios();
+      setUsers(usuarios); 
+    };
+
+    fetchUsers();
   }, []);
 
   const filteredUsers = users.filter(
     (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.nombre.toLowerCase().includes(search.toLowerCase()) || // 🔹 Cambié "name" por "nombre"
       u.email.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -22,18 +33,11 @@ export const UsersTable = () => {
     setSelectedUser(user);
     setShowModal(true);
   };
+
   const confirmRoleChange = (newRole) => {
     setUsers((prevUsers) =>
       prevUsers.map((u) =>
-        u.id === selectedUser.id ? { ...u, role: newRole } : u
-      )
-    );
-    localStorage.setItem(
-      "users",
-      JSON.stringify(
-        users.map((u) =>
-          u.id === selectedUser.id ? { ...u, role: newRole } : u
-        )
+        u.id === selectedUser.id ? { ...u, usuarioRole: newRole } : u
       )
     );
     setShowModal(false);
@@ -49,16 +53,6 @@ export const UsersTable = () => {
           <button className="hidden md:flex items-center bg-white px-4 py-2 rounded-full text-gray-700 shadow-lg">
             <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
           </button>
-          {/* <div className="relative">
-            <input
-              type="text"
-              placeholder="Buscar usuario..."
-              className=" px-4 py-2 rounded-full w-48 pl-10 bg-white  shadow-lg"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          </div> */}
         </div>
 
         <div className="bg-white rounded-lg p-4">
@@ -73,7 +67,7 @@ export const UsersTable = () => {
             <tbody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user, index) => (
-                  <tr key={`${user}-uss`} className="border-b">
+                  <tr key={user.id} className="border-b">
                     <td className="py-2">{index + 1}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
@@ -81,19 +75,19 @@ export const UsersTable = () => {
                         alt="Avatar"
                         className="w-8 h-8 rounded-full"
                       />
-                      {user.name} {user.lastName}
+                      {user.nombre} {user.apellido}
                     </td>
                     <td className="py-2">
                       <select
                         className={`border-none rounded-lg p-1 ${
-                          user.role === "admin"
+                          user.usuarioRole === "admin"
                             ? "bg-blue-100"
                             : "bg-transparent"
                         }`}
-                        disabled={user.role === "admin" ? true : false}
-                        defaultValue={user.role.toLowerCase()}
+                        disabled={user.usuarioRole === "admin"}
+                        defaultValue={user.usuarioRole.toLowerCase()}
                         onChange={(e) =>
-                          handleRoleChange({ ...user, role: e.target.value })
+                          handleRoleChange({ ...user, usuarioRole: e.target.value })
                         }
                       >
                         <option value="user">User</option>
@@ -131,14 +125,14 @@ export const UsersTable = () => {
             <CircleAlert className="h-20 w-20 text-[#e67e24]" />
             <h3 className="text-3xl font-semibold py-3">Confirmar</h3>
             <p className="text-lg mb-4">
-              {`¿Estás seguro de cambiar el rol de ${selectedUser?.name} a 
-              ${selectedUser?.role}"?`}
+              {`¿Estás seguro de cambiar el rol de ${selectedUser?.nombre} a 
+              ${selectedUser?.usuarioRole}"?`}
             </p>
 
             <div className="flex gap-4">
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded"
-                onClick={() => confirmRoleChange(selectedUser?.role)}
+                onClick={() => confirmRoleChange(selectedUser?.usuarioRole)}
               >
                 Confirmar
               </button>

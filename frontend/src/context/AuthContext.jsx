@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error("❌ No hay token en localStorage, no se puede obtener perfil.");
+        console.error(" No hay token en localStorage, no se puede obtener perfil.");
         return null;
       }
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         usuarioRole: userData.usuarioRole,
       };
     } catch (error) {
-      console.error("❌ Error en obtenerPerfil:", error.message);
+      console.error("Error en obtenerPerfil:", error.message);
       return null;
     }
   };
@@ -80,11 +80,42 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const listarUsuarios = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No hay token en localStorage, no se puede obtener la lista de usuarios.");
+        return [];
+      }
+  
+      console.log("🔹 Obteniendo lista de usuarios...");
+      const response = await fetch("http://localhost:8080/usuarios/listar", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("No se pudo obtener la lista de usuarios.");
+      }
+  
+      const usuarios = await response.json();
+      console.log("Lista de usuarios obtenida:", usuarios);
+      return usuarios;
+    } catch (error) {
+      console.error("Error en listarUsuarios:", error.message);
+      return [];
+    }
+  };
+  
   return (
-    <AuthContext.Provider value={{ user, login, logout, error }}>
+    <AuthContext.Provider value={{ user, login, logout, error, listarUsuarios }}> 
       {children}
     </AuthContext.Provider>
   );
+  
 };
 
 export const useAuth = () => useContext(AuthContext);
