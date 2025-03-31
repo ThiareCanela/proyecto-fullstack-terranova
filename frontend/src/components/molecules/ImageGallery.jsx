@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-export const ImageGallery = ({ images = [] }) => {
+export const ImageGallery = ({ images = [], type = "consult" }) => {
   return (
     <div className="w-full max-w-full">
-      {images.length > 1 ? (
+      {images.length > 1 && type === "consult" ? (
         <div className="flex gap-4 overflow-x-auto whitespace-nowrap touch-pan-x [&::-webkit-scrollbar]:hidden scrollbar-none md:hidden snap-x snap-mandatory">
           {images.map((img, index) => (
             <img

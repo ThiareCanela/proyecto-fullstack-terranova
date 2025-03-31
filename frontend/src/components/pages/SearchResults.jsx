@@ -10,6 +10,12 @@ import TravelCard from "../organisms/TravelCard";
 import { useSearchTour } from "../../hooks/useSearchTour";
 import { useCategory } from "../../hooks/useCategory";
 
+const parseDate = (dateString) => {
+  if (!dateString) return null;
+  const parts = dateString.split("-");
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+};
+
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,11 +27,10 @@ const SearchResults = () => {
   const fechaInicioParam = queryParams.get("fechaInicio");
   const fechaFinParam = queryParams.get("fechaFin");
 
-  console.log(dataResult, "resultados");
   const [formData, setFormData] = useState({
     pais: paisParam || "",
-    fechaInicio: fechaInicioParam ? new Date(fechaInicioParam) : null,
-    fechaFin: fechaFinParam ? new Date(fechaFinParam) : null,
+    fechaInicio: parseDate(fechaInicioParam),
+    fechaFin: parseDate(fechaFinParam),
   });
 
   const [errors, setErrors] = useState("");
@@ -146,7 +151,9 @@ const SearchResults = () => {
             onClick={() => setShowDatePicker(true)}
           >
             {formData.fechaInicio && formData.fechaFin
-              ? `${formData.fechaInicio.toLocaleDateString()} - ${formData.fechaFin.toLocaleDateString()}`
+              ? `${formData.fechaInicio.toLocaleDateString(
+                  "es-ES"
+                )} - ${formData.fechaFin.toLocaleDateString("es-ES")}`
               : "Cuándo"}
           </button>
           {showDatePicker && (

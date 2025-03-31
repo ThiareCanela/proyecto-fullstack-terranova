@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     setUser({
+      id: crypto.randomUUID(),
       name: foundUser.name,
       lastName: foundUser.lastName,
       email: foundUser.email,
@@ -87,6 +88,7 @@ export const AuthProvider = ({ children }) => {
 
     if (!adminExists) {
       const adminUser = {
+        id: 1,
         name: "Admin",
         lastName: "Terranova",
         email: adminEmail,
