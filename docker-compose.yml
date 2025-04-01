@@ -13,6 +13,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
 
   backend:
     build: ./backend/terranova
@@ -28,15 +30,23 @@ services:
       SPRING_DATASOURCE_PASSWORD: terranova
     ports:
       - "8080:8080"
+    networks:
+      - app-network
 
-  frontend:
-    build: ./frontend
-    container_name: frontend_tours
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: nginx_proxy
     restart: always
-    depends_on:
-      - backend
     ports:
       - "80:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   db_data:

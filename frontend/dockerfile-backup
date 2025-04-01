@@ -10,15 +10,6 @@ RUN npm install --frozen-lockfile
 COPY . .
 RUN npm run build
 
-# Etapa 2: Servidor de producción con Nginx
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
+# Define la salida de la build
+CMD ["echo", "Build completado. Usa el contenedor de Nginx para servir los archivos."]
 
-# Copiar solo los archivos estáticos generados por Vite
-COPY --from=builder /app/dist .
-
-# Exponer el puerto 80
-EXPOSE 80
-
-# Iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
