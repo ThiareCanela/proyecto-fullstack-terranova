@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileContainer } from "../organisms/ProfileContainer";
 import { ArrowLeft } from "lucide-react";
-import { API_BASE_URL } from "../constants/endpoints";
+import { API_BASE_URL } from "../../constants/endpoints";
 
 export default function Profile() {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import logo from "../../assets/logo.png";
 import Register from "../molecules/Register";
 import Login from "../molecules/Login";
 import { useAuth } from "../../context/AuthContext";
-import { API_BASE_URL } from "../constants/endpoints";
+import { API_BASE_URL } from "../../constants/endpoints";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
