@@ -19,8 +19,6 @@ export const BookingForm = () => {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const datePickerRef = useRef(null);
 
-  console.log(dataResult, "dataresult");
-
   const handleSelectPlace = (place) => {
     setFormData({ ...formData, pais: place });
     setFilteredPlaces([]);
@@ -90,10 +88,10 @@ export const BookingForm = () => {
   }, [showDatePicker]);
 
   useEffect(() => {
-    if (formData.fechaInicio && formData.fechaFin) {
+    if (formData.pais && formData.fechaInicio && formData.fechaFin) {
       setErrors("");
     }
-  }, [formData.fechaInicio, formData.fechaFin]);
+  }, [formData.fechaInicio, formData.fechaFin, formData.pais]);
   return (
     <div className="flex flex-col w-full p-6 gap-6 bg-white rounded-lg shadow-md">
       <h3 className="font-medium text-[var(--color-default)] text-3xl text-center w-full">
@@ -158,7 +156,10 @@ export const BookingForm = () => {
                       fechaInicio: start,
                       fechaFin: end,
                     });
-                    setShowDatePicker(false);
+
+                    if (start && end) {
+                      setShowDatePicker(false);
+                    }
                   }}
                   startDate={formData.fechaInicio}
                   endDate={formData.fechaFin}

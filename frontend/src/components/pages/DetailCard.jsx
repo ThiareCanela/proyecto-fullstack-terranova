@@ -8,6 +8,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useTourById } from "../../hooks/useTour";
 import { useAvailability } from "../../hooks/useBooking";
 import { ImageGallery } from "../molecules/ImageGallery";
+import Login from "../molecules/Login";
+import { useAuth } from "../../context/AuthContext";
 /* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
@@ -64,6 +66,7 @@ export default function DetailCard() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [startDate, setStartDate] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [guests, setGuests] = useState(1);
   const [showModal, setShowModal] = useState(false);
@@ -72,7 +75,10 @@ export default function DetailCard() {
   const { oneTour } = useTourById(id);
   const { dateAvailability, errorMessage } = useAvailability(id);
   const datePickerRef = useRef(null);
+  const { user } = useAuth();
 
+  const openLogin = () => setActiveModal("login");
+  const closeModal = () => setActiveModal(null);
   const is404Error = errorMessage?.includes("404");
   const today = new Date();
 
@@ -113,15 +119,20 @@ export default function DetailCard() {
       setShowModal(true);
       return;
     }
-    navigate("/detalle-reserva", {
-      state: {
-        startDate,
-        endDate,
-        guests,
-        tour: oneTour,
-        totalPrice: guests * oneTour.precio,
-      },
-    });
+
+    if (!user) {
+      openLogin();
+    } else {
+      navigate("/detalle-reserva", {
+        state: {
+          startDate,
+          endDate,
+          guests,
+          tour: oneTour,
+          totalPrice: guests * oneTour.precio,
+        },
+      });
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -265,6 +276,7 @@ export default function DetailCard() {
         onClose={() => setShowModal(false)}
         message={modalMessage}
       />
+      {!user && <Login isOpen={activeModal === "login"} onClose={closeModal} />}
     </div>
   );
 }

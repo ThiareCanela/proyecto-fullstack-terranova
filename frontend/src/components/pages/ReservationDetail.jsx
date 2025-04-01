@@ -15,7 +15,6 @@ export default function ReservationDetail() {
   const endDate = location.state?.endDate || "";
   const guests = location.state?.guests || 1;
   const { user } = useAuth();
-
   const [contact, setContact] = useState({
     firstName: "",
     lastName: "",
@@ -25,8 +24,8 @@ export default function ReservationDetail() {
   const requestData = {
     tourId: tour.id,
     estado: "CONFIRMADA",
-    fechaFin: startDate,
-    fechaInicio: endDate,
+    fechaFin: endDate,
+    fechaInicio: startDate,
     numPersonas: guests,
     total: guests * tour.precio,
     usuarioId: user.id,
@@ -91,7 +90,7 @@ export default function ReservationDetail() {
                   <input
                     type="text"
                     name="firstName"
-                    value={user.name}
+                    value={user.nombre}
                     onChange={handleChange}
                     placeholder="Nombre"
                     className="border border-gray-300 p-2 rounded-lg w-full bg-blue-100"
@@ -106,7 +105,7 @@ export default function ReservationDetail() {
                   <input
                     type="text"
                     name="lastName"
-                    value={user.lastName}
+                    value={user.apellido}
                     onChange={handleChange}
                     placeholder="Apellido"
                     className="border border-gray-300 p-2 rounded-lg w-full bg-blue-100"
