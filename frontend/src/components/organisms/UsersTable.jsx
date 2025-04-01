@@ -1,41 +1,63 @@
 import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext"; 
 
 export const UsersTable = () => {
+  const { user, listarUsuarios, cambiarRolUsuario } = useAuth(); // 🔹 Obtener usuario autenticado
+  
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState("");
   const [showModal, setShowModal] = useState(false);
 
+  // 🔹 Cargar usuarios al montar el componente
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    setUsers(storedUsers);
+    const fetchUsers = async () => {
+      const usuarios = await listarUsuarios();
+      console.log("Usuarios cargados:", usuarios);
+      setUsers(usuarios);
+    };
+
+    fetchUsers();
   }, []);
 
+  // 🔹 Filtrar usuarios por búsqueda
   const filteredUsers = users.filter(
     (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.nombre.toLowerCase().includes(search.toLowerCase()) || 
       u.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleRoleChange = (user) => {
-    setSelectedUser(user);
+  // 🔹 Seleccionar usuario y abrir modal (evita seleccionar al usuario actual)
+  const handleRoleChange = (userToModify, role) => {
+    if (userToModify.id === user.id) {
+      console.warn("⚠️ No puedes cambiar tu propio rol."); // 🔹 Mensaje en consola para debugging
+      return; // 🔹 Evita abrir el modal si el usuario intenta cambiar su propio rol
+    }
+
+    console.log(`🔹 Usuario seleccionado para cambio de rol:`, userToModify);
+    setSelectedUser(userToModify);
+    setNewRole(role);
     setShowModal(true);
   };
-  const confirmRoleChange = (newRole) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id === selectedUser.id ? { ...u, role: newRole } : u
-      )
-    );
-    localStorage.setItem(
-      "users",
-      JSON.stringify(
-        users.map((u) =>
-          u.id === selectedUser.id ? { ...u, role: newRole } : u
-        )
-      )
-    );
+
+  // 🔹 Confirmar cambio de rol
+  const confirmRoleChange = async () => {
+    if (!selectedUser) return;
+
+    console.log(`⚡ Confirmando cambio de rol para ID: ${selectedUser.id} a ${newRole}`);
+
+    const response = await cambiarRolUsuario(selectedUser.id);
+
+    if (response.success) {
+      // 🔹 Recargar lista de usuarios después del cambio de rol
+      const updatedUsers = await listarUsuarios();
+      console.log("Lista de usuarios después del cambio:", updatedUsers);
+      setUsers(updatedUsers);
+    }
+
+    setSelectedUser(null);
     setShowModal(false);
   };
 
@@ -49,16 +71,6 @@ export const UsersTable = () => {
           <button className="hidden md:flex items-center bg-white px-4 py-2 rounded-full text-gray-700 shadow-lg">
             <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
           </button>
-          {/* <div className="relative">
-            <input
-              type="text"
-              placeholder="Buscar usuario..."
-              className=" px-4 py-2 rounded-full w-48 pl-10 bg-white  shadow-lg"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          </div> */}
         </div>
 
         <div className="bg-white rounded-lg p-4">
@@ -72,32 +84,28 @@ export const UsersTable = () => {
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <tr key={`${user}-uss`} className="border-b">
+                filteredUsers.map((usuario, index) => (
+                  <tr key={usuario.id} className="border-b">
                     <td className="py-2">{index + 1}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
-                        src={user.profilePicture || "src/assets/profile.webp"}
+                        src={usuario.profilePicture || "src/assets/profile.webp"}
                         alt="Avatar"
                         className="w-8 h-8 rounded-full"
                       />
-                      {user.name} {user.lastName}
+                      {usuario.nombre} {usuario.apellido}
                     </td>
                     <td className="py-2">
                       <select
                         className={`border-none rounded-lg p-1 ${
-                          user.role === "admin"
-                            ? "bg-blue-100"
-                            : "bg-transparent"
+                          usuario.usuarioRole === "ROLE_ADMIN" ? "bg-blue-100" : "bg-transparent"
                         }`}
-                        disabled={user.role === "admin" ? true : false}
-                        defaultValue={user.role.toLowerCase()}
-                        onChange={(e) =>
-                          handleRoleChange({ ...user, role: e.target.value })
-                        }
+                        value={usuario.usuarioRole} 
+                        disabled={usuario.id === user.id} // 🔹 Bloquear el select si el usuario es el mismo
+                        onChange={(e) => handleRoleChange(usuario, e.target.value)}
                       >
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_ADMIN">Admin</option>
                       </select>
                     </td>
                   </tr>
@@ -113,7 +121,9 @@ export const UsersTable = () => {
           </table>
         </div>
       </div>
-      {showModal && (
+
+      {/* Modal de Confirmación */}
+      {showModal && selectedUser && (
         <div
           className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"
           onClick={() => setShowModal(false)}
@@ -131,14 +141,14 @@ export const UsersTable = () => {
             <CircleAlert className="h-20 w-20 text-[#e67e24]" />
             <h3 className="text-3xl font-semibold py-3">Confirmar</h3>
             <p className="text-lg mb-4">
-              {`¿Estás seguro de cambiar el rol de ${selectedUser?.name} a 
-              ${selectedUser?.role}"?`}
+              {`¿Estás seguro de cambiar el rol de ${selectedUser.nombre} a 
+              ${newRole === "ROLE_ADMIN" ? "Administrador" : "Usuario"}?`}
             </p>
 
             <div className="flex gap-4">
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded"
-                onClick={() => confirmRoleChange(selectedUser?.role)}
+                onClick={confirmRoleChange}
               >
                 Confirmar
               </button>

@@ -27,9 +27,7 @@ export const ProfileContainer = ({ user }) => {
           <span>{user.email}</span>
         </div>
       </div>
-      <button className="mt-8 w-[150px] bg-[var(--color-secondary)] text-white py-2 rounded">
-        Editar
-      </button>
+      
     </div>
   );
 };
