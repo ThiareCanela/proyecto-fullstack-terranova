@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class ReservaService {
     @Autowired
@@ -26,11 +27,10 @@ public class ReservaService {
     private ITourRepository tourRepository;
 
     public boolean verificarDisponibilidad(Long tourId, LocalDate fechaInicio, LocalDate fechaFin) {
-        // Buscar fechas no disponibles dentro del rango
         List<DisponibilidadTour> fechasNoDisponibles = disponibilidadTourRepository
                 .findFechasNoDisponibles(tourId, fechaInicio, fechaFin);
 
-        return fechasNoDisponibles.isEmpty(); // Si no hay fechas no disponibles, se puede reservar
+        return fechasNoDisponibles.isEmpty();
     }
 
     public Reserva crearReserva(Long usuarioId, Long tourId, LocalDate fechaInicio, LocalDate fechaFin, Integer numPersonas) {
@@ -44,31 +44,59 @@ public class ReservaService {
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new IllegalArgumentException("Tour no encontrado"));
 
+       
+        // Marcar todas las fechas del rango como no disponibles
+        LocalDate fecha = fechaInicio;
+        while (!fecha.isAfter(fechaFin)) {
+            DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fecha);
+    
+            if (disp == null) {
+                // Si no existe, creamos una nueva disponibilidad como no disponible
+                disp = new DisponibilidadTour();
+                disp.setTour(tour);
+                disp.setFecha(fecha);
+                disp.setDisponible(false);
+            } else if (!disp.isDisponible()) {
+                // Si ya existe pero está ocupada, lanzamos error
+                throw new IllegalArgumentException("No hay disponibilidad en la fecha: " + fecha);
+            } else {
+                // Si existe y está disponible, la marcamos como ocupada
+                disp.setDisponible(false);
+            }
+
+            disponibilidadTourRepository.save(disp);
+            fecha = fecha.plusDays(1);
+        }
+
+
         Reserva reserva = new Reserva();
         reserva.setUsuario(usuario);
         reserva.setTour(tour);
         reserva.setFechaInicio(fechaInicio);
-        reserva.setFechaFin(fechaFin); // Puede ser el mismo día
+        reserva.setFechaFin(fechaFin);
         reserva.setNumPersonas(numPersonas);
         reserva.setEstado(EstadoReserva.CONFIRMADA);
         reserva.setTotal(numPersonas * tour.getPrecio());
 
-        try {
-            DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fechaInicio);
-            disp.setDisponible(false);
-            disponibilidadTourRepository.save(disp);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         return repository.save(reserva);
     }
+
     public ReservaService(ReservaRepository repository) {
         this.repository = repository;
     }
-    public List<Reserva> findAll() { return repository.findAll(); }
-    public Optional<Reserva> findById(Long id) { return repository.findById(id); }
-    public Reserva save(Reserva reserva) { return repository.save(reserva); }
+
+    public List<Reserva> findAll() {
+        return repository.findAll();
+    }
+
+    public Optional<Reserva> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public Reserva save(Reserva reserva) {
+        return repository.save(reserva);
+    }
+
     public void deleteById(Long id) {
         try {
             Reserva reserva = repository.findById(id)
@@ -76,20 +104,25 @@ public class ReservaService {
 
             Long tourId = reserva.getTour().getId();
             LocalDate fechaInicio = reserva.getFechaInicio();
+            LocalDate fechaFin = reserva.getFechaFin();
 
-            // Actualizar la disponibilidad del tour
-            DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fechaInicio);
-            if (disp != null) {
-                disp.setDisponible(true); // Se vuelve a marcar como disponible
-                disponibilidadTourRepository.save(disp);
+            // Liberar las fechas del rango
+            LocalDate fecha = fechaInicio;
+            while (!fecha.isAfter(fechaFin)) {
+                DisponibilidadTour disp = disponibilidadTourRepository.findDisponibilidadFecha(tourId, fecha);
+                if (disp != null) {
+                    disp.setDisponible(true);
+                    disponibilidadTourRepository.save(disp);
+                }
+                fecha = fecha.plusDays(1);
             }
 
-            // Eliminar la reserva
             repository.deleteById(id);
         } catch (Exception ex) {
             throw new RuntimeException("Error al eliminar la reserva: " + ex.getMessage(), ex);
         }
     }
+
     public List<Reserva> obtenerReservasPorUsuario(Long usuarioId) {
         try {
             return repository.findByUsuarioId(usuarioId);
