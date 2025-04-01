@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileContainer } from "../organisms/ProfileContainer";
 import { ArrowLeft } from "lucide-react";
+import { API_BASE_URL } from "../constants/endpoints";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -22,11 +23,11 @@ export default function Profile() {
       }
 
       try {
-        const response = await fetch("http://localhost:8080/usuarios/perfil", {
+        const response = await fetch(`${API_BASE_URL}/usuarios/perfil`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { API_TERRANOVA, API_URL_BASE } from "../constants/endpoints";
+import { API_BASE_URL } from "../constants/endpoints";
 
 export const useRegister = () => {
   const [data, setData] = useState(null);
@@ -13,21 +13,24 @@ export const useRegister = () => {
         email: usuario.email,
         password: usuario.password,
       });
-  
+
       console.log("Datos enviados al backend:", params.toString());
-  
-      const respuesta = await fetch(`${API_URL_BASE}/usuarios/registrar?${params.toString()}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-  
+
+      const respuesta = await fetch(
+        `${API_BASE_URL}/usuarios/registrar?${params.toString()}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
       if (!respuesta.ok) {
         const errorMessage = await respuesta.text();
         throw new Error(errorMessage || "Error al registrar usuario");
       }
-  
+
       const res = await respuesta.text(); // <-- Ahora tratamos la respuesta como texto
       console.log("Respuesta del backend:", res);
       setData({ message: res }); // Guardamos el mensaje en el estado
@@ -38,8 +41,6 @@ export const useRegister = () => {
       return null;
     }
   };
-  
-  
 
   return {
     data,
@@ -47,4 +48,3 @@ export const useRegister = () => {
     error,
   };
 };
-

@@ -1,8 +1,9 @@
+import { API_BASE_URL } from "../constants/endpoints";
 export const registrarUsuario = async (usuario) => {
   try {
     console.log("📌 Enviando datos al backend (registrarUsuario):", usuario);
 
-    const respuesta = await fetch(`${API_URL_BASE}/usuarios/registrar`, {
+    const respuesta = await fetch(`${API_BASE_URL}/usuarios/registrar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // 👈 Ahora enviamos JSON
@@ -11,7 +12,9 @@ export const registrarUsuario = async (usuario) => {
     });
 
     console.log("🔹 Código de estado HTTP:", respuesta.status);
-    console.log("🔹 Headers de la respuesta:", [...respuesta.headers.entries()]);
+    console.log("🔹 Headers de la respuesta:", [
+      ...respuesta.headers.entries(),
+    ]);
 
     const responseText = await respuesta.text();
     console.log("🔹 Respuesta cruda del backend:", responseText);
@@ -27,4 +30,3 @@ export const registrarUsuario = async (usuario) => {
     return { success: false, message: error.message };
   }
 };
-

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../constants/endpoints";
 export const searchTourApi = async (params) => {
   try {
     const filters = {};
@@ -8,7 +9,7 @@ export const searchTourApi = async (params) => {
 
     const query_params = new URLSearchParams(filters).toString();
     const response = await fetch(
-      `http://localhost:8080/tour/disponibles?${query_params}`
+      `${API_BASE_URL}/tour/disponibles?${query_params}`
     );
 
     if (!response.ok) {
@@ -25,9 +26,7 @@ export const searchTourApi = async (params) => {
 
 export const getTourAvailability = async (idTour) => {
   try {
-    const response = await fetch(
-      `http://localhost:8080/disponibilidades/${idTour}`
-    );
+    const response = await fetch(`${API_BASE_URL}/disponibilidades/${idTour}`);
     if (!response.ok) {
       throw new Error(`Error en la solicitud: ${response.status}`);
     }
@@ -40,7 +39,7 @@ export const getTourAvailability = async (idTour) => {
 
 export const postCreateReservation = async (reservaData) => {
   try {
-    const response = await fetch("http://localhost:8080/reservas/crear", {
+    const response = await fetch(`${API_BASE_URL}/reservas/crear`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,7 @@
+import { API_BASE_URL } from "../constants/endpoints";
 export const getToursApi = async () => {
   try {
-    const response = await fetch("http://localhost:8080/tour", {
+    const response = await fetch(`${API_BASE_URL}/tour`, {
       headers: { "Content-Type": "application/json; charset=utf-8" },
     });
 
@@ -17,7 +18,7 @@ export const getToursApi = async () => {
 
 export const getTourByIdApi = async (id) => {
   try {
-    const response = await fetch(`http://localhost:8080/tour/buscar/${id}`);
+    const response = await fetch(`${API_BASE_URL}/tour/buscar/${id}`);
 
     if (!response.ok) {
       throw new Error(`Error al obtener el tour: ${response.statusText}`);
@@ -42,7 +43,7 @@ export const getTourByIdApi = async (id) => {
 
 export const postTour = async (tour) => {
   try {
-    const response = await fetch("http://localhost:8080/tour/agregar", {
+    const response = await fetch(`${API_BASE_URL}/tour/agregar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tour),
@@ -57,7 +58,6 @@ export const postTour = async (tour) => {
   }
 };
 
-
 export const postTourWithImagesApi = async (tour, imagenes) => {
   const formData = new FormData();
   formData.append("tour", JSON.stringify(tour));
@@ -67,12 +67,12 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
   });
 
   try {
-    const response = await fetch("http://localhost:8080/tour/agregar-con-imagenes", {
+    const response = await fetch(`${API_BASE_URL}/tour/agregar-con-imagenes`, {
       method: "POST",
       body: formData,
     });
 
-    const contentType = response.headers.get("content-type"); 
+    const contentType = response.headers.get("content-type");
     let data;
 
     if (contentType && contentType.includes("application/json")) {
@@ -83,7 +83,9 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
 
     if (!response.ok) {
       console.error("Error recibido del backend:", data);
-      throw new Error(data?.error || data || "Error desconocido al crear el tour"); // 👈 Aquí aseguramos que lanza un error capturable
+      throw new Error(
+        data?.error || data || "Error desconocido al crear el tour"
+      ); // 👈 Aquí aseguramos que lanza un error capturable
     }
 
     return data;
@@ -93,20 +95,18 @@ export const postTourWithImagesApi = async (tour, imagenes) => {
   }
 };
 
-
-
-
-
-
-
 export const deleteTourApi = async (tourId) => {
   try {
     console.log(`Enviando solicitud DELETE para el tour ID: ${tourId}`);
-    const response = await fetch(`http://localhost:8080/tour/${tourId}`, { method: "DELETE" });
+    const response = await fetch(`${API_BASE_URL}/tour/${tourId}`, {
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Error desconocido al eliminar el tour");
+      throw new Error(
+        errorData.message || "Error desconocido al eliminar el tour"
+      );
     }
 
     return { success: true };
@@ -116,11 +116,10 @@ export const deleteTourApi = async (tourId) => {
   }
 };
 
-
 export const updateTourCategoryApi = async (tourId, categoriaId) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/tour/${tourId}/categoria/${categoriaId}`,
+      `${API_BASE_URL}/tour/${tourId}/categoria/${categoriaId}`,
       {
         method: "PUT",
         headers: {
@@ -133,21 +132,22 @@ export const updateTourCategoryApi = async (tourId, categoriaId) => {
 
     // Manejar si la respuesta no es JSON
     if (!response.ok) {
-      const errorMessage = contentType && contentType.includes("application/json")
-        ? await response.json()
-        : await response.text(); // Si no es JSON, tratar como texto
+      const errorMessage =
+        contentType && contentType.includes("application/json")
+          ? await response.json()
+          : await response.text(); // Si no es JSON, tratar como texto
 
-      throw new Error(errorMessage || "Error al actualizar la categoría del tour.");
+      throw new Error(
+        errorMessage || "Error al actualizar la categoría del tour."
+      );
     }
 
     // Manejar respuesta en texto plano o JSON
     return contentType && contentType.includes("application/json")
       ? await response.json()
       : await response.text(); // Si es texto, devolverlo como está
-
   } catch (error) {
     console.error("⛔ Error en updateTourCategoryApi:", error);
     throw error;
   }
 };
-

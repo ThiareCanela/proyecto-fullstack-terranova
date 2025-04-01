@@ -5,6 +5,7 @@ import logo from "../../assets/logo.png";
 import Register from "../molecules/Register";
 import Login from "../molecules/Login";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../constants/endpoints";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +35,7 @@ const Navbar = () => {
   // **🔹 Función para obtener el rol de usuario**
   const fetchUserRole = async () => {
     console.log("🔹 Ejecutando fetchUserRole...");
-    
+
     if (!user) {
       console.log("❌ No hay usuario, estableciendo isAdmin en false.");
       setIsAdmin(false);
@@ -49,11 +50,11 @@ const Navbar = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/usuarios/perfil", {
+      const response = await fetch(`${API_BASE_URL}/usuarios/perfil`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -67,8 +68,10 @@ const Navbar = () => {
       console.log("✅ Usuario obtenido:", userData);
 
       setIsAdmin(userData.usuarioRole === "ROLE_ADMIN");
-      console.log("🔹 isAdmin actualizado a:", userData.usuarioRole === "ROLE_ADMIN");
-
+      console.log(
+        "🔹 isAdmin actualizado a:",
+        userData.usuarioRole === "ROLE_ADMIN"
+      );
     } catch (error) {
       console.error("❌ Error al obtener el rol de usuario:", error.message);
       setIsAdmin(false);
