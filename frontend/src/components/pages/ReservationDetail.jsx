@@ -7,7 +7,12 @@ import { useAuth } from "../../context/AuthContext";
 import { postCreateReservation } from "../../apis/booking";
 
 export default function ReservationDetail() {
-  const [modal, setModal] = useState({ isOpen: false, success: false });
+  const [modal, setModal] = useState({
+    isOpen: false,
+    success: false,
+    message: "",
+  });
+  
   const navigate = useNavigate();
   const location = useLocation();
   const tour = location.state?.tour || {};
@@ -35,20 +40,23 @@ export default function ReservationDetail() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setModal({ isOpen: true, success: true });
+  try {
+    const response = await postCreateReservation(requestData);
+    setModal({ isOpen: true, success: true, message: "Reserva confirmada con éxito" });
+    console.log(response, "response");
+  } catch (error) {
+    console.error("Error al crear reserva:", error.message);
+    setModal({
+      isOpen: true,
+      success: false,
+      message: error.message || "Ocurrió un error inesperado",
+    });
+  }
+};
 
-    try {
-      const response = await postCreateReservation(requestData);
-      setModal({ isOpen: true, success: true });
-
-      console.log(response, "response");
-    } catch (error) {
-      console.error(error);
-      setModal({ isOpen: true, success: false });
-    }
-  };
+  
 
   return (
     <>

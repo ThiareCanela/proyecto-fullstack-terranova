@@ -85,7 +85,10 @@ export default function DetailCard() {
   const blockedDates =
     dateAvailability
       ?.filter((date) => !date.disponible)
-      ?.map((date) => new Date(date.fecha)) || [];
+      ?.map((date) => {
+        const [year, month, day] = date.fecha.split("-");
+        return new Date(year, month - 1, day); // mes - 1 porque en JS los meses van de 0 a 11
+      });
 
   const handleDateChange = (date) => {
     if (!date) return;

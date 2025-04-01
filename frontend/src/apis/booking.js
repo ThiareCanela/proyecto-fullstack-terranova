@@ -48,13 +48,20 @@ export const postCreateReservation = async (reservaData) => {
       body: JSON.stringify(reservaData),
     });
 
+    const responseData = await response.json();
+    console.log("response.status:", response.status);
+    console.log("responseData:", responseData);
+
     if (!response.ok) {
-      throw new Error("Error en la petición: " + response.statusText);
+      const errorMsg = responseData?.error || response.statusText;
+      throw new Error(errorMsg);
     }
 
-    return await response.json();
+    return responseData;
   } catch (error) {
-    console.error("Error al crear la reserva", error);
+    console.error("Error al crear la reserva:", error.message);
     throw error;
   }
 };
+
+
