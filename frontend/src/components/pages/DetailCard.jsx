@@ -10,6 +10,7 @@ import { useAvailability } from "../../hooks/useBooking";
 import { ImageGallery } from "../molecules/ImageGallery";
 import Login from "../molecules/Login";
 import { useAuth } from "../../context/AuthContext";
+import Register from "../molecules/Register";
 /* eslint-disable react/prop-types */
 const Modal = ({ isOpen, onClose, message }) => {
   let icon, title, description;
@@ -78,17 +79,19 @@ export default function DetailCard() {
   const { user } = useAuth();
 
   const openLogin = () => setActiveModal("login");
+  const openRegister = () => {
+    setActiveModal("register");
+  };
   const closeModal = () => setActiveModal(null);
   const is404Error = errorMessage?.includes("404");
   const today = new Date();
 
-  const blockedDates =
-    dateAvailability
-      ?.filter((date) => !date.disponible)
-      ?.map((date) => {
-        const [year, month, day] = date.fecha.split("-");
-        return new Date(year, month - 1, day); // mes - 1 porque en JS los meses van de 0 a 11
-      });
+  const blockedDates = dateAvailability
+    ?.filter((date) => !date.disponible)
+    ?.map((date) => {
+      const [year, month, day] = date.fecha.split("-");
+      return new Date(year, month - 1, day); // mes - 1 porque en JS los meses van de 0 a 11
+    });
 
   const handleDateChange = (date) => {
     if (!date) return;
@@ -279,7 +282,16 @@ export default function DetailCard() {
         onClose={() => setShowModal(false)}
         message={modalMessage}
       />
-      {!user && <Login isOpen={activeModal === "login"} onClose={closeModal} />}
+      {!user && (
+        <>
+          <Login
+            isOpen={activeModal === "login"}
+            onClose={closeModal}
+            openRegister={openRegister}
+          />
+          <Register isOpen={activeModal === "register"} onClose={closeModal} />
+        </>
+      )}
     </div>
   );
 }

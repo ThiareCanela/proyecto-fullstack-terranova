@@ -34,7 +34,7 @@ const Navbar = () => {
   // **🔹 Función para obtener el rol de usuario**
   const fetchUserRole = async () => {
     console.log("🔹 Ejecutando fetchUserRole...");
-    
+
     if (!user) {
       console.log("❌ No hay usuario, estableciendo isAdmin en false.");
       setIsAdmin(false);
@@ -53,7 +53,7 @@ const Navbar = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -67,8 +67,10 @@ const Navbar = () => {
       console.log("✅ Usuario obtenido:", userData);
 
       setIsAdmin(userData.usuarioRole === "ROLE_ADMIN");
-      console.log("🔹 isAdmin actualizado a:", userData.usuarioRole === "ROLE_ADMIN");
-
+      console.log(
+        "🔹 isAdmin actualizado a:",
+        userData.usuarioRole === "ROLE_ADMIN"
+      );
     } catch (error) {
       console.error("❌ Error al obtener el rol de usuario:", error.message);
       setIsAdmin(false);
@@ -159,7 +161,11 @@ const Navbar = () => {
       </div>
 
       <Register isOpen={activeModal === "register"} onClose={closeModal} />
-      <Login isOpen={activeModal === "login"} onClose={closeModal} />
+      <Login
+        isOpen={activeModal === "login"}
+        onClose={closeModal}
+        openRegister={openRegister}
+      />
 
       <button
         className="md:hidden"
