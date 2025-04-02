@@ -62,16 +62,15 @@ export const ModalConfirmReservation = ({
             </button>
           </div>
         </>
-      ) : (
-        <>
-          <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-          <p className="text-center font-bold">Error en la reserva</p>
-          <p className="text-center font-medium text-[var(--color-default)] mt-4">
-            Hubo un problema al procesar la reserva. Intenta nuevamente más
-            tarde.
-          </p>
-        </>
-      )}
+     ) : (
+      <>
+        <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
+        <p className="text-center font-bold">Error en la reserva</p>
+        <p className="text-center font-medium text-[var(--color-default)] mt-4">
+          {modal.message || "Hubo un problema al procesar la reserva. Intenta nuevamente más tarde."}
+        </p>
+      </>
+    )}
     </Modal>
   );
 };

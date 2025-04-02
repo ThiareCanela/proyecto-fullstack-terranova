@@ -7,7 +7,12 @@ import { useAuth } from "../../context/AuthContext";
 import { postCreateReservation } from "../../apis/booking";
 
 export default function ReservationDetail() {
-  const [modal, setModal] = useState({ isOpen: false, success: false });
+  const [modal, setModal] = useState({
+    isOpen: false,
+    success: false,
+    message: "",
+  });
+  
   const navigate = useNavigate();
   const location = useLocation();
   const tour = location.state?.tour || {};
@@ -15,7 +20,6 @@ export default function ReservationDetail() {
   const endDate = location.state?.endDate || "";
   const guests = location.state?.guests || 1;
   const { user } = useAuth();
-
   const [contact, setContact] = useState({
     firstName: "",
     lastName: "",
@@ -25,8 +29,8 @@ export default function ReservationDetail() {
   const requestData = {
     tourId: tour.id,
     estado: "CONFIRMADA",
-    fechaFin: startDate,
-    fechaInicio: endDate,
+    fechaFin: endDate,
+    fechaInicio: startDate,
     numPersonas: guests,
     total: guests * tour.precio,
     usuarioId: user.id,
@@ -36,20 +40,23 @@ export default function ReservationDetail() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setModal({ isOpen: true, success: true });
+  try {
+    const response = await postCreateReservation(requestData);
+    setModal({ isOpen: true, success: true, message: "Reserva confirmada con éxito" });
+    console.log(response, "response");
+  } catch (error) {
+    console.error("Error al crear reserva:", error.message);
+    setModal({
+      isOpen: true,
+      success: false,
+      message: error.message || "Ocurrió un error inesperado",
+    });
+  }
+};
 
-    try {
-      const response = await postCreateReservation(requestData);
-      setModal({ isOpen: true, success: true });
-
-      console.log(response, "response");
-    } catch (error) {
-      console.error(error);
-      setModal({ isOpen: true, success: false });
-    }
-  };
+  
 
   return (
     <>
@@ -91,7 +98,7 @@ export default function ReservationDetail() {
                   <input
                     type="text"
                     name="firstName"
-                    value={user.name}
+                    value={user.nombre}
                     onChange={handleChange}
                     placeholder="Nombre"
                     className="border border-gray-300 p-2 rounded-lg w-full bg-blue-100"
@@ -106,7 +113,7 @@ export default function ReservationDetail() {
                   <input
                     type="text"
                     name="lastName"
-                    value={user.lastName}
+                    value={user.apellido}
                     onChange={handleChange}
                     placeholder="Apellido"
                     className="border border-gray-300 p-2 rounded-lg w-full bg-blue-100"

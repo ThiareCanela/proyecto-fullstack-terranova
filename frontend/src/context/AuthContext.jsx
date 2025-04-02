@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useState, useEffect } from "react";
 import { loginUser } from "../apis/login";
 
@@ -25,7 +26,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error(" No hay token en localStorage, no se puede obtener perfil.");
+        console.error(
+          " No hay token en localStorage, no se puede obtener perfil."
+        );
         return null;
       }
 
@@ -33,7 +36,7 @@ export const AuthProvider = ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -65,7 +68,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", result.token);
       const userData = await obtenerPerfil();
       if (!userData) {
-        return { success: false, message: "No se pudo obtener el perfil del usuario." };
+        return {
+          success: false,
+          message: "No se pudo obtener el perfil del usuario.",
+        };
       }
 
       setUser(userData);
@@ -84,23 +90,25 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error("No hay token en localStorage, no se puede obtener la lista de usuarios.");
+        console.error(
+          "No hay token en localStorage, no se puede obtener la lista de usuarios."
+        );
         return [];
       }
-  
+
       console.log("🔹 Obteniendo lista de usuarios...");
       const response = await fetch("http://localhost:8080/usuarios/listar", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("No se pudo obtener la lista de usuarios.");
       }
-  
+
       const usuarios = await response.json();
       console.log("Lista de usuarios obtenida:", usuarios);
       return usuarios;
@@ -112,32 +120,37 @@ export const AuthProvider = ({ children }) => {
 
   const cambiarRolUsuario = async (id) => {
     try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            console.error("❌ No hay token en localStorage, no se puede cambiar el rol.");
-            return { success: false, message: "No se encontró el token." };
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error(
+          "❌ No hay token en localStorage, no se puede cambiar el rol."
+        );
+        return { success: false, message: "No se encontró el token." };
+      }
+
+      console.log(`🔹 Cambiando rol del usuario con ID: ${id}...`);
+      const response = await fetch(
+        `http://localhost:8080/usuarios/cambiarRol/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-  
-        console.log(`🔹 Cambiando rol del usuario con ID: ${id}...`);
-        const response = await fetch(`http://localhost:8080/usuarios/cambiarRol/${id}`, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
-        });
-  
-        if (!response.ok) {
-            throw new Error("No se pudo cambiar el rol del usuario.");
-        }
-  
-        console.log("✅ Rol cambiado exitosamente");
-        return { success: true };
+      );
+
+      if (!response.ok) {
+        throw new Error("No se pudo cambiar el rol del usuario.");
+      }
+
+      console.log("✅ Rol cambiado exitosamente");
+      return { success: true };
     } catch (error) {
-        console.error("❌ Error en cambiarRolUsuario:", error.message);
-        return { success: false, message: error.message };
+      console.error("❌ Error en cambiarRolUsuario:", error.message);
+      return { success: false, message: error.message };
     }
   };
-  
+
   const register = async (userData) => {
     try {
       const response = await fetch("http://localhost:8080/usuarios/registrar", {
@@ -147,28 +160,37 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(userData),
       });
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage || "Error al registrar usuario.");
       }
-  
+
       const result = await response.json();
       console.log("✅ Usuario registrado:", result);
-  
+
       return { success: true, data: result };
     } catch (error) {
       console.error("❌ Error en register:", error.message);
       return { success: false, message: error.message };
     }
   };
-  
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, error, listarUsuarios, cambiarRolUsuario, register, }}> 
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        error,
+        listarUsuarios,
+        cambiarRolUsuario,
+        register,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-  
 };
 
 export const useAuth = () => useContext(AuthContext);

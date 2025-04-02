@@ -169,7 +169,10 @@ const SearchResults = () => {
                     fechaInicio: update[0],
                     fechaFin: update[1],
                   });
-                  setShowDatePicker(false);
+
+                  if (update[0] && update[1]) {
+                    setShowDatePicker(false);
+                  }
                 }}
                 startDate={formData.fechaInicio}
                 endDate={formData.fechaFin}
