@@ -11,17 +11,22 @@ export const searchTourApi = async (params) => {
       `http://localhost:8080/tour/disponibles?${query_params}`
     );
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
-    }
+    const text = await response.text();
 
-    const data = await response.json();
-    return { payload: data };
+    try {
+      const data = JSON.parse(text);
+      return { payload: data };
+    } catch (e) {
+      // Si no se puede hacer JSON.parse, asumimos que no hay tours
+      console.warn("Respuesta no válida como JSON. Asumimos sin resultados.");
+      return { payload: [] }; // devolvemos array vacío como fallback
+    }
   } catch (error) {
     console.error("Error fetching tours:", error);
     return { error: error.message };
   }
 };
+
 
 export const getTourAvailability = async (idTour) => {
   try {

@@ -106,14 +106,16 @@ const SearchResults = () => {
   }, [showDatePicker]);
 
   useEffect(() => {
-    if (paisParam && fechaInicioParam && fechaFinParam) {
-      searchTours({
-        pais: paisParam,
-        fechaInicio: fechaInicioParam,
-        fechaFin: fechaFinParam,
-      });
+    const queryParams = new URLSearchParams(location.search);
+    const pais = queryParams.get("pais");
+    const fechaInicio = queryParams.get("fechaInicio");
+    const fechaFin = queryParams.get("fechaFin");
+  
+    if (pais && fechaInicio && fechaFin) {
+      searchTours({ pais, fechaInicio, fechaFin });
     }
-  }, [paisParam, fechaInicioParam, fechaFinParam]);
+  }, [location.search]);
+  
 
   return (
     <div className="p-6 mt-20">
