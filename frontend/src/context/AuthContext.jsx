@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useState, useEffect } from "react";
 import { loginUser } from "../apis/login";
 import { API_BASE_URL } from "../constants/endpoints";

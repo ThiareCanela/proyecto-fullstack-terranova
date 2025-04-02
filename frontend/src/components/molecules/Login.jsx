@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "../atoms/Modal";
@@ -5,24 +6,27 @@ import { InputField } from "../atoms/InputField";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 
-const Login = ({ isOpen, onClose }) => {
+const Login = ({ isOpen, onClose, openRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("🔹 Intentando hacer login con:", email, password);
-  
+
     const result = await login(email, password);
     console.log("🔹 Resultado del login:", result);
-  
+
     if (result.success) {
       setTimeout(() => {
-        console.log("🔹 Usuario guardado en localStorage:", JSON.parse(localStorage.getItem("user")));
+        console.log(
+          "🔹 Usuario guardado en localStorage:",
+          JSON.parse(localStorage.getItem("user"))
+        );
       }, 500);
-  
+
       onClose();
       setEmail("");
       setPassword("");
@@ -31,7 +35,6 @@ const Login = ({ isOpen, onClose }) => {
       setErrorMessage(result.message);
     }
   };
-  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} backgroundOpacity="10%">
@@ -74,6 +77,16 @@ const Login = ({ isOpen, onClose }) => {
         >
           Iniciar Sesión
         </button>
+        <p className="text-center text-sm mt-4">
+          ¿No tienes una cuenta?{" "}
+          <button
+            type="button"
+            onClick={openRegister}
+            className="text-[var(--color-emphasis)] hover:underline"
+          >
+            Regístrate aquí
+          </button>
+        </p>
       </form>
     </Modal>
   );

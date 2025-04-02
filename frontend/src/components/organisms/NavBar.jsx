@@ -162,7 +162,11 @@ const Navbar = () => {
       </div>
 
       <Register isOpen={activeModal === "register"} onClose={closeModal} />
-      <Login isOpen={activeModal === "login"} onClose={closeModal} />
+      <Login
+        isOpen={activeModal === "login"}
+        onClose={closeModal}
+        openRegister={openRegister}
+      />
 
       <button
         className="md:hidden"

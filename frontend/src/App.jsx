@@ -11,10 +11,13 @@ import SearchResults from "./components/pages/SearchResults";
 import ReservationDetail from "./components/pages/ReservationDetail";
 
 // eslint-disable-next-line react/prop-types
-// eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
-  return user?.usuarioRole === "ROLE_ADMIN" ? children : <Navigate to="/" replace />;
+  return user?.usuarioRole === "ROLE_ADMIN" ? (
+    children
+  ) : (
+    <Navigate to="/" replace />
+  );
 };
 
 // eslint-disable-next-line react/prop-types
@@ -24,7 +27,7 @@ const PrivateRoute = ({ children }) => {
 };
 
 const App = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

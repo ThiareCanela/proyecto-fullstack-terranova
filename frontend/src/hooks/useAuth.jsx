@@ -200,5 +200,6 @@ export const useAuth = () => {
     listarUsuarios,
     cambiarRolUsuario,
     register,
+    obtenerPerfil,
   };
 };

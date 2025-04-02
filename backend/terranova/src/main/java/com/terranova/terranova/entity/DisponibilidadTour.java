@@ -25,6 +25,5 @@ public class DisponibilidadTour {
     @Column(nullable = false)
     private LocalDate fecha;
     @Column(nullable = false)
-    private Boolean disponible;
-
+    private boolean disponible;
 }
