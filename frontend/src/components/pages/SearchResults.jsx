@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,12 +20,14 @@ const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
+
   const { dataResult, searchTours, loading, setLoading } = useSearchTour();
   const { categoryData } = useCategory();
 
   const paisParam = queryParams.get("pais");
   const fechaInicioParam = queryParams.get("fechaInicio");
   const fechaFinParam = queryParams.get("fechaFin");
+  const categoriaParam = queryParams.get("categoria"); // 👈 nueva
 
   const [formData, setFormData] = useState({
     pais: paisParam || "",
@@ -33,6 +35,7 @@ const SearchResults = () => {
     fechaFin: parseDate(fechaFinParam),
   });
 
+  const [activeCategory, setActiveCategory] = useState(categoriaParam || "all");
   const [errors, setErrors] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
@@ -61,6 +64,7 @@ const SearchResults = () => {
       setErrors(errorMessage);
       return;
     }
+
     setErrors("");
     setLoading(true);
     setFilteredPlaces([]);
@@ -69,13 +73,13 @@ const SearchResults = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      console.log("Datos enviados:", formData);
-
       const queryParams = new URLSearchParams({
         pais: formData.pais,
         fechaInicio: formData.fechaInicio.toISOString().split("T")[0],
         fechaFin: formData.fechaFin.toISOString().split("T")[0],
+        ...(activeCategory && activeCategory !== "all" && { categoria: activeCategory }),
       }).toString();
+      
 
       navigate(`/resultados?${queryParams}`);
     } catch (error) {
@@ -105,17 +109,29 @@ const SearchResults = () => {
     };
   }, [showDatePicker]);
 
+  // Ejecuta la búsqueda cuando cambian los parámetros en la URL
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const pais = queryParams.get("pais");
     const fechaInicio = queryParams.get("fechaInicio");
     const fechaFin = queryParams.get("fechaFin");
-  
+    const categoria = queryParams.get("categoria");
+
+    setActiveCategory(categoria || "all");
+
     if (pais && fechaInicio && fechaFin) {
       searchTours({ pais, fechaInicio, fechaFin });
     }
   }, [location.search]);
-  
+
+  // Filtro por categoría aplicado a los resultados obtenidos por país y fecha
+  const filteredByCategory = useMemo(() => {
+    return dataResult.filter((tour) =>
+      activeCategory === "all"
+        ? true
+        : tour.categoriaTours?.nombre === activeCategory
+    );
+  }, [dataResult, activeCategory]);
 
   return (
     <div className="p-6 mt-20">
@@ -202,7 +218,13 @@ const SearchResults = () => {
       </form>
 
       <div className="mt-8">
-        <Categories categories={categoryData} />
+        <Categories
+          categories={categoryData}
+          activeCategory={activeCategory}
+          onCategoryClick={(name) =>
+            setActiveCategory((prev) => (prev === name || name === "all" ? "all" : name))
+          }
+        />
       </div>
 
       <div className="mt-8 text-center">
@@ -210,22 +232,21 @@ const SearchResults = () => {
       </div>
 
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dataResult.map((place, i) => (
+        {filteredByCategory.map((place, i) => (
           <TravelCard
             key={`${i}-resulFilterTour`}
             imagenes={place.imagenes[0].urlImagen}
             pais={place.pais}
             titulo={place.titulo}
-            // rating={place.rating}
             precio={place.precio}
             onDetail={() => navigate(`/detalle/${place.id}`)}
           />
         ))}
       </div>
-      {dataResult.length === 0 && (
+
+      {filteredByCategory.length === 0 && (
         <p className="text-center text-gray-500 mt-4">
-          No se encontraron tours para la fecha seleccionada. Intenta con otra
-          fecha o destino.
+          No se encontraron tours que coincidan con los filtros seleccionados.
         </p>
       )}
     </div>
