@@ -89,7 +89,7 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50 px-6 py-4 flex justify-between items-center">
       <Link to="/" className="flex items-center space-x-3">
-        <img src={logo} alt="Terranova Logo" className="h-8 w-auto" />
+        <img src={logo} alt="Terranova Logo" className="h-14 w-auto" />
         <span className="text-[var(--color-default)] font-bold text-lg">
           Terranova
         </span>
