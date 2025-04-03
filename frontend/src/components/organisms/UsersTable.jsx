@@ -89,7 +89,7 @@ export const UsersTable = () => {
                     <td className="py-2">{index + 1}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
-                        src={usuario.profilePicture || "src/assets/profile.webp"}
+                        src={usuario.profilePicture || "https://terranova-tours-images.s3.us-east-1.amazonaws.com/profile.webp"}
                         alt="Avatar"
                         className="w-8 h-8 rounded-full"
                       />
