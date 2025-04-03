@@ -1,6 +1,6 @@
 import { BookingForm } from "../molecules/BookingForm";
 
-export const HeroHome = () => {
+export const HeroHome = ({ activeCategory }) => {
   return (
     <div className="relative">
       <div
@@ -12,9 +12,11 @@ export const HeroHome = () => {
         }}
       />
       <section className="absolute z-10 bottom-[0px] w-full left-0 sm:left-2 md:left-4 lg:left-6 sm:max-w-[523px]">
-        <BookingForm />
+        <BookingForm activeCategory={activeCategory} />
       </section>
     </div>
   );
 };
+
+
 

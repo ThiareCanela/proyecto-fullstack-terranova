@@ -6,9 +6,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PAIS } from "../../constants";
 import { useSearchTour } from "../../hooks/useSearchTour";
 
-export const BookingForm = () => {
+export const BookingForm = ({ activeCategory }) => {
   const navigate = useNavigate();
-  const { dataResult, loading, searchTours } = useSearchTour();
+  const { searchTours, loading } = useSearchTour();
   const [formData, setFormData] = useState({
     pais: "",
     fechaInicio: null,
@@ -49,23 +49,18 @@ export const BookingForm = () => {
       fechaFin: formData.fechaFin.toISOString().split("T")[0],
     };
 
+    const queryParams = new URLSearchParams({
+      pais: filters.pais,
+      fechaInicio: filters.fechaInicio,
+      fechaFin: filters.fechaFin,
+      ...(activeCategory && activeCategory !== "all" && { categoria: activeCategory })
+
+    }).toString();
+
+    console.log("➡️ Query Params:", queryParams); // Para depuración
     await searchTours(filters);
-    navigate(
-      `/resultados?pais=${filters.pais}&fechaInicio=${filters.fechaInicio}&fechaFin=${filters.fechaFin}`
-    );
+    navigate(`/resultados?${queryParams}`);
   };
-
-  useEffect(() => {
-    if (!loading && dataResult?.length > 0) {
-      const queryParams = new URLSearchParams({
-        pais: formData.pais,
-        fechaInicio: formData.fechaInicio.toISOString().split("T")[0],
-        fechaFin: formData.fechaFin.toISOString().split("T")[0],
-      }).toString();
-
-      navigate(`/resultados?${queryParams}`);
-    }
-  }, [dataResult, loading, navigate]);
 
   const handleClickOutside = (event) => {
     if (
@@ -92,6 +87,7 @@ export const BookingForm = () => {
       setErrors("");
     }
   }, [formData.fechaInicio, formData.fechaFin, formData.pais]);
+
   return (
     <div className="flex flex-col w-full p-6 gap-6 bg-white rounded-lg shadow-md">
       <h3 className="font-medium text-[var(--color-default)] text-3xl text-center w-full">
