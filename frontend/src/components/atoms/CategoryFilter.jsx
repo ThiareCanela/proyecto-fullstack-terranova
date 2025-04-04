@@ -1,36 +1,27 @@
 /* eslint-disable react/prop-types */
-export const CategoryFilter = ({ image, categoryName, onClick, isActive, isSmaller }) => {
+export const CategoryFilter = ({ image, categoryName, onClick, isActive }) => {
   const activeClass = isActive
     ? "border-2 border-[var(--color-secondary)] bg-gray-100"
     : "hover:bg-gray-200";
 
-  const containerSize = isSmaller
-    ? "w-[100px] md:w-[110px]"
-    : "w-[140px] md:w-[160px]";
-
-  const iconSize = isSmaller
-    ? "w-4 h-4"
-    : "w-8 h-8";
-
-  const textSize = isSmaller
-    ? "text-xs"
-    : "text-sm";
-
   return (
     <div
-      className={`flex flex-col justify-center items-center rounded-md p-4 cursor-pointer transition-all ${activeClass} ${containerSize}`}
+      className={`flex flex-col justify-center items-center rounded-md 
+        px-2 py-1 md:px-4 md:py-4 cursor-pointer transition-all 
+        ${activeClass} w-[70px] md:w-[140px]`}
       onClick={onClick}
     >
-      <div
-        className={`rounded-full overflow-hidden flex justify-center items-center ${iconSize}`}
-      >
+      <div className="rounded-full flex justify-center items-center bg-white w-4 h-4 md:w-8 md:h-8">
         <img
           src={image}
-          className="w-full h-full object-cover object-center"
+          alt="Ícono categoría"
+          className="w-full h-full object-contain"
         />
       </div>
       <p
-        className={`text-center mt-2 ${textSize} ${isActive ? "font-bold" : ""}`}
+        className={`text-center mt-1 md:mt-2 text-[8px] md:text-sm ${
+          isActive ? "" : ""
+        }`}
       >
         {categoryName}
       </p>
