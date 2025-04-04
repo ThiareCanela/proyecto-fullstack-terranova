@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       <HeroHome activeCategory={activeCategory} />
-      <div className="mt-16 mb-12 px-10">
+      <div className="mt-6 mb-6 px-4 md:mt-16 md:mb-12 md:px-10">
         <Categories
           categories={categoryData}
           onCategoryClick={handleCategoryClick}
