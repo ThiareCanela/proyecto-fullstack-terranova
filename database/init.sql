@@ -176,7 +176,8 @@ INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas
 (2, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'CONFIRMADA'),
 (2, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'CANCELADA'),
 (2, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'CONFIRMADA'),
-(2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'PENDIENTE');
+(2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'PENDIENTE'),
+(2, 2, '2025-02-05', '2025-02-05', 2, 240.00, 'CONFIRMADA');
 
 -- Disponibilidad para el tour 1 (ocupado del 2025-04-10 al 2025-04-12)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
@@ -187,6 +188,11 @@ INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 -- Disponibilidad para el tour 2 (ocupado el 2025-05-15) PERO LA FECHA ESTA DISPONIBLE YA QUE LA RESERVA ESTA PENDIENTE AUN NO CONFIRMADA
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 (2, '2025-05-15', TRUE);
+
+-- Disponibilidad para el tour 2 fecha pasada (ocupado el 2025-02-05) 
+INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
+(2, '2025-02-05', FALSE);
+
 
 -- Disponibilidad para el tour 3 (ocupado del 2025-06-20 al 2025-06-21)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
