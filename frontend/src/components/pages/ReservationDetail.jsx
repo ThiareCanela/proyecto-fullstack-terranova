@@ -26,7 +26,23 @@ export default function ReservationDetail() {
     email: "",
   });
 
-  const requestData = {
+  const formatDateToYYYYMMDD = (date) => {
+  if (!date) return "";
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const requestData = {
+  tourId: tour.id,
+  estado: "CONFIRMADA",
+  fechaFin: formatDateToYYYYMMDD(endDate),
+  fechaInicio: formatDateToYYYYMMDD(startDate),
+  numPersonas: guests,
+  total: guests * tour.precio,
+  usuarioId: user.id,
     tourId: tour.id,
     estado: "CONFIRMADA",
     fechaFin: endDate,

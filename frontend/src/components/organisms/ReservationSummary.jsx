@@ -3,6 +3,18 @@ import { Calendar, Clock, MapPin, User } from "lucide-react";
 import { CharacteristicsSection } from "../molecules/CharacteristicsSection";
 import { ImageGallery } from "../molecules/ImageGallery";
 
+
+
+const parseDateWithoutTimezone = (date) => {
+  if (!date) return null;
+  if (typeof date === "string") {
+    const [year, month, day] = date.split("-");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+  return date; // ya es un objeto Date
+};
+
+
 export const ReservationSummary = ({
   tour,
   guests,
@@ -42,8 +54,8 @@ export const ReservationSummary = ({
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-[var(--color-emphasis)]" />
           <span>
-            {startDate ? new Date(startDate).toLocaleDateString() : "No seleccionada"} -{" "}
-            {endDate ? new Date(endDate).toLocaleDateString() : "No seleccionada"}
+            {startDate ? parseDateWithoutTimezone(startDate).toLocaleDateString() : "No seleccionada"} -{" "}
+            {endDate ? parseDateWithoutTimezone(endDate).toLocaleDateString() : "No seleccionada"}
           </span>
         </div>
         <div className="flex items-center gap-2">

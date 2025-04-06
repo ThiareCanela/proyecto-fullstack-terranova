@@ -33,13 +33,18 @@ export const MisReservas = () => {
 
     const hoy = new Date();
 
+const parseDateWithoutTimezone = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+};
+
     const reservasFiltradas = reservas
         .filter((r) => r.estado === "CONFIRMADA")
         .filter((r) => {
-            const fechaFin = new Date(r.fechaFin);
+            const fechaFin = parseDateWithoutTimezone(r.fechaFin);
             return mostrarAntiguas ? fechaFin < hoy : fechaFin >= hoy;
         })
-        .sort((a, b) => new Date(a.fechaInicio) - new Date(b.fechaInicio));
+        .sort((a, b) => parseDateWithoutTimezone(a.fechaInicio) - parseDateWithoutTimezone(b.fechaInicio));
 
     return (
         <div className="p-4 sm:p-6 mt-24">
