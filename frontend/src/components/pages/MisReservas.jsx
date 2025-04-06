@@ -33,21 +33,30 @@ export const MisReservas = () => {
 
     const hoy = new Date();
 
-const parseDateWithoutTimezone = (dateString) => {
-    const [year, month, day] = dateString.split("-");
-    return new Date(Number(year), Number(month) - 1, Number(day));
-};
-
     const reservasFiltradas = reservas
         .filter((r) => r.estado === "CONFIRMADA")
         .filter((r) => {
-            const fechaFin = parseDateWithoutTimezone(r.fechaFin);
+            const fechaFin = new Date(r.fechaFin);
             return mostrarAntiguas ? fechaFin < hoy : fechaFin >= hoy;
         })
-        .sort((a, b) => parseDateWithoutTimezone(a.fechaInicio) - parseDateWithoutTimezone(b.fechaInicio));
+        .sort((a, b) => new Date(a.fechaInicio) - new Date(b.fechaInicio));
 
     return (
         <div className="p-4 sm:p-6 mt-24">
+
+      <div className="flex justify-end mb-4">
+        <button
+          className="flex items-center bg-transparent border-none gap-2 text-[var(--color-emphasis)] text-sm font-medium"
+          onClick={() => window.location.href = "/"}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver al inicio
+        </button>
+      </div>
+
             <h1 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-default)] mb-6">
                 {mostrarAntiguas ? "Reservas pasadas" : "Mis reservas vigentes"}
             </h1>

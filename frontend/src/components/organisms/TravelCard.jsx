@@ -31,7 +31,7 @@ const TravelCard = ({ imagenes, pais, titulo, precio, duracion, onDetail }) => {
         </h3>
 
         <p className="text-[var(--color-emphasis)] font-bold text-lg mt-1">
-          ${precio}
+          USD ${precio}
         </p>
       </div>
     </div>
