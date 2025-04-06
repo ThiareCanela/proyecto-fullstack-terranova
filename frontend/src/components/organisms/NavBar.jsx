@@ -1,6 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, User, LogOut, Settings } from "lucide-react";
-import { useState, useEffect } from "react";
+import {
+  Menu,
+  X,
+  User,
+  LogOut,
+  Settings,
+  CalendarDays,
+} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import logo from "../../assets/logo.png";
 import Register from "../molecules/Register";
 import Login from "../molecules/Login";
@@ -15,6 +22,9 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const profileMenuRef = useRef();
+  const mobileMenuRef = useRef();
+
   const openLogin = () => setActiveModal("login");
   const openRegister = () => setActiveModal("register");
   const closeModal = () => setActiveModal(null);
@@ -23,7 +33,7 @@ const Navbar = () => {
     logout();
     setProfileMenuOpen(false);
     setMenuOpen(false);
-    setIsAdmin(false); // 🔹 Resetear isAdmin al cerrar sesión
+    setIsAdmin(false);
     navigate("/");
   };
 
@@ -32,12 +42,8 @@ const Navbar = () => {
     return `${name[0]}${lastName[0]}`.toUpperCase();
   };
 
-  // **🔹 Función para obtener el rol de usuario**
   const fetchUserRole = async () => {
-    console.log("🔹 Ejecutando fetchUserRole...");
-
     if (!user) {
-      console.log("❌ No hay usuario, estableciendo isAdmin en false.");
       setIsAdmin(false);
       return;
     }
@@ -45,7 +51,6 @@ const Navbar = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.log("❌ No hay token, estableciendo isAdmin en false.");
         setIsAdmin(false);
         return;
       }
@@ -59,26 +64,17 @@ const Navbar = () => {
       });
 
       if (!response.ok) {
-        console.error("❌ Error obteniendo el rol del usuario.");
         setIsAdmin(false);
         return;
       }
 
       const userData = await response.json();
-      console.log("✅ Usuario obtenido:", userData);
-
       setIsAdmin(userData.usuarioRole === "ROLE_ADMIN");
-      console.log(
-        "🔹 isAdmin actualizado a:",
-        userData.usuarioRole === "ROLE_ADMIN"
-      );
     } catch (error) {
-      console.error("❌ Error al obtener el rol de usuario:", error.message);
       setIsAdmin(false);
     }
   };
 
-  // **🔹 Llamamos a `fetchUserRole` cuando el usuario cambia**
   useEffect(() => {
     if (user) {
       fetchUserRole();
@@ -87,10 +83,32 @@ const Navbar = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileMenuOpen &&
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setProfileMenuOpen(false);
+      }
+      if (
+        menuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileMenuOpen, menuOpen]);
+
   return (
     <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50 px-6 py-4 flex justify-between items-center">
       <Link to="/" className="flex items-center space-x-3">
-        <img src={logo} alt="Terranova Logo" className="h-8 w-auto" />
+        <img src={logo} alt="Terranova Logo" className="h-14 w-auto" />
         <span className="text-[var(--color-default)] font-bold text-lg">
           Terranova
         </span>
@@ -125,7 +143,10 @@ const Navbar = () => {
         )}
 
         {profileMenuOpen && user && (
-          <div className="absolute top-12 right-0 bg-white shadow-md rounded-md p-4 flex flex-col space-y-3 w-48">
+          <div
+            ref={profileMenuRef}
+            className="absolute top-12 right-0 bg-white shadow-md rounded-md p-4 flex flex-col space-y-3 w-48"
+          >
             <button
               className="flex items-center space-x-2 py-2"
               onClick={() => {
@@ -136,6 +157,19 @@ const Navbar = () => {
               <User size={20} />
               <span>Mi perfil</span>
             </button>
+
+            {!isAdmin && (
+              <button
+                className="flex items-center space-x-2 py-2"
+                onClick={() => {
+                  setProfileMenuOpen(false);
+                  navigate("/mis-reservas");
+                }}
+              >
+                <CalendarDays size={20} />
+                <span>Mis reservas</span>
+              </button>
+            )}
 
             {isAdmin && (
               <button
@@ -179,7 +213,10 @@ const Navbar = () => {
       </button>
 
       {menuOpen && (
-        <div className="absolute top-16 right-6 bg-white shadow-md rounded-md p-4 flex flex-col space-y-3 md:hidden w-48">
+        <div
+          ref={mobileMenuRef}
+          className="absolute top-16 right-6 bg-white shadow-md rounded-md p-4 flex flex-col space-y-3 md:hidden w-48"
+        >
           {user ? (
             <>
               <div className="flex items-center space-x-3 border-b pb-2">
@@ -197,6 +234,16 @@ const Navbar = () => {
                 <User size={20} />
                 <span>Mi perfil</span>
               </Link>
+
+              {!isAdmin && (
+                <Link
+                  to="/mis-reservas"
+                  className="flex items-center space-x-2 text-[var(--color-default)] py-2"
+                >
+                  <CalendarDays size={20} />
+                  <span>Mis reservas</span>
+                </Link>
+              )}
 
               {isAdmin && (
                 <button

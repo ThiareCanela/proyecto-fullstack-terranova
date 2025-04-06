@@ -9,6 +9,7 @@ import AdminPanel from "./components/pages/AdminPanel";
 import { useAuth } from "./context/AuthContext";
 import SearchResults from "./components/pages/SearchResults";
 import ReservationDetail from "./components/pages/ReservationDetail";
+import { MisReservas } from "./components/pages/MisReservas";
 
 // eslint-disable-next-line react/prop-types
 const AdminRoute = ({ children }) => {
@@ -63,6 +64,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/mis-reservas"
+          element={
+            <PrivateRoute>
+              <MisReservas />
             </PrivateRoute>
           }
         />

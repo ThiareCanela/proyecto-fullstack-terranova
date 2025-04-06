@@ -111,16 +111,16 @@ INSERT INTO caracteristicas_tours (descripcion, url_icon) VALUES
 
 -- Insertar tours con descripcion como STRING
 INSERT INTO tours (titulo, tipo_duracion, duracion, descripcion, precio, pais, categoria_id) VALUES
-('Tour en la Selva', 'DIAS', 3, 'Explora la selva tropical. Incluye guía profesional y transporte. Disfruta de actividades al aire libre.', 250.00, 'MÉXICO', 1),
-('Tour en Pirámides', 'HORAS', 5, 'Visita guiada por pirámides históricas. Transporte incluido desde el hotel. Aprende sobre la cultura ancestral.', 120.00, 'MÉXICO', 2),
-('Tour en la Playa', 'DIAS', 2, 'Relájate en una playa paradisíaca. Incluye comida gourmet y bebidas. Disfruta de deportes acuáticos.', 180.00, 'COLOMBIA', 3),
-('Tour en la Montaña', 'DIAS', 4, 'Escalada y camping en montaña. Guía turístico experimentado. Vistas panorámicas impresionantes.', 300.00, 'CHILE', 4),
-('Tour Gastronómico', 'HORAS', 3, 'Degusta platillos locales auténticos. Visita mercados tradicionales. Aprende sobre la historia culinaria.', 90.00, 'MÉXICO', 5),
-('Tour de Relajación', 'DIAS', 5, 'Spa y masajes relajantes. Ambiente tranquilo y privado. Incluye yoga y meditación.', 400.00, 'CHILE', 6),
-('Tour en el Desierto', 'DIAS', 2, 'Explora dunas de arena dorada. Paseo en camello incluido. Noche bajo las estrellas.', 200.00, 'MÉXICO', 1),
-('Tour Histórico', 'HORAS', 4, 'Recorrido por museos y monumentos. Guía experto en historia. Entradas incluidas.', 150.00, 'CHILE', 2),
-('Tour Acuático', 'HORAS', 6, 'Actividades como snorkel y buceo. Equipo completo proporcionado. Guía especializado en vida marina.', 170.00, 'PERÚ', 3),
-('Tour de Aventura Extrema', 'DIAS', 3, 'Paracaidismo y rappel. Equipamiento seguro y certificado. Adrenalina garantizada.', 350.00, 'MÉXICO', 4);
+('Tour en la Selva', 'DIAS', 3, 'Sumérgete en la exuberante belleza de la selva tropical con este tour de 3 días diseñado para los amantes de la naturaleza y la aventura. Este paquete incluye un guía profesional que te acompañará mientras exploras senderos vírgenes, observas animales exóticos en su hábitat natural y descubres paisajes impresionantes. Además, el transporte está completamente cubierto desde tu punto de partida hasta el corazón de la selva. Durante tu estadía, tendrás la oportunidad de participar en emocionantes actividades al aire libre, como caminatas guiadas, navegación por ríos y visitas a comunidades locales. Este tour es perfecto para quienes buscan desconectar de la rutina urbana y reconectar con la naturaleza en su estado más puro.', 250.00, 'MÉXICO', 1),
+('Tour en Pirámides', 'DIAS', 1, 'Viaja en el tiempo con este fascinante tour de 1 día que te llevará a las majestuosas pirámides históricas de México. Este recorrido incluye transporte desde tu hotel, lo que garantiza comodidad y conveniencia durante toda la experiencia. Acompañado por un guía experto, aprenderás sobre la rica cultura ancestral que dio origen a estas imponentes estructuras. Desde conocer las técnicas arquitectónicas empleadas hasta escuchar relatos mitológicos y ceremoniales, este tour te permitirá apreciar la grandeza de una de las civilizaciones más avanzadas de la historia. Ideal para entusiastas de la historia y curiosos culturales, esta excursión ofrece una mezcla equilibrada de educación y asombro.', 120.00, 'MÉXICO', 2),
+('Tour en la Playa', 'DIAS', 2, 'Escápate a un paraíso playero con este relajante tour de 2 días en Colombia. Relájate en arenas doradas bañadas por aguas cristalinas mientras disfrutas de un ambiente paradisíaco. Este paquete incluye deliciosas comidas gourmet y bebidas refrescantes para consentir tu paladar mientras te desconectas del estrés diario. Si prefieres algo más activo, también podrás participar en emocionantes deportes acuáticos como surf, paddleboarding o snorkel. Ya sea que desees tomar el sol, nadar en aguas tranquilas o simplemente disfrutar de atardeceres inolvidables, este tour promete una experiencia única frente al mar.', 180.00, 'COLOMBIA', 3),
+('Tour en la Montaña', 'DIAS', 4, 'Prepárate para una aventura inolvidable de 4 días en las montañas chilenas. Este tour combina escalada, camping y senderismo guiado con vistas panorámicas absolutamente impresionantes. Un guía turístico experimentado te acompañará en cada paso, asegurando tu seguridad mientras exploras picos nevados, valles verdes y lagunas escondidas. Este paquete es ideal tanto para principiantes como para expertos en montañismo, ya que se adapta a diferentes niveles de habilidad. Además, tendrás la oportunidad de acampar bajo cielos estrellados y despertar rodeado de la serenidad de la naturaleza. Perfecto para quienes buscan desafiar sus límites y conectar con paisajes impresionantes.', 300.00, 'CHILE', 4),
+('Tour Gastronómico', 'DIAS', 1, 'Disfruta de una experiencia culinaria auténtica con este tour gastronómico de 1 día que celebra los sabores locales de México. Visitarás mercados tradicionales donde degustarás platillos típicos preparados con ingredientes frescos y técnicas ancestrales. A lo largo del recorrido, un experto en gastronomía compartirá contigo la historia detrás de cada bocado, explicando cómo la comida ha sido parte integral de la cultura mexicana a lo largo de los siglos. Este tour no solo satisface el paladar, sino que también ofrece una mirada profunda a las raíces culinarias del país. Perfecto para foodies y curiosos culturales, esta experiencia dejará un sabor duradero en tu memoria.', 90.00, 'MÉXICO', 5),
+('Tour de Relajación', 'DIAS', 1, 'Encuentra paz interior con este exclusivo tour de 1 día centrado en el bienestar y la relajación. Ubicado en un entorno tranquilo y privado en Chile, este paquete incluye sesiones de spa, masajes relajantes, yoga y meditación guiada. El ambiente calmado y las instalaciones de alta calidad están diseñados para ofrecer una experiencia holística que revitalice cuerpo y mente. Sea cual sea tu nivel de experiencia en prácticas de bienestar, este tour está adaptado para proporcionarte herramientas útiles para manejar el estrés y mejorar tu calidad de vida. Ideal para quienes buscan escapar de la agitación cotidiana y encontrar equilibrio personal.', 400.00, 'CHILE', 6),
+('Tour en el Desierto', 'DIAS', 2, 'Descubre la magia del desierto con este tour de 2 días lleno de experiencias únicas en México. Explora vastas dunas de arena dorada mientras disfrutas de un emocionante paseo en camello que te llevará a través de paisajes surrealistas. Por la noche, acampa bajo un manto de estrellas brillantes y vive la serenidad del silencio absoluto. Este paquete ofrece una combinación perfecta de aventura y contemplación, permitiéndote desconectar del mundo moderno y conectarte con la naturaleza en su forma más pura. Ideal para viajeros intrépidos que buscan nuevas perspectivas y momentos inolvidables.', 200.00, 'MÉXICO', 1),
+('Tour Histórico', 'DIAS', 4, 'Embárcate en un viaje educativo y cultural con este tour histórico de 4 días en Chile. Este recorrido te llevará a través de museos emblemáticos, monumentos icónicos y sitios patrimoniales, acompañado por un guía experto en historia. Cada parada está cuidadosamente seleccionada para ofrecerte una visión completa del pasado del país, desde su legado colonial hasta eventos contemporáneos. Las entradas a todos los lugares están incluidas, lo que facilita una experiencia sin preocupaciones. Este tour es ideal para quienes desean profundizar su comprensión de la historia y apreciar la evolución cultural del destino.', 150.00, 'CHILE', 2),
+('Tour Acuático', 'DIAS', 6, 'Sumérgete en las aguas cristalinas del Perú con este emocionante tour acuático de 6 días. Diseñado para los amantes del océano, este paquete incluye actividades como snorkel y buceo, con equipo completo proporcionado para garantizar tu seguridad y comodidad. Acompañado por un guía especializado en vida marina, explorarás arrecifes vibrantes, cuevas submarinas y ecosistemas únicos mientras aprendes sobre la biodiversidad local. Este tour es perfecto para quienes buscan una mezcla de diversión, aprendizaje y conexión con la naturaleza marina.', 170.00, 'PERÚ', 3),
+('Tour de Aventura Extrema', 'DIAS', 3, 'Si buscas adrenalina pura, este tour de aventura extrema de 3 días en México es exactamente lo que necesitas. Desde emocionantes saltos en paracaídas hasta descensos en rappel, cada actividad está diseñada para poner a prueba tus límites y brindarte una dosis de emoción inigualable. Todo el equipamiento necesario está certificado y provisto por profesionales, asegurando tu seguridad en cada paso del camino. Este paquete es ideal para aquellos que buscan vivir experiencias fuera de lo común y crear recuerdos inolvidables en compañía de otros aventureros.', 350.00, 'MÉXICO', 4);
 
 
 -- Insertar imágenes de los tours
@@ -176,7 +176,10 @@ INSERT INTO reservas (usuario_id, tour_id, fecha_inicio, fecha_fin, num_personas
 (2, 3, '2025-06-20', '2025-06-21', 4, 720.00, 'CONFIRMADA'),
 (2, 4, '2025-07-01', '2025-07-04', 2, 600.00, 'CANCELADA'),
 (2, 5, '2025-08-10', '2025-08-10', 1, 90.00, 'CONFIRMADA'),
-(2, 6, '2025-09-05', '2025-09-09', 2, 800.00, 'PENDIENTE');
+(2, 6, '2025-09-05', '2025-09-05', 2, 800.00, 'PENDIENTE'),
+(2, 2, '2025-02-05', '2025-02-05', 2, 240.00, 'CONFIRMADA'),
+(2, 5, '2025-02-01', '2025-02-01', 2, 240.00, 'CONFIRMADA');
+
 
 -- Disponibilidad para el tour 1 (ocupado del 2025-04-10 al 2025-04-12)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
@@ -187,6 +190,11 @@ INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 -- Disponibilidad para el tour 2 (ocupado el 2025-05-15) PERO LA FECHA ESTA DISPONIBLE YA QUE LA RESERVA ESTA PENDIENTE AUN NO CONFIRMADA
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 (2, '2025-05-15', TRUE);
+
+-- Disponibilidad para el tour 2 fecha pasada (ocupado el 2025-02-05) 
+INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
+(2, '2025-02-05', FALSE);
+
 
 -- Disponibilidad para el tour 3 (ocupado del 2025-06-20 al 2025-06-21)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
@@ -203,11 +211,10 @@ INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 -- Disponibilidad para el tour 5 (ocupado el 2025-08-10)
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
 (5, '2025-08-10', FALSE);
+-- Disponibilidad para el tour 5 (ocupado el 2025-02-01) reserva en tiempo pasado 
+INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
+(5, '2025-02-01', FALSE);
 
 -- Disponibilidad para el tour 6 (ocupado del 2025-09-05 al 2025-09-09) PASA A TRUE DISPONIBLE POR QUE LA RESERVA ESTA PENDIENTE
 INSERT INTO disponibilidades_tours (tour_id, fecha, disponible) VALUES
-(6, '2025-09-05', TRUE),
-(6, '2025-09-06', TRUE),
-(6, '2025-09-07', TRUE),
-(6, '2025-09-08', TRUE),
-(6, '2025-09-09', TRUE);
+(6, '2025-09-05', TRUE);

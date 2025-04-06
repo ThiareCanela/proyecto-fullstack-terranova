@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext"; 
 
 export const UsersTable = () => {
-  const { user, listarUsuarios, cambiarRolUsuario } = useAuth(); // 🔹 Obtener usuario autenticado
-  
+  const { user, listarUsuarios, cambiarRolUsuario } = useAuth();
+
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [sortByName, setSortByName] = useState(false);
 
-  // 🔹 Cargar usuarios al montar el componente
   useEffect(() => {
     const fetchUsers = async () => {
       const usuarios = await listarUsuarios();
@@ -22,18 +22,27 @@ export const UsersTable = () => {
     fetchUsers();
   }, []);
 
-  // 🔹 Filtrar usuarios por búsqueda
-  const filteredUsers = users.filter(
+  const toggleSort = () => {
+    setSortByName((prev) => !prev);
+  };
+
+  const sortedUsers = [...users].sort((a, b) => {
+    if (!sortByName) return 0; // no aplicar orden si está en modo ID (default)
+    const fullNameA = `${a.nombre} ${a.apellido}`.toLowerCase();
+    const fullNameB = `${b.nombre} ${b.apellido}`.toLowerCase();
+    return fullNameA.localeCompare(fullNameB);
+  });
+
+  const filteredUsers = sortedUsers.filter(
     (u) =>
       u.nombre.toLowerCase().includes(search.toLowerCase()) || 
       u.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  // 🔹 Seleccionar usuario y abrir modal (evita seleccionar al usuario actual)
   const handleRoleChange = (userToModify, role) => {
     if (userToModify.id === user.id) {
-      console.warn("⚠️ No puedes cambiar tu propio rol."); // 🔹 Mensaje en consola para debugging
-      return; // 🔹 Evita abrir el modal si el usuario intenta cambiar su propio rol
+      console.warn("⚠️ No puedes cambiar tu propio rol.");
+      return;
     }
 
     console.log(`🔹 Usuario seleccionado para cambio de rol:`, userToModify);
@@ -42,7 +51,6 @@ export const UsersTable = () => {
     setShowModal(true);
   };
 
-  // 🔹 Confirmar cambio de rol
   const confirmRoleChange = async () => {
     if (!selectedUser) return;
 
@@ -51,7 +59,6 @@ export const UsersTable = () => {
     const response = await cambiarRolUsuario(selectedUser.id);
 
     if (response.success) {
-      // 🔹 Recargar lista de usuarios después del cambio de rol
       const updatedUsers = await listarUsuarios();
       console.log("Lista de usuarios después del cambio:", updatedUsers);
       setUsers(updatedUsers);
@@ -68,8 +75,11 @@ export const UsersTable = () => {
           Administrar usuarios
         </h3>
         <div className="flex justify-between mb-4">
-          <button className="hidden md:flex items-center bg-white px-4 py-2 rounded-full text-gray-700 shadow-lg">
-            <ArrowUpDown className="w-4 h-4 mr-2" /> Ordenar
+          <button
+            className="hidden md:flex items-center bg-white px-4 py-2 rounded-full text-gray-700 shadow-lg"
+            onClick={toggleSort}
+          >
+            <ArrowUpDown className="w-4 h-4 mr-2" /> {sortByName ? "Ordenar por ID" : "Ordenar por nombre"}
           </button>
         </div>
 
@@ -84,12 +94,12 @@ export const UsersTable = () => {
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
-                filteredUsers.map((usuario, index) => (
+                filteredUsers.map((usuario) => (
                   <tr key={usuario.id} className="border-b">
-                    <td className="py-2">{index + 1}</td>
+                    <td className="py-2">{usuario.id}</td>
                     <td className="py-2 flex items-center gap-2">
                       <img
-                        src={usuario.profilePicture || "src/assets/profile.webp"}
+                        src={usuario.profilePicture || "https://terranova-tours-images.s3.us-east-1.amazonaws.com/profile.webp"}
                         alt="Avatar"
                         className="w-8 h-8 rounded-full"
                       />
@@ -100,8 +110,8 @@ export const UsersTable = () => {
                         className={`border-none rounded-lg p-1 ${
                           usuario.usuarioRole === "ROLE_ADMIN" ? "bg-blue-100" : "bg-transparent"
                         }`}
-                        value={usuario.usuarioRole} 
-                        disabled={usuario.id === user.id} // 🔹 Bloquear el select si el usuario es el mismo
+                        value={usuario.usuarioRole}
+                        disabled={usuario.id === user.id}
                         onChange={(e) => handleRoleChange(usuario, e.target.value)}
                       >
                         <option value="ROLE_USER">User</option>
@@ -122,7 +132,6 @@ export const UsersTable = () => {
         </div>
       </div>
 
-      {/* Modal de Confirmación */}
       {showModal && selectedUser && (
         <div
           className="fixed inset-0 bg-[#9799aaa8] flex justify-center items-center"

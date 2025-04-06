@@ -176,6 +176,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const obtenerReservasUsuario = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:8080/reservas/usuario/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) throw new Error("No se pudieron obtener las reservas.");
+      const reservas = await response.json();
+      return reservas;
+    } catch (error) {
+      console.error("❌ Error al obtener reservas del usuario:", error.message);
+      return [];
+    }
+  };
+  
+
   return (
     <AuthContext.Provider
       value={{
@@ -186,6 +206,7 @@ export const AuthProvider = ({ children }) => {
         listarUsuarios,
         cambiarRolUsuario,
         register,
+        obtenerReservasUsuario,
       }}
     >
       {children}
