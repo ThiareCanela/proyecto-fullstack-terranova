@@ -185,6 +185,25 @@ export default function DetailCard() {
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
             <DescriptionDetail description={oneTour.descripcion} />
+            {oneTour.duracion && (
+              <div className="flex items-center gap-2 mt-4 text-gray-700 text-sm justify-center md:justify-start">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-[var(--color-emphasis)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Este tour tiene {oneTour.duracion} días de duración</span>
+              </div>
+            )}
+
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">

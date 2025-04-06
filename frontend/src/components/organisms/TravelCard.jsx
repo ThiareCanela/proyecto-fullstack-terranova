@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
+import { Heart, MapPin, Clock } from "lucide-react";
 
-import { Heart, MapPin } from "lucide-react";
-
-const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
+const TravelCard = ({ imagenes, pais, titulo, precio, duracion, onDetail }) => {
   return (
     <div
       className="bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-sm"
@@ -21,14 +20,16 @@ const TravelCard = ({ imagenes, pais, titulo, precio, onDetail }) => {
             <MapPin size={18} className="text-[var(--color-emphasis)]" />
             <span className="text-sm">{pais}</span>
           </div>
-          {/* <div className="flex items-center space-x-1">
-            <Star className="text-yellow-400" />
-            <span className="text-sm font-bold">{rating}</span>
-          </div> */}
+          <div className="flex items-center space-x-1 text-gray-600 text-sm">
+            <Clock size={16} className="text-[var(--color-emphasis)]" />
+            <span>Duración: {duracion} días</span>
+          </div>
         </div>
+
         <h3 className="text-lg font-semibold text-[var(--color-default)] mt-2">
           {titulo}
         </h3>
+
         <p className="text-[var(--color-emphasis)] font-bold text-lg mt-1">
           ${precio}
         </p>
