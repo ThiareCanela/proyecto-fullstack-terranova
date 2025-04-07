@@ -1,6 +1,6 @@
 // import process from "process";
 
-export const API_BASE_URL = "/api";
+export const API_BASE_URL = "http://52.90.220.114:8080";
 // export const API_HEADERS_BASE = {
 //   "x-api-key": process.env(),
 // };
