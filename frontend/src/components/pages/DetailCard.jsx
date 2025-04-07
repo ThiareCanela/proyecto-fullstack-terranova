@@ -72,6 +72,7 @@ export default function DetailCard() {
   const [guests, setGuests] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [formError, setFormError] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { oneTour } = useTourById(id);
   const { dateAvailability, errorMessage } = useAvailability(id);
@@ -86,6 +87,18 @@ export default function DetailCard() {
   const is404Error = errorMessage?.includes("404");
   const today = new Date();
 
+
+const getTourDateRange = (startDate, duration) => {
+  const dates = [];
+  for (let i = 0; i < duration; i++) {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i);
+    dates.push(date);
+  }
+  return dates;
+};
+
+
   const blockedDates = dateAvailability
     ?.filter((date) => !date.disponible)
     ?.map((date) => {
@@ -96,35 +109,45 @@ export default function DetailCard() {
   const handleDateChange = (date) => {
     if (!date) return;
 
-    setStartDate(date);
-
     const duration = parseInt(oneTour?.duracion, 10);
+    if (isNaN(duration) || duration <= 0) return;
 
-    if (!isNaN(duration) && duration > 0) {
-      const calculatedEndDate = new Date(date);
-      calculatedEndDate.setDate(calculatedEndDate.getDate() + duration - 1);
-      setEndDate(calculatedEndDate);
-    } else {
+    const tourRange = getTourDateRange(date, duration);
+
+    const isBlocked = tourRange.some((d) =>
+      blockedDates.some(
+        (b) => b.toDateString() === d.toDateString()
+      )
+    );
+
+    if (isBlocked) {
+      setFormError("Este rango de fechas no está disponible. Intenta con otro día de inicio.");
+      setStartDate(null);
       setEndDate(null);
+      return;
     }
 
+    setFormError("");
+    setStartDate(date);
+
+    const calculatedEndDate = new Date(date);
+    calculatedEndDate.setDate(calculatedEndDate.getDate() + duration - 1);
+    setEndDate(calculatedEndDate);
     setShowDatePicker(false);
   };
 
   const handleReserve = () => {
     if (!startDate) {
-      setModalMessage("Error en la reserva: Selecciona ambas fechas.");
-      setShowModal(true);
+      setFormError("Debes seleccionar una fecha de inicio.");
       return;
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-      setModalMessage(
-        "Fecha no disponible: La fecha de inicio debe ser anterior a la de fin."
-      );
-      setShowModal(true);
+      setFormError("La fecha de inicio debe ser anterior a la de fin.");
       return;
     }
+
+    setFormError("");
 
     if (!user) {
       openLogin();
@@ -185,11 +208,30 @@ export default function DetailCard() {
         <div className="w-full flex flex-col md:flex-row gap-10 items-start">
           <div className="md:w-[65%] text-center md:text-left pr10">
             <DescriptionDetail description={oneTour.descripcion} />
+            {oneTour.duracion && (
+              <div className="flex items-center gap-2 mt-4 text-gray-700 text-sm justify-center md:justify-start">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-[var(--color-emphasis)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Este tour tiene {oneTour.duracion} días de duración</span>
+              </div>
+            )}
+
           </div>
 
           <div className="md:w-[33%] bg-white shadow-lg rounded-2xl p-6 border border-[var(--color-secondary)] text-left w-full md:ml-auto">
             <h2 className="text-lg md:text-xl font-bold mb-5 text-center text-[var(--color-default)]">
-              Desde{" "}
+              Precio USD{" "}
               <span className="text-[var(--color-emphasis)]">
                 ${oneTour.precio}
               </span>{" "}
@@ -218,6 +260,9 @@ export default function DetailCard() {
                   disabled
                 />
               </div>
+              {formError && (
+                <p className="text-red-600 text-sm font-medium mt-2">{formError}</p>
+              )}
               {showDatePicker && (
                 <div
                   ref={datePickerRef}
@@ -263,7 +308,7 @@ export default function DetailCard() {
 
             <div className="mt-4 flex justify-between items-center">
               <label className="text-sm font-semibold text-[var(--color-default)]">
-                Precio total
+                Precio total USD
               </label>
               <p className="text-[var(--color-emphasis)] font-bold text-lg">
                 ${guests * oneTour.precio}

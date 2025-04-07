@@ -43,6 +43,20 @@ export const MisReservas = () => {
 
     return (
         <div className="p-4 sm:p-6 mt-24">
+
+      <div className="flex justify-end mb-4">
+        <button
+          className="flex items-center bg-transparent border-none gap-2 text-[var(--color-emphasis)] text-sm font-medium"
+          onClick={() => window.location.href = "/"}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver al inicio
+        </button>
+      </div>
+
             <h1 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-default)] mb-6">
                 {mostrarAntiguas ? "Reservas pasadas" : "Mis reservas vigentes"}
             </h1>
