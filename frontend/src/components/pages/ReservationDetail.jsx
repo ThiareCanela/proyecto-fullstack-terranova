@@ -43,13 +43,6 @@ const requestData = {
   numPersonas: guests,
   total: guests * tour.precio,
   usuarioId: user.id,
-    tourId: tour.id,
-    estado: "CONFIRMADA",
-    fechaFin: endDate,
-    fechaInicio: startDate,
-    numPersonas: guests,
-    total: guests * tour.precio,
-    usuarioId: user.id,
   };
   const handleChange = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
