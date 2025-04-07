@@ -96,7 +96,8 @@ public class WebSecurityConfig {
                 "http://localhost",
                 "http://localhost:5173", // Vite (modo desarrollo)
                 "http://localhost:3000", // React en Docker Compose
-                "http://52.87.166.227" //ip publica de EC2
+                "http://52.90.220.114", //ip publica de EC2 t2.micro
+                "http://terranovadh.s3-website-us-east-1.amazonaws.com" // bucket s3 donde esta el frontend statico
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
         config.setAllowedHeaders(List.of("*")); // Permitir cualquier cabecera
